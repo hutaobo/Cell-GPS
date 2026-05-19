@@ -1,10 +1,15 @@
-# sfplot
+# Cell-GPS / sfplot
 
-`sfplot` is a Python package for spatial structure analysis in spatial omics data. It implements the Search-and-Find Plot (SFplot) / Cell-GPS workflow used in our manuscript to quantify multiscale tissue architecture, compute cophenetic distance-based structure maps, and analyze cell-cell or transcript-cell spatial relationships.
+[![PyPI version](https://img.shields.io/pypi/v/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
+[![Python versions](https://img.shields.io/pypi/pyversions/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
+[![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
+[![Upload Python Package](https://github.com/hutaobo/sfplot/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/sfplot/actions/workflows/python-publish.yml)
+
+`Cell-GPS` is the installable PyPI distribution, and `sfplot` is the Python import package. Together, `Cell-GPS` / `sfplot` provide spatial structure analysis for spatial omics data. They implement the Search-and-Find Plot (SFplot) / Cell-GPS workflow used in our manuscript to quantify multiscale tissue architecture, compute cophenetic distance-based structure maps, and analyze cell-cell or transcript-cell spatial relationships.
 
 This repository is being maintained as the code companion for manuscript review and future reuse.
 
-## What the package does
+## What Cell-GPS / sfplot does
 
 - Computes searcher-findee distance matrices from spatial coordinates and cell labels.
 - Builds cophenetic distance matrices and StructureMap heatmaps from `AnnData` objects or plain `pandas` tables.
@@ -16,7 +21,7 @@ This repository is being maintained as the code companion for manuscript review 
 
 ## Repository layout
 
-- `src/sfplot/`: core implementation.
+- `src/sfplot/`: core import package implementation.
 - `tests/`: package tests and smoke checks.
 - `docs/`: Sphinx documentation.
 - `sfplot-manuscript/`: manuscript-specific notebooks, figures, and derived outputs.
@@ -24,6 +29,12 @@ This repository is being maintained as the code companion for manuscript review 
 - `segmentation_methods/`: supporting segmentation workflows.
 
 ## Installation
+
+Install from PyPI:
+
+```bash
+pip install Cell-GPS
+```
 
 Install directly from GitHub:
 
