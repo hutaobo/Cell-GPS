@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sfplot"
-version = "0.0.2"
+name = "Cell-GPS"
+version = "0.0.3"
 description = "Spatial structure analysis and Search-and-Find plot generation for spatial omics data."
 readme = "README.md"
 authors = [
