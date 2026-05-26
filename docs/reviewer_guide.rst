@@ -10,7 +10,7 @@ Package naming
 
 * Python distribution: ``Cell-GPS``
 * Python import package: ``cellgps``
-* Python GitHub repository: https://github.com/hutaobo/cellgps
+* Python GitHub repository: https://github.com/hutaobo/Cell-GPS
 * R package/repository: ``cellgpsr`` at https://github.com/hutaobo/cellgpsr
 * Windows executable: ``cellgps.exe`` at https://zenodo.org/records/17859173
 
@@ -36,7 +36,7 @@ Minimal install
 
 .. code-block:: console
 
-   $ git clone https://github.com/hutaobo/cellgps.git
+   $ git clone https://github.com/hutaobo/Cell-GPS.git
    $ cd cellgps
    $ pip install -e .
 

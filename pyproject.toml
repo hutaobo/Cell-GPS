@@ -48,8 +48,8 @@ visium = [
 cellgps-gui = "cellgps.gui.gui_app:main"
 
 [project.urls]
-Homepage = "https://github.com/hutaobo/cellgps"
-Repository = "https://github.com/hutaobo/cellgps"
+Homepage = "https://github.com/hutaobo/Cell-GPS"
+Repository = "https://github.com/hutaobo/Cell-GPS"
 
 [tool.setuptools.packages.find]
 where = ["src"]

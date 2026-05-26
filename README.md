@@ -3,7 +3,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![Python versions](https://img.shields.io/pypi/pyversions/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
-[![Upload Python Package](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml)
+[![Upload Python Package](https://github.com/hutaobo/Cell-GPS/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/Cell-GPS/actions/workflows/python-publish.yml)
 
 `Cell-GPS` is the Python package and method name for spatial topology analysis in spatial omics data. New Python code should import `cellgps`; the historical `sfplot` import namespace is retained for backward compatibility.
 
@@ -16,7 +16,7 @@ This repository is being maintained as the code companion for manuscript review 
 - R package/repository: `cellgpsr`
 - Windows executable: `cellgps.exe`
 
-The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo: <https://zenodo.org/records/17859173>.
+The Python package is hosted at `https://github.com/hutaobo/Cell-GPS`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo: <https://zenodo.org/records/17859173>.
 
 ## What Cell-GPS does
 
@@ -49,13 +49,13 @@ pip install Cell-GPS
 Install directly from GitHub:
 
 ```bash
-pip install git+https://github.com/hutaobo/cellgps.git
+pip install git+https://github.com/hutaobo/Cell-GPS.git
 ```
 
 For local development or reviewer inspection:
 
 ```bash
-git clone https://github.com/hutaobo/cellgps.git
+git clone https://github.com/hutaobo/Cell-GPS.git
 cd cellgps
 pip install -e .
 ```
