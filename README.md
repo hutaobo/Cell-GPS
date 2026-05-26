@@ -1,6 +1,7 @@
 # Cell-GPS
 
 [![PyPI version](https://img.shields.io/pypi/v/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/cell-gps.svg)](https://anaconda.org/conda-forge/cell-gps)
 [![Python versions](https://img.shields.io/pypi/pyversions/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
 [![Upload Python Package](https://github.com/hutaobo/Cell-GPS/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/Cell-GPS/actions/workflows/python-publish.yml)
@@ -12,7 +13,7 @@ This repository is being maintained as the code companion for manuscript review 
 ## Package Names
 
 - Python distribution: `Cell-GPS`
-- Python import package: `Cell-GPS`
+- Python import package: `cellgps`
 - R package/repository: `cellgpsr`
 - Windows executable: `cellgps.exe`
 
@@ -44,6 +45,12 @@ Install from PyPI:
 
 ```bash
 pip install Cell-GPS
+```
+
+Install from conda-forge:
+
+```bash
+conda install -c conda-forge cell-gps
 ```
 
 Install directly from GitHub:
