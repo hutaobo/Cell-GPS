@@ -15,31 +15,21 @@ from __future__ import annotations
 
 import os
 import sys
-import importlib
 from typing import Optional
 
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-# --- sfplot utilities -------------------------------------------------
+# --- Cell-GPS utilities -----------------------------------------------
 from ..preprocessing.data_processing import load_xenium_data
+from ._xenium_io import iter_cellgps_gene_names, load_xenium_transcripts
 from .searcher_findee_score import (
     compute_cophenetic_distances_from_df,   # core metric computation
     plot_cophenetic_heatmap,                # nice clustered heat-map
 )
 
 # --------------------------------------------------------------------- #
-
-
-def _load_xenium_reader():
-    try:
-        return importlib.import_module("spatialdata_io").xenium
-    except ImportError as exc:
-        raise ImportError(
-            "transcript_by_cell_analysis_serial requires spatialdata_io and its spatialdata/ome_zarr/zarr "
-            "dependency stack. Please install compatible versions before using this helper."
-        ) from exc
 
 
 def _prepare_obs_df(
@@ -138,39 +128,15 @@ def transcript_by_cell_analysis_serial(
     print(f"[{sample}] Loading data …")
     adata = load_xenium_data(folder, normalize=False)
 
-    xenium = _load_xenium_reader()
-    sdata = xenium(
-        folder,
-        cells_boundaries=False,
-        nucleus_boundaries=False,
-        cells_as_circles=False,
-        cells_labels=False,
-        nucleus_labels=False,
-        transcripts=True,
-        morphology_mip=False,
-        morphology_focus=False,
-        aligned_images=False,
-        cells_table=False,
-    )
-
     # ---- 2. filter transcripts ---------------------------------------
-    coords = sdata.points["transcripts"]
-    try:
-        coords = coords.compute()              # dask -> pandas if necessary
-    except AttributeError:
-        pass
-    coords["feature_name"] = coords["feature_name"].astype(str)
-    coords = coords.loc[
-        ~coords["feature_name"].str.contains("NegControl|Unassigned", na=False),
-        ["x", "y", "feature_name", "cell_id"],
-    ]
+    coords = load_xenium_transcripts(folder)
 
     # ---- 3. prepare observation table & structure map ----------------
     obs_df = _prepare_obs_df(adata, df)
     row_coph_global = _compute_structure_map(obs_df, out_dir, sample, coph_method)
 
     # ---- 4. iterate genes sequentially -------------------------------
-    genes = list(adata.var.index)
+    genes = iter_cellgps_gene_names(adata)
     result_csv = os.path.join(out_dir, f"t_and_c_result_{sample}.csv")
     header_written = False
 

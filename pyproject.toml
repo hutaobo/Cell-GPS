@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "Cell-GPS"
 version = "0.0.3"
-description = "Spatial structure analysis and Search-and-Find plot generation for spatial omics data."
+description = "Cell-GPS spatial topology analysis for spatial omics data."
 readme = "README.md"
 authors = [
     { name = "Taobo Hu", email = "taobo.hu@scilifelab.se" },
@@ -30,20 +30,19 @@ dependencies = [
 gpu = ["torch>=2.0"]
 gui = ["pillow"]
 xenium = [
-    "scanpy>=1.9",
-    "spatialdata_io>=0.1",
+    "pyXenium>=0.4.3",
     "h5py>=3.0",
-    "pyarrow",
-    "geopandas>=0.12",
-    "shapely>=2.0",
+]
+visium = [
+    "spatialdata_io>=0.3",
 ]
 
 [project.scripts]
-sfplot-gui = "sfplot.gui.gui_app:main"
+cellgps-gui = "cellgps.gui.gui_app:main"
 
 [project.urls]
-Homepage = "https://github.com/hutaobo/sfplot"
-Repository = "https://github.com/hutaobo/sfplot"
+Homepage = "https://github.com/hutaobo/cellgps"
+Repository = "https://github.com/hutaobo/cellgps"
 
 [tool.setuptools.packages.find]
 where = ["src"]

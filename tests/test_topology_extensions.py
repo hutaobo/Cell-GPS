@@ -14,7 +14,7 @@ import pandas as pd
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 
-from sfplot import (  # noqa: E402
+from cellgps import (  # noqa: E402
     compute_pathway_activity_matrix,
     compute_searcher_findee_distance_matrix_from_df,
     compute_weighted_searcher_findee_distance_matrix_from_df,

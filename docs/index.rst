@@ -1,5 +1,5 @@
-sfplot documentation
-====================
+Cell-GPS documentation
+======================
 
 .. toctree::
    :maxdepth: 2

@@ -1,1 +1,1 @@
-"""Unit test package for sfplot."""
+"""Unit test package for Cell-GPS."""

@@ -1,5 +1,4 @@
-"""Console script for sfplot."""
-import sfplot
+"""Console script placeholder for Cell-GPS."""
 
 import typer
 from rich.console import Console
@@ -10,9 +9,9 @@ console = Console()
 
 @app.command()
 def main():
-    """Console script for sfplot."""
+    """Console script placeholder for Cell-GPS."""
     console.print("Replace this message by putting your code into "
-               "sfplot.cli.main")
+               "cellgps.cli.main")
     console.print("See Typer documentation at https://typer.tiangolo.com/")
     
 

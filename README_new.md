@@ -1,17 +1,25 @@
-# Extended Notes for `sfplot`
+# Extended Notes for Cell-GPS
 
 This file provides a compact English overview of the main modules in the repository. It replaces an earlier internal draft note so that reviewer-facing documentation remains consistent.
+
+Recommended public names:
+
+- Python distribution: `Cell-GPS`
+- Python import package: `cellgps`
+- R package/repository: `cellgpsr`
+- Windows executable: `cellgps.exe`
+- Windows release: <https://zenodo.org/records/17859173>
 
 ## Core modules
 
 ### `data_processing.py`
 
 - `load_xenium_data(folder, normalize=True)`
-  Loads 10x Xenium outputs into an `AnnData` object and attaches spatial coordinates and cluster annotations when available.
+  Loads 10x Xenium outputs through `pyXenium.io` into an `AnnData` object and attaches spatial coordinates and cluster annotations when available.
 - `load_xenium_table_bundle(folder, ...)`
-  Builds an `AnnData` object directly from `cells.parquet`, official `*_cell_groups.csv`, and `cell_feature_matrix.h5`, which is the recommended fallback when the `spatialdata_io` stack is not compatible with the local environment.
+  Delegates `cells.parquet`, official `*_cell_groups.csv`, and `cell_feature_matrix.h5` table bundles to `pyXenium.io`.
 
-### `Searcher_Findee_Score.py`
+### `analysis/searcher_findee_score.py`
 
 - `compute_cophenetic_distances_from_adata(...)`
   Computes row and column cophenetic distance matrices from an `AnnData` object.
@@ -76,11 +84,11 @@ These are convenience wrappers for quick heatmap generation from common input ty
 
 1. `README.md`
 2. `REVIEWER_GUIDE.md`
-3. `src/sfplot/Searcher_Findee_Score.py`
-4. `src/sfplot/data_processing.py`
-5. `src/sfplot/tbc_analysis.py`
+3. `src/sfplot/analysis/searcher_findee_score.py`
+4. `src/sfplot/preprocessing/data_processing.py`
+5. `src/sfplot/analysis/tbc_analysis.py`
 
 ## Practical notes
 
-- If an `sfplot_tbc_formal_wta/results` directory already exists for a sample, use it as the preferred anchor input for ligand-receptor and pathway topology analyses.
-- `load_xenium_data` remains available for the legacy `spatialdata_io` route, but the table-bundle loader is more robust for environments with `zarr` / `ome_zarr` / `spatialdata` version mismatches.
+- If a `cellgps_tbc_formal_wta/results` directory already exists for a sample, use it as the preferred anchor input for ligand-receptor and pathway topology analyses.
+- Xenium loading uses `pyXenium>=0.4.3`; Visium remains a separate optional dependency through `Cell-GPS[visium]`.

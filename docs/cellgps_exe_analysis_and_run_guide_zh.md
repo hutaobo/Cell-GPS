@@ -1,8 +1,10 @@
-# CellGPS.exe 构建分析与运行说明
+# cellgps.exe 构建分析与运行说明
 
 ## 1. 结论先说
 
-这份 `Y:\long\projects\Packagedevelopment\CellGPS\sfplot\dist\CellGPS.exe` 基本可以判断为一个 PyInstaller `--onefile` 风格的 Windows GUI 打包产物。
+这份 `Y:\long\projects\Packagedevelopment\Cell-GPS\cellgps\dist\cellgps.exe` 基本可以判断为一个 PyInstaller `--onefile` 风格的 Windows GUI 打包产物。
+
+官方 Windows 单文件发布页：<https://zenodo.org/records/17859173>
 
 它的“standalone”结论是：
 
@@ -10,16 +12,16 @@
 - 更准确地说，它是“无需额外安装 Python/Conda 的单文件启动器”，而不是“完全不解压、完全零依赖”的纯原生单二进制。
 - 目标机器需要满足基本条件：`Windows 64-bit`、可写 `%TEMP%` 临时目录、未被杀毒软件/SmartScreen 阻止。
 
-如果用户满足上面这些条件，那么把 `CellGPS.exe` 单独拷到另一台电脑后，原则上是可以运行的。
+如果用户满足上面这些条件，那么把 `cellgps.exe` 单独拷到另一台电脑后，原则上是可以运行的。
 
 ## 2. 本次检查到的直接证据
 
 ### 2.1 产物形态
 
 - `dist` 目录里只有两个文件：
-  - `CellGPS.exe`
+  - `cellgps.exe`
   - `error.log`
-- `CellGPS.exe` 体积约 `425 MB`
+- `cellgps.exe` 体积约 `425 MB`
 - 可执行文件是 `Windows GUI` 子系统
 - 架构是 `x64`
 
@@ -35,9 +37,8 @@
 - `tk8.6`
 - `splash.png`
 - `scanpy`
-- `spatialdata_io`
-- `geopandas`
-- `shapely`
+- `pyXenium`
+- `pyarrow`
 - `h5py`
 
 这说明它不是一个只负责“调用本机 Python”的空壳，而是把 Python 运行时和一大批科学计算依赖一起塞进去了。
@@ -50,7 +51,7 @@
 
 ### 2.4 当前机器上的复测结果
 
-- 我重新启动过这份 `CellGPS.exe`
+- 我重新启动过这份 `cellgps.exe`
 - 启动后进程不会立即退出
 - 现有 `error.log` 没有被更新
 
@@ -65,7 +66,7 @@
 - 不要求用户自己安装 Python
 - 不要求用户自己安装 Conda 环境
 - 不要求用户手动放置一整套源码目录
-- 分发时理论上只需要给用户一个 `CellGPS.exe`
+- 分发时理论上只需要给用户一个 `cellgps.exe`
 
 所以如果你的意思是“别人下载一个 exe 到 Windows 电脑上就能点开跑”，答案是：
 
@@ -116,7 +117,7 @@
 
 ### 4.3 GUI 导入链过重
 
-GUI 入口文件只用到了少数功能，但它通过 `from sfplot import ...` 导入顶层包，而顶层包又会继续导入很多模块。
+GUI 入口文件只用到了少数功能，但它通过 `from cellgps import ...` 导入顶层包，而顶层包又会继续导入很多模块。
 
 这会带来两个副作用：
 
@@ -159,7 +160,7 @@ GUI 入口文件只用到了少数功能，但它通过 `from sfplot import ...`
 
 建议这样说：
 
-- “这是面向 Windows 64 位的单文件版 CellGPS，已内置 Python 和主要依赖，通常无需额外安装环境即可运行。首次启动会稍慢，因为程序会先在临时目录解压运行时文件。”
+- “这是面向 Windows 64 位的单文件版 Cell-GPS，已内置 Python 和主要依赖，通常无需额外安装环境即可运行。首次启动会稍慢，因为程序会先在临时目录解压运行时文件。”
 
 这个表述更准确，也更符合它现在的打包方式。
 
@@ -174,12 +175,12 @@ GUI 入口文件只用到了少数功能，但它通过 `from sfplot import ...`
 
 ### 6.2 获取程序
 
-建议把 `CellGPS.exe` 复制到本地磁盘再运行，不要直接在网络盘里双击。
+建议把 `cellgps.exe` 复制到本地磁盘再运行，不要直接在网络盘里双击。
 
 推荐位置示例：
 
-- `C:\Users\<用户名>\Desktop\CellGPS\CellGPS.exe`
-- `C:\Users\<用户名>\Downloads\CellGPS\CellGPS.exe`
+- `C:\Users\<用户名>\Desktop\Cell-GPS\cellgps.exe`
+- `C:\Users\<用户名>\Downloads\Cell-GPS\cellgps.exe`
 
 不建议：
 
@@ -190,7 +191,7 @@ GUI 入口文件只用到了少数功能，但它通过 `from sfplot import ...`
 
 如果文件是从邮件、网盘、浏览器下载得到的，先做下面检查：
 
-1. 右键 `CellGPS.exe`
+1. 右键 `cellgps.exe`
 2. 打开“属性”
 3. 如果底部有“解除锁定”或 `Unblock` 选项，勾上后点击“确定”
 
@@ -201,7 +202,7 @@ GUI 入口文件只用到了少数功能，但它通过 `from sfplot import ...`
 
 ### 6.4 启动程序
 
-双击 `CellGPS.exe` 即可。
+双击 `cellgps.exe` 即可。
 
 注意：
 
@@ -339,9 +340,8 @@ CSV 至少需要包含这些列名：
 因为它把大量 Python 运行时和科学计算依赖都打包进去了，包括：
 
 - `scanpy`
-- `spatialdata_io`
-- `geopandas`
-- `shapely`
+- `pyXenium`
+- `pyarrow`
 - `h5py`
 
 这会换来“无需用户安装环境”的便利，但代价就是：
@@ -365,7 +365,7 @@ CSV 至少需要包含这些列名：
 
 最终判断可以概括成一句话：
 
-**这份 `CellGPS.exe` 已经具备“单文件分发到另一台 Windows 64 位电脑上运行”的基本条件，能算 standalone；但它仍然是 PyInstaller onefile 风格的自解压程序，不是完全零环境条件的原生绿色软件。**
+**这份 `cellgps.exe` 已经具备“单文件分发到另一台 Windows 64 位电脑上运行”的基本条件，能算 standalone；但它仍然是 PyInstaller onefile 风格的自解压程序，不是完全零环境条件的原生绿色软件。**
 
 如果只是内部测试或小范围分发，已经够用。
 

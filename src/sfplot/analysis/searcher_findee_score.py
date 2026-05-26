@@ -1,4 +1,4 @@
-# sfplot/compute_cophenetic_distances_from_adata.py
+# Cell-GPS compute_cophenetic_distances_from_adata.py
 
 import os
 import numpy as np
@@ -133,7 +133,7 @@ def compute_cophenetic_distances_from_adata(
     return row_cophenetic_df_norm, col_cophenetic_df_norm
 
 
-# sfplot/compute_cophenetic_distances_from_df.py
+# Cell-GPS compute_cophenetic_distances_from_df.py
 
 import os
 import numpy as np

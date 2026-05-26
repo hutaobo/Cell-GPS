@@ -152,10 +152,10 @@ def generate_TCR_distance_heatmap_from_df(
     g.ax_heatmap.set_yticklabels(g.ax_heatmap.get_yticklabels(), rotation=0)
 
     # Set the overall figure title
-    g.fig.suptitle(f"TCR_SFplot of {sample}", fontsize=12, y=1.02)
+    g.fig.suptitle(f"TCR Cell-GPS of {sample}", fontsize=12, y=1.02)
 
     # 10. Save PDF
-    output_file = os.path.join(output_dir, f"TCR_SFplot_of_{sample}.pdf")
+    output_file = os.path.join(output_dir, f"TCR_Cell-GPS_of_{sample}.pdf")
     plt.savefig(output_file, format="pdf", bbox_inches="tight")
     plt.close()
     print(f"Sample {sample} done. PDF saved to {output_file}")

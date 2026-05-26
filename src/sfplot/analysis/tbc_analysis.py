@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import warnings
 import logging
-import importlib
 import os
 import sys
 import traceback
@@ -22,6 +21,7 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 from ..preprocessing.data_processing import load_xenium_data
+from ._xenium_io import iter_cellgps_gene_names, load_xenium_transcripts
 from .searcher_findee_score import (
     compute_cophenetic_distances_from_df,
     plot_cophenetic_heatmap,
@@ -35,7 +35,7 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(name)-15s | %(message)s"
 )
 # suppress logs from specific libraries
-for lib in ("sfplot", "spatialdata", "anndata", "seaborn"):
+for lib in ("Cell-GPS", "pyXenium", "anndata", "seaborn"):
     logging.getLogger(lib).setLevel(logging.ERROR)
 
 # Globals visible inside worker processes
@@ -44,16 +44,6 @@ _row_coph_global: Optional[pd.DataFrame] = None
 _coords_global: Optional[pd.DataFrame] = None
 _coph_method: str = "average"
 _shm: Optional[shared_memory.SharedMemory] = None
-
-
-def _load_xenium_reader():
-    try:
-        return importlib.import_module("spatialdata_io").xenium
-    except ImportError as exc:
-        raise ImportError(
-            "transcript_by_cell_analysis requires spatialdata_io and its spatialdata/ome_zarr/zarr "
-            "dependency stack. Please install compatible versions before using this helper."
-        ) from exc
 
 
 def _init_worker(shm_name, shm_shape, shm_dtype, adata_obs_df, row_coph_df, coph_method: str):
@@ -157,27 +147,7 @@ def transcript_by_cell_analysis(
 
     # load Xenium data and transcripts
     adata = load_xenium_data(folder, normalize=False)
-    xenium = _load_xenium_reader()
-    sdata = xenium(
-        folder,
-        cells_boundaries=False, nucleus_boundaries=False,
-        cells_as_circles=False, cells_labels=False,
-        nucleus_labels=False, transcripts=True,
-        morphology_mip=False, morphology_focus=False,
-        aligned_images=False, cells_table=False,
-    )
-
-    # filter transcripts and convert feature_name to string
-    coords = sdata.points["transcripts"]
-    try:
-        coords = coords.compute()
-    except AttributeError:
-        pass
-    coords["feature_name"] = coords["feature_name"].astype(str)
-    coords = coords.loc[
-        ~coords["feature_name"].str.contains("NegControl|Unassigned", na=False),
-        ["x", "y", "feature_name", "cell_id"],
-    ]
+    coords = load_xenium_transcripts(folder)
 
     # create shared memory block for transcript coords
     coords_arr = coords[["x", "y", "feature_name"]].to_records(index=False)
@@ -208,7 +178,7 @@ def transcript_by_cell_analysis(
     _row_coph_global.to_csv(f"{out_dir}/StructureMap_table_{sample}.csv")
 
     # parallel processing of genes
-    genes = list(adata.var.index)
+    genes = iter_cellgps_gene_names(adata)
     out_csv = f"{out_dir}/t_and_c_result_{sample}.csv"
     header_written = False
 

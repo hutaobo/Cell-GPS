@@ -1,7 +1,7 @@
-# src/sfplot/gui/__init__.py
+# Legacy sfplot GUI namespace.
 
 """
-sfplot.gui subpackage providing the graphical user interface entry point.
+Compatibility subpackage providing the Cell-GPS graphical user interface entry point.
 """
 
 from .gui_app import main

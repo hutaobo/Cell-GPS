@@ -7,7 +7,7 @@ Replace ``adata1``, ``adata2``, ``adata3`` with your own AnnData objects,
 update ``output_dir``, then run the script.
 """
 
-from sfplot import compute_cophenetic_distances_from_adata
+from cellgps import compute_cophenetic_distances_from_adata
 
 # Replace with your actual AnnData objects
 adata_list = [adata1, adata2, adata3]  # noqa: F821

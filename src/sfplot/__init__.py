@@ -1,12 +1,22 @@
-"""Top-level package for sfplot."""
+"""Legacy top-level package for Cell-GPS.
+
+The recommended public import is now ``cellgps``. This ``sfplot`` package is
+kept as a compatibility layer for existing scripts.
+"""
 
 from __future__ import annotations
 
+from importlib.metadata import PackageNotFoundError, version
 from importlib import import_module
 from typing import Any
 
 __author__ = "Taobo Hu"
 __email__ = "taobo.hu@scilifelab.se"
+
+try:
+    __version__ = version("Cell-GPS")
+except PackageNotFoundError:
+    __version__ = "0.0.3"
 
 _LAZY_EXPORTS = {
     # subpackages

@@ -11,7 +11,7 @@ import pandas as pd
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-from sfplot import compute_cophenetic_distances_from_df
+from cellgps import compute_cophenetic_distances_from_df
 
 
 def process_gene(gene, adata, transcripts_pdf):

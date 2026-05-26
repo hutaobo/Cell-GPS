@@ -1,4 +1,4 @@
-# sfplot/plotting.py
+# Cell-GPS plotting.py
 
 import os
 from typing import Optional
@@ -163,10 +163,10 @@ def generate_cluster_distance_heatmap_from_path(
     g.ax_heatmap.set_yticklabels(g.ax_heatmap.get_yticklabels(), rotation=0)
 
     # Set the overall figure title (not the heatmap title)
-    g.fig.suptitle(f"SFplot of {sample}", fontsize=12, y=1)
+    g.fig.suptitle(f"Cell-GPS of {sample}", fontsize=12, y=1)
 
     # 7. Save as PDF with sample name
-    output_file = os.path.join(output_dir, f"SFplot_of_{sample}.pdf")
+    output_file = os.path.join(output_dir, f"Cell-GPS_of_{sample}.pdf")
     plt.savefig(output_file, format="pdf", bbox_inches="tight")
     plt.close()
 
@@ -339,11 +339,11 @@ def generate_cluster_distance_heatmap_from_adata(
 
     # Set the overall figure title (not the heatmap title)
     sample = adata.uns.get("sample", "Sample")  # assumes sample name is stored in adata.uns
-    g.fig.suptitle(f"SFplot of {sample}", fontsize=12, y=1)
+    g.fig.suptitle(f"Cell-GPS of {sample}", fontsize=12, y=1)
 
     # 7. Save as PDF with sample name
     if output_filename is None:
-        output_filename = f"SFplot_of_{sample}.pdf"
+        output_filename = f"Cell-GPS_of_{sample}.pdf"
     output_file = os.path.join(output_dir, output_filename)
     plt.savefig(output_file, format="pdf", bbox_inches="tight")
     plt.close()
@@ -499,7 +499,7 @@ def generate_cluster_distance_heatmap_from_df(
     g.ax_heatmap.set_xlabel("Findee", fontsize=12)
     g.ax_heatmap.set_ylabel("Searcher", fontsize=12)
     g.ax_heatmap.set_yticklabels(g.ax_heatmap.get_yticklabels(), rotation=0)
-    g.fig.suptitle(f"SFplot of {sample}", fontsize=12, y=1)
+    g.fig.suptitle(f"Cell-GPS of {sample}", fontsize=12, y=1)
 
     # Save as PDF
     if output_filename is None:

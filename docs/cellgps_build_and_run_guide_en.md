@@ -1,8 +1,8 @@
-# CellGPS User Guide and Distribution Notes
+# Cell-GPS User Guide and Distribution Notes
 
 ## 1. Executive Summary
 
-`CellGPS.exe` is a Windows x64 single-file GUI application packaged from the `sfplot` codebase.
+`cellgps.exe` is a Windows x64 single-file GUI application packaged from the `Cell-GPS` codebase.
 
 For end users, it behaves like a standalone desktop program:
 
@@ -24,7 +24,8 @@ The current official release has the following characteristics:
 - target platform: `Windows 64-bit`
 - subsystem: `Windows GUI`
 - packaging style: `single-file executable`
-- official release file: `CellGPS.exe`
+- official release file: `cellgps.exe`
+- official release page: <https://zenodo.org/records/17859173>
 - official release size: about `297 MB`
 
 This release prioritizes stability and compatibility for the CSV and Xenium workflows over aggressive size reduction.
@@ -33,7 +34,7 @@ This release prioritizes stability and compatibility for the CSV and Xenium work
 
 The distributed executable should be treated as the official release build:
 
-- the release filename is `CellGPS.exe`
+- the release filename is `cellgps.exe`
 - older experimental or intermediate packaging variants should not be distributed
 - the current release was finalized after compatibility-focused packaging adjustments for the Xenium workflow
 
@@ -67,12 +68,12 @@ Please keep the following limitations in mind when distributing the application:
 
 For external release, distribute the software with:
 
-- `CellGPS.exe`
+- `cellgps.exe`
 - this guide in `docx` or `pdf` format
 
 When sharing the executable with researchers, use wording like this:
 
-> CellGPS is a Windows 64-bit single-file desktop build that already contains the required Python runtime and major dependencies. In most cases, no additional software installation is needed. The first launch may take longer because the application unpacks its runtime files into the user's temporary directory.
+> Cell-GPS is a Windows 64-bit single-file desktop build that already contains the required Python runtime and major dependencies. In most cases, no additional software installation is needed. The first launch may take longer because the application unpacks its runtime files into the user's temporary directory.
 
 ## 7. System Requirements
 
@@ -93,14 +94,14 @@ Do not run the program directly from:
 
 Recommended locations:
 
-- `C:\Users\<username>\Desktop\CellGPS\CellGPS.exe`
-- `C:\Users\<username>\Downloads\CellGPS\CellGPS.exe`
+- `C:\Users\<username>\Desktop\Cell-GPS\cellgps.exe`
+- `C:\Users\<username>\Downloads\Cell-GPS\cellgps.exe`
 
 ### 8.2 Unblock the file if Windows marked it as downloaded
 
 If the file was downloaded from a browser, cloud drive, or email:
 
-1. Right-click `CellGPS.exe`
+1. Right-click `cellgps.exe`
 2. Open `Properties`
 3. If an `Unblock` option is visible, enable it
 4. Click `Apply` and `OK`
@@ -118,7 +119,7 @@ If this happens, the user may need to:
 
 To start the application:
 
-1. Double-click `CellGPS.exe`
+1. Double-click `cellgps.exe`
 2. Wait for the GUI to finish loading
 
 Notes:
@@ -242,7 +243,7 @@ Before publishing globally, run one final smoke test on a clean Windows x64 mach
 
 Recommended checklist:
 
-1. Copy only `CellGPS.exe` to the machine
+1. Copy only `cellgps.exe` to the machine
 2. Launch the executable
 3. Run a small `CSV Heatmap` example
 4. Run a small `Xenium Heatmap` example
@@ -251,7 +252,7 @@ Recommended checklist:
 
 ## 15. Final Assessment
 
-The official `CellGPS.exe` is suitable for distribution to external researchers as a standalone Windows GUI application.
+The official `cellgps.exe` is suitable for distribution to external researchers as a standalone Windows GUI application.
 
 It should be described as:
 

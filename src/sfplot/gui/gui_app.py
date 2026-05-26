@@ -27,7 +27,7 @@ def main() -> None:
 class MainApp(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
-        self.title("CellGPS GUI")
+        self.title("Cell-GPS GUI")
         self.geometry("1000x750")
 
         self._queue: queue.Queue[tuple[str, object]] = queue.Queue()
@@ -68,7 +68,7 @@ class MainApp(tk.Tk):
 
     def _get_searcher_api(self) -> SearcherApi:
         if self._searcher_api is None:
-            module = import_module("sfplot.analysis.searcher_findee_score")
+            module = import_module("cellgps.analysis.searcher_findee_score")
             self._searcher_api = (
                 module.compute_cophenetic_distances_from_df,
                 module.compute_cophenetic_distances_from_adata,
@@ -78,7 +78,7 @@ class MainApp(tk.Tk):
 
     def _get_xenium_loader(self) -> Callable[[str, bool], Any]:
         if self._xenium_loader is None:
-            module = import_module("sfplot.preprocessing.data_processing")
+            module = import_module("cellgps.preprocessing.data_processing")
             self._xenium_loader = module.load_xenium_data
         return self._xenium_loader
 

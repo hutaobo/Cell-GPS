@@ -10,7 +10,7 @@ The minimal table-based workflow expects ``x``, ``y``, and ``celltype`` columns.
 .. code-block:: python
 
    import pandas as pd
-   from sfplot import compute_cophenetic_distances_from_df, plot_cophenetic_heatmap
+   from cellgps import compute_cophenetic_distances_from_df, plot_cophenetic_heatmap
 
    df = pd.DataFrame(
        {
@@ -40,7 +40,7 @@ From Xenium output
 
 .. code-block:: python
 
-   from sfplot import load_xenium_data, compute_cophenetic_distances_from_adata
+   from cellgps import load_xenium_data, compute_cophenetic_distances_from_adata
 
    adata = load_xenium_data("/path/to/xenium/run", normalize=False)
    row_coph, col_coph = compute_cophenetic_distances_from_adata(
@@ -56,7 +56,7 @@ For larger coordinate tables, use the memory-aware helper:
 
 .. code-block:: python
 
-   from sfplot import (
+   from cellgps import (
        pick_batch_size,
        compute_cophenetic_distances_from_df_memory_opt,
    )

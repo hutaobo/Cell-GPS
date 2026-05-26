@@ -15,7 +15,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/hutaobo/sfplot/issues.
+Report bugs at https://github.com/hutaobo/cellgps/issues.
 
 If you are reporting a bug, please include:
 
@@ -38,14 +38,14 @@ and "help wanted" is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-sfplot could always use more documentation, whether as part of the
-official sfplot docs, in docstrings, or even on the web in blog posts,
+Cell-GPS could always use more documentation, whether as part of the
+official Cell-GPS docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/hutaobo/sfplot/issues.
+The best way to send feedback is to file an issue at https://github.com/hutaobo/cellgps/issues.
 
 If you are proposing a feature:
 
@@ -57,17 +57,17 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `sfplot` for local development.
+Ready to contribute? Here's how to set up `cellgps` for local development.
 
-1. Fork the `sfplot` repo on GitHub.
+1. Fork the `cellgps` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/sfplot.git
+    $ git clone git@github.com:your_name_here/cellgps.git
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv sfplot
-    $ cd sfplot/
+    $ mkvirtualenv cellgps
+    $ cd cellgps/
     $ python setup.py develop
 
 4. Create a branch for local development::
@@ -104,7 +104,7 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
 3. The pull request should work for Python 3.5, 3.6, 3.7 and 3.8, and for PyPy. Check
-   https://travis-ci.com/hutaobo/sfplot/pull_requests
+   https://travis-ci.com/hutaobo/cellgps/pull_requests
    and make sure that the tests pass for all supported Python versions.
 
 Tips
@@ -113,7 +113,7 @@ Tips
 To run a subset of tests::
 
 
-    $ python -m unittest tests.test_sfplot
+    $ python -m unittest tests.test_cellgps
 
 Deploying
 ---------

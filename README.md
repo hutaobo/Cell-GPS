@@ -1,27 +1,37 @@
-# Cell-GPS / sfplot
+# Cell-GPS
 
 [![PyPI version](https://img.shields.io/pypi/v/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![Python versions](https://img.shields.io/pypi/pyversions/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
-[![Upload Python Package](https://github.com/hutaobo/sfplot/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/sfplot/actions/workflows/python-publish.yml)
+[![Upload Python Package](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml)
 
-`Cell-GPS` is the installable PyPI distribution, and `sfplot` is the Python import package. Together, `Cell-GPS` / `sfplot` provide spatial structure analysis for spatial omics data. They implement the Search-and-Find Plot (SFplot) / Cell-GPS workflow used in our manuscript to quantify multiscale tissue architecture, compute cophenetic distance-based structure maps, and analyze cell-cell or transcript-cell spatial relationships.
+`Cell-GPS` is the Python package and method name for spatial topology analysis in spatial omics data. New Python code should import `cellgps`; the historical `sfplot` import namespace is retained for backward compatibility.
 
 This repository is being maintained as the code companion for manuscript review and future reuse.
 
-## What Cell-GPS / sfplot does
+## Package Names
+
+- Python distribution: `Cell-GPS`
+- Python import package: `cellgps`
+- R package/repository: `cellgpsr`
+- Windows executable: `cellgps.exe`
+
+The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo: <https://zenodo.org/records/17859173>.
+
+## What Cell-GPS does
 
 - Computes searcher-findee distance matrices from spatial coordinates and cell labels.
 - Builds cophenetic distance matrices and StructureMap heatmaps from `AnnData` objects or plain `pandas` tables.
 - Loads 10x Xenium outputs and prepares them for downstream spatial analysis.
-- Provides a table-bundle Xenium loader that assembles `cells.parquet`, official `*_cell_groups.csv`, and `cell_feature_matrix.h5` without requiring the `spatialdata_io` dependency chain.
+- Provides Xenium loaders backed by `pyXenium.io`, including standard Xenium folders and table bundles with `cells.parquet`, official `*_cell_groups.csv`, and `cell_feature_matrix.h5`.
 - Supports transcript-by-cell analysis for locating transcripts relative to cell types.
 - Includes memory-optimized workflows for large datasets.
 - Provides plotting utilities such as clustered heatmaps, circular dendrograms, and related summary figures.
 
 ## Repository layout
 
-- `src/sfplot/`: core import package implementation.
+- `src/cellgps/`: recommended Python import namespace.
+- `src/sfplot/`: legacy compatibility namespace and current implementation modules.
 - `tests/`: package tests and smoke checks.
 - `docs/`: Sphinx documentation.
 - `sfplot-manuscript/`: manuscript-specific notebooks, figures, and derived outputs.
@@ -39,14 +49,14 @@ pip install Cell-GPS
 Install directly from GitHub:
 
 ```bash
-pip install git+https://github.com/hutaobo/sfplot.git
+pip install git+https://github.com/hutaobo/cellgps.git
 ```
 
 For local development or reviewer inspection:
 
 ```bash
-git clone https://github.com/hutaobo/sfplot.git
-cd sfplot
+git clone https://github.com/hutaobo/cellgps.git
+cd cellgps
 pip install -e .
 ```
 
@@ -58,7 +68,7 @@ The minimal input is a table with spatial coordinates and a cell-type column.
 
 ```python
 import pandas as pd
-from sfplot import compute_cophenetic_distances_from_df, plot_cophenetic_heatmap
+from cellgps import compute_cophenetic_distances_from_df, plot_cophenetic_heatmap
 
 df = pd.DataFrame(
     {
@@ -87,12 +97,12 @@ plot_cophenetic_heatmap(
 ## Quick start from Xenium output
 
 ```python
-from sfplot import load_xenium_data, load_xenium_table_bundle, compute_cophenetic_distances_from_adata
+from cellgps import load_xenium_data, load_xenium_table_bundle, compute_cophenetic_distances_from_adata
 
-# Legacy `spatialdata_io` route
+# Standard Xenium folder through pyXenium.io
 adata = load_xenium_data("/path/to/xenium/run", normalize=False)
 
-# Stable table-bundle route used for the Atera Xenium benchmark
+# Explicit table-bundle route used for the Atera Xenium benchmark
 adata = load_xenium_table_bundle("/path/to/xenium/run", normalize=False)
 
 row_coph, col_coph = compute_cophenetic_distances_from_adata(
@@ -105,7 +115,7 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 ## Useful public entry points
 
 - `load_xenium_data`: load and preprocess Xenium data.
-- `load_xenium_table_bundle`: load Xenium data from `cells.parquet` + `*_cell_groups.csv` + `cell_feature_matrix.h5` when `spatialdata_io` is unavailable or unstable.
+- `load_xenium_table_bundle`: load Xenium data from `cells.parquet` + `*_cell_groups.csv` + `cell_feature_matrix.h5` through `pyXenium.io`.
 - `compute_cophenetic_distances_from_df`: compute structure matrices from a coordinate table.
 - `compute_weighted_searcher_findee_distance_matrix_from_df`: weighted searcher-findee kernel for entity, pathway, or LR analysis.
 - `compute_weighted_cophenetic_distances_from_df`: weighted StructureMap wrapper over the weighted kernel.
@@ -123,11 +133,11 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 
 ## Notes for reviewers
 
-- The package code used for the manuscript is in `src/sfplot/`.
+- The recommended Python import namespace is `cellgps`; the legacy `sfplot` namespace remains available for older scripts.
 - Manuscript-facing notebooks and generated figure assets are kept in `sfplot-manuscript/`.
 - Raw experimental datasets are not bundled in this repository because of size and distribution constraints. The code expects standard spatial omics outputs such as Xenium folders or tabular coordinate inputs.
-- When an `sfplot_tbc_formal_wta/results`-style directory is already available, the LR and pathway topology extensions are designed to reuse its `t_and_c_result_*.csv` and `StructureMap_table_*.csv` outputs as the preferred gene-level topology anchors before falling back to recomputation.
-- `load_xenium_data` depends on a compatible `spatialdata_io` / `spatialdata` / `ome_zarr` / `zarr` stack. For reviewer reproduction on environments where that stack is mismatched, prefer `load_xenium_table_bundle`.
+- When a `cellgps_tbc_formal_wta/results`-style directory is already available, the LR and pathway topology extensions are designed to reuse its `t_and_c_result_*.csv` and `StructureMap_table_*.csv` outputs as the preferred gene-level topology anchors before falling back to recomputation.
+- Xenium loading depends on `pyXenium>=0.4.3`. Visium helpers remain optional through the separate `Cell-GPS[visium]` extra.
 - A short repository walkthrough is available in [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md).
 
 ## Documentation

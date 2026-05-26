@@ -8,19 +8,19 @@ $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Push-Location $repoRoot
 
 try {
-    if (Test-Path ".\build\CellGPS") {
-        Remove-Item ".\build\CellGPS" -Recurse -Force
+    if (Test-Path ".\build\cellgps") {
+        Remove-Item ".\build\cellgps" -Recurse -Force
     }
 
-    if (Test-Path ".\dist\CellGPS.exe") {
-        Remove-Item ".\dist\CellGPS.exe" -Force
+    if (Test-Path ".\dist\cellgps.exe") {
+        Remove-Item ".\dist\cellgps.exe" -Force
     }
 
     if (Test-Path ".\dist\error.log") {
         Remove-Item ".\dist\error.log" -Force
     }
 
-    & $PythonExe -m PyInstaller --clean --noconfirm ".\CellGPS.spec"
+    & $PythonExe -m PyInstaller --clean --noconfirm ".\cellgps.spec"
 }
 finally {
     Pop-Location

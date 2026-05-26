@@ -6,7 +6,7 @@ from PyInstaller.utils.hooks import collect_submodules, copy_metadata
 
 project_root = Path(SPECPATH)
 metadata_datas = []
-for package_name in ("anndata", "spatialdata", "spatialdata-io", "scanpy", "ome-types", "xsdata"):
+for package_name in ("anndata", "pyXenium", "scanpy", "h5py", "pyarrow"):
     metadata_datas += copy_metadata(package_name)
 
 a = Analysis(
@@ -15,13 +15,14 @@ a = Analysis(
     binaries=[],
     datas=metadata_datas,
     hiddenimports=[
-        "sfplot.Searcher_Findee_Score",
-        "sfplot.data_processing",
+        "cellgps.analysis.searcher_findee_score",
+        "cellgps.preprocessing.data_processing",
+        "sfplot.analysis.searcher_findee_score",
+        "sfplot.preprocessing.data_processing",
+        "pyXenium.io",
     ]
-    + collect_submodules("ome_types")
-    + collect_submodules("pygments")
-    + collect_submodules("xsdata")
-    + collect_submodules("xsdata_pydantic_basemodel"),
+    + collect_submodules("pyXenium")
+    + collect_submodules("pygments"),
     hookspath=[str(project_root)],
     hooksconfig={
         "matplotlib": {
@@ -59,7 +60,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="CellGPS",
+    name="cellgps",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
