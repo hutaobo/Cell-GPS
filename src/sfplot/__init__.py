@@ -16,7 +16,7 @@ __email__ = "taobo.hu@scilifelab.se"
 try:
     __version__ = version("Cell-GPS")
 except PackageNotFoundError:
-    __version__ = "0.0.3"
+    __version__ = "0.0.4"
 
 _LAZY_EXPORTS = {
     # subpackages
