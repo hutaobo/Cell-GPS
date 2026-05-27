@@ -1,0 +1,56 @@
+{% set name = "cell-gps" %}
+{% set version = environ.get("RECIPE_VERSION", "") %}
+{% set python_min = "3.9" %}
+
+package:
+  name: {{ name }}
+  version: "{{ version }}"
+
+source:
+  url: "{{ environ.get('RECIPE_SDIST_URL', '') }}"
+  sha256: "{{ environ.get('RECIPE_SHA256', '') }}"
+
+build:
+  noarch: python
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  entry_points:
+    - cellgps-gui = cellgps.gui.gui_app:main
+
+requirements:
+  host:
+    - python {{ python_min }}
+    - pip
+    - setuptools >=61.0
+    - wheel
+  run:
+    - python >={{ python_min }}
+    - pandas >=1.3
+    - numpy >=1.21
+    - matplotlib-base >=3.4
+    - seaborn >=0.11
+    - scikit-learn >=1.0
+    - scipy >=1.7
+    - psutil >=5.8
+    - joblib >=1.1
+    - tqdm >=4.60
+
+test:
+  imports:
+    - cellgps
+    - sfplot
+  commands:
+    - pip check
+  requires:
+    - pip
+    - python {{ python_min }}
+
+about:
+  home: https://github.com/hutaobo/Cell-GPS
+  summary: Cell-GPS spatial topology analysis for spatial omics data.
+  license: CC-BY-NC-4.0
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - hutaobo

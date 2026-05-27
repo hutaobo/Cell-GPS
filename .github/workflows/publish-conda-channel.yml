@@ -1,0 +1,155 @@
+name: Publish conda channel package
+
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version to publish, without a leading v"
+        required: false
+        type: string
+      channel_repo:
+        description: "Static conda channel repository"
+        required: false
+        default: "hutaobo/conda-channel"
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  CONDA_PACKAGE: cell-gps
+  PYPI_PACKAGE: cell-gps
+  CHANNEL_REPO: ${{ inputs.channel_repo || 'hutaobo/conda-channel' }}
+  CHANNEL_URL: https://raw.githubusercontent.com/${{ inputs.channel_repo || 'hutaobo/conda-channel' }}/main
+
+jobs:
+  publish-conda-channel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out package repository
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        shell: bash
+        run: |
+          version="${{ inputs.version }}"
+          if [ -z "$version" ]; then
+            version="${GITHUB_REF_NAME#v}"
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -z "${{ inputs.version }}" ]; then
+            echo "Provide workflow_dispatch input 'version' when not running from a release/tag event." >&2
+            exit 1
+          fi
+          echo "PKG_VERSION=$version" >> "$GITHUB_ENV"
+          echo "RECIPE_VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Resolve PyPI source distribution
+        shell: python
+        run: |
+          import json
+          import os
+          import time
+          import urllib.error
+          import urllib.request
+
+          name = os.environ["PYPI_PACKAGE"]
+          version = os.environ["PKG_VERSION"]
+          url = f"https://pypi.org/pypi/{name}/{version}/json"
+          last_error = None
+
+          for attempt in range(1, 31):
+              try:
+                  with urllib.request.urlopen(url, timeout=60) as handle:
+                      data = json.load(handle)
+                  sdist = next(
+                      (item for item in data["urls"] if item["packagetype"] == "sdist"),
+                      None,
+                  )
+                  if sdist is not None:
+                      break
+                  last_error = f"No sdist listed for {name}=={version}"
+              except (TimeoutError, urllib.error.HTTPError, urllib.error.URLError) as exc:
+                  last_error = exc
+
+              if attempt < 30:
+                  print(f"Waiting for PyPI sdist ({attempt}/30): {last_error}")
+                  time.sleep(30)
+          else:
+              raise SystemExit(f"Unable to resolve PyPI sdist for {name}=={version}: {last_error}")
+
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              env.write(f"RECIPE_SDIST_URL={sdist['url']}\n")
+              env.write(f"RECIPE_SHA256={sdist['digests']['sha256']}\n")
+
+      - name: Set up conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+          channels: conda-forge
+          channel-priority: strict
+          activate-environment: conda-publish
+          python-version: "3.11"
+
+      - name: Install conda packaging tools
+        shell: bash -el {0}
+        run: conda install -y conda-build conda-index
+
+      - name: Build conda package
+        shell: bash -el {0}
+        run: |
+          conda build conda-recipe --no-test --package-format conda --output-folder conda-channel-work \
+            -c "$CHANNEL_URL" -c conda-forge --override-channels
+
+      - name: Check channel token
+        env:
+          CONDA_CHANNEL_PAT: ${{ secrets.CONDA_CHANNEL_PAT }}
+        shell: bash
+        run: |
+          test -n "$CONDA_CHANNEL_PAT" || {
+            echo "Missing CONDA_CHANNEL_PAT secret with write access to ${CHANNEL_REPO}." >&2
+            exit 1
+          }
+
+      - name: Update static conda channel
+        env:
+          CONDA_CHANNEL_PAT: ${{ secrets.CONDA_CHANNEL_PAT }}
+        shell: bash -el {0}
+        run: |
+          git clone "https://x-access-token:${CONDA_CHANNEL_PAT}@github.com/${CHANNEL_REPO}.git" conda-channel
+          mkdir -p conda-channel/noarch
+          target="conda-channel/noarch/${CONDA_PACKAGE}-${PKG_VERSION}-py_0.conda"
+          if [ -f "$target" ]; then
+            echo "Package already exists in the channel: $target"
+            echo "Leaving the existing immutable conda artifact unchanged."
+          else
+            cp conda-channel-work/noarch/*.conda conda-channel/noarch/
+            python -m conda_index conda-channel
+            cd conda-channel
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .
+            if git diff --cached --quiet; then
+              echo "No conda channel changes to publish."
+            else
+              git commit -m "Update ${CONDA_PACKAGE} ${PKG_VERSION}"
+              git push
+            fi
+          fi
+
+      - name: Verify published package
+        shell: bash -el {0}
+        run: |
+          for attempt in {1..10}; do
+            if conda search --override-channels -c "$CHANNEL_URL" "$CONDA_PACKAGE"; then
+              exit 0
+            fi
+            echo "Waiting for channel metadata to become visible (${attempt}/10)."
+            sleep 30
+          done
+          exit 1
