@@ -13,7 +13,7 @@ This repository is being maintained as the code companion for manuscript review 
 ## Package Names
 
 - Python distribution: `Cell-GPS`
-- Python import package: `cellgps`
+- Python import package: `cell-gps`
 - R package/repository: `cellgpsr`
 - Windows executable: `cellgps.exe`
 
