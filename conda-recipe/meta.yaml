@@ -48,7 +48,7 @@ test:
 about:
   home: https://github.com/hutaobo/Cell-GPS
   summary: Cell-GPS spatial topology analysis for spatial omics data.
-  license: CC-BY-NC-4.0
+  license: MIT
   license_file: LICENSE
 
 extra:
