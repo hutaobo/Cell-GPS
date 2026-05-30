@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Cell-GPS"
-version = "0.0.4"
+version = "0.0.5"
 description = "Cell-GPS spatial topology analysis for spatial omics data."
 readme = "README.md"
 authors = [
@@ -48,8 +48,10 @@ visium = [
 cellgps-gui = "cellgps.gui.gui_app:main"
 
 [project.urls]
-Homepage = "https://github.com/hutaobo/Cell-GPS"
-Repository = "https://github.com/hutaobo/Cell-GPS"
+Homepage = "https://github.com/hutaobo/cellgps"
+Repository = "https://github.com/hutaobo/cellgps"
+Preprint = "https://www.biorxiv.org/content/10.64898/2026.05.26.727847v1"
+"Manuscript code" = "https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code"
 
 [tool.setuptools.packages.find]
 where = ["src"]

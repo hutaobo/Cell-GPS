@@ -18,7 +18,7 @@ __email__ = _legacy.__email__
 try:
     __version__ = version("Cell-GPS")
 except PackageNotFoundError:
-    __version__ = getattr(_legacy, "__version__", "0.0.4")
+    __version__ = getattr(_legacy, "__version__", "0.0.5")
 
 _SUBPACKAGES = {"analysis", "preprocessing", "plotting", "gui"}
 
