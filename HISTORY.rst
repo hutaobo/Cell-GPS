@@ -2,6 +2,12 @@
 History
 =======
 
+0.0.6 (2026-05-30)
+------------------
+
+* Corrected README conda installation instructions to use the maintained static conda channel.
+* Hardened the GitHub Actions workflow used to publish and verify conda channel packages.
+
 0.0.5 (2026-05-30)
 ------------------
 
