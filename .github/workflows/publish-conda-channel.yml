@@ -143,12 +143,15 @@ jobs:
           fi
 
       - name: Verify published package
+        env:
+          CONDA_CHANNEL_PAT: ${{ secrets.CONDA_CHANNEL_PAT }}
         shell: bash -el {0}
         run: |
+          set +e
           package_path="noarch/${CONDA_PACKAGE}-${PKG_VERSION}-py_0.conda"
           metadata_url="https://api.github.com/repos/${CHANNEL_REPO}/contents/${package_path}?ref=main"
           for attempt in {1..10}; do
-            if curl -fsSL "$metadata_url" >/dev/null; then
+            if curl -fsSL -H "Authorization: Bearer ${CONDA_CHANNEL_PAT}" "$metadata_url" >/dev/null; then
               exit 0
             fi
             echo "Waiting for channel metadata to become visible (${attempt}/10)."
