@@ -103,7 +103,7 @@ jobs:
       - name: Build conda package
         shell: bash -el {0}
         run: |
-          conda build conda-recipe --no-test --package-format conda --output-folder conda-channel-work \
+          conda-build conda-recipe --no-test --package-format conda --output-folder conda-channel-work \
             -c "$CHANNEL_URL" -c conda-forge --override-channels
 
       - name: Check channel token
