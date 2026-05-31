@@ -9,11 +9,38 @@ from scipy.spatial.distance import squareform, pdist
 from sklearn.neighbors import NearestNeighbors
 
 
+def _resolve_backend(backend: str) -> str:
+    """Resolve a user-facing backend string to ``'cpu'`` or ``'gpu'``.
+
+    ``'cpu'`` (default) keeps the scikit-learn path. ``'gpu'``/``'cuda'`` force the
+    PyTorch path. ``'auto'`` uses the GPU when a CUDA device is available and falls
+    back to CPU otherwise. The GPU path is numerically equivalent to the CPU path
+    (``gpu_dtype='float64'`` reproduces the scikit-learn result exactly).
+    """
+    b = str(backend or "cpu").lower()
+    if b in ("gpu", "cuda"):
+        return "gpu"
+    if b == "cpu":
+        return "cpu"
+    if b == "auto":
+        try:
+            import torch
+
+            return "gpu" if torch.cuda.is_available() else "cpu"
+        except Exception:
+            return "cpu"
+    raise ValueError(f"Unknown backend {backend!r}; choose 'cpu', 'gpu', or 'auto'.")
+
+
 def compute_cophenetic_distances_from_adata(
     adata: 'anndata.AnnData',
     cluster_col: str = "Cluster",
     output_dir: Optional[str] = None,
-    method: str = "average"
+    method: str = "average",
+    backend: str = "cpu",
+    device: str = "cuda",
+    gpu_dtype: str = "float64",
+    gpu_max_memory_gb: float = 4.0,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Compute and return cophenetic distance matrices in both row and column dimensions (using cophenet),
@@ -49,19 +76,37 @@ def compute_cophenetic_distances_from_adata(
         dtype=float
     )
 
-    # 4. For each cluster, use a nearest-neighbor model to compute distances from all cells to that cluster
-    for c in unique_clusters:
-        mask_c = (clusters == c)
-        coords_c = coords[mask_c]
+    # 4. For each cluster, compute distances from all cells to that cluster
+    if _resolve_backend(backend) == "gpu":
+        # GPU path: batched torch.cdist nearest-neighbour distances (numerically
+        # equivalent to the scikit-learn path below; float64 reproduces it exactly).
+        from .searcher_findee_score_gpu import nearest_cluster_distance_columns_gpu
 
-        if coords_c.shape[0] == 0:
-            df_nearest_cluster_dist.loc[:, c] = np.nan
-            continue
+        masks = {c: (clusters == c).values for c in unique_clusters}
+        nearest_cols = nearest_cluster_distance_columns_gpu(
+            np.asarray(coords),
+            masks,
+            unique_clusters,
+            device=device,
+            dtype=gpu_dtype,
+            max_memory_gb=gpu_max_memory_gb,
+        )
+        df_nearest_cluster_dist = pd.DataFrame(
+            nearest_cols, index=adata.obs["cell_id"], columns=unique_clusters
+        )
+    else:
+        for c in unique_clusters:
+            mask_c = (clusters == c)
+            coords_c = coords[mask_c]
 
-        nbrs_c = NearestNeighbors(n_neighbors=1, algorithm="auto")
-        nbrs_c.fit(coords_c)
-        dist_c, _ = nbrs_c.kneighbors(coords)
-        df_nearest_cluster_dist[c] = dist_c[:, 0]
+            if coords_c.shape[0] == 0:
+                df_nearest_cluster_dist.loc[:, c] = np.nan
+                continue
+
+            nbrs_c = NearestNeighbors(n_neighbors=1, algorithm="auto")
+            nbrs_c.fit(coords_c)
+            dist_c, _ = nbrs_c.kneighbors(coords)
+            df_nearest_cluster_dist[c] = dist_c[:, 0]
 
     # (optional) save results to adata.uns
     adata.uns["nearest_cluster_dist"] = df_nearest_cluster_dist
@@ -72,7 +117,7 @@ def compute_cophenetic_distances_from_adata(
         index=adata.obs["cell_id"],
         name=cluster_col
     )
-    df_group_mean = df_nearest_cluster_dist.groupby(clusters_by_id).mean()
+    df_group_mean = df_nearest_cluster_dist.groupby(clusters_by_id, observed=False).mean()
 
     # 6. Drop clusters whose entire column is NaN
     df_group_mean_clean = df_group_mean.dropna(axis=1, how="all")
@@ -149,7 +194,11 @@ def compute_searcher_findee_distance_matrix_from_df(
     x_col: str = "x",
     y_col: str = "y",
     z_col: Optional[str] = None,
-    celltype_col: str = "celltype"
+    celltype_col: str = "celltype",
+    backend: str = "cpu",
+    device: str = "cuda",
+    gpu_dtype: str = "float64",
+    gpu_max_memory_gb: float = 4.0,
 ) -> pd.DataFrame:
     """
     Compute and return a directed inter-cluster average nearest-neighbor distance matrix.
@@ -174,6 +223,21 @@ def compute_searcher_findee_distance_matrix_from_df(
         Distance matrix DataFrame with cluster names as index and columns. Shape is (n_clusters, n_clusters);
         values are the average nearest-neighbor distance between the corresponding cluster pairs. NaN if unavailable.
     """
+    if _resolve_backend(backend) == "gpu":
+        from .searcher_findee_score_gpu import (
+            compute_searcher_findee_distance_matrix_from_df_gpu,
+        )
+
+        return compute_searcher_findee_distance_matrix_from_df_gpu(
+            df,
+            x_col=x_col,
+            y_col=y_col,
+            z_col=z_col,
+            celltype_col=celltype_col,
+            device=device,
+            dtype=gpu_dtype,
+            max_memory_gb=gpu_max_memory_gb,
+        )
     # 1. Check required columns exist
     required_cols = {x_col, y_col, celltype_col}
     if z_col is not None:
@@ -202,7 +266,7 @@ def compute_searcher_findee_distance_matrix_from_df(
         dist_c, _ = nbrs.kneighbors(coords)
         df_nearest_cluster_dist[c] = dist_c[:, 0]
     # 6. Group by source cluster and compute mean to get cluster × cluster average distance matrix
-    distance_matrix = df_nearest_cluster_dist.groupby(clusters).mean()
+    distance_matrix = df_nearest_cluster_dist.groupby(clusters, observed=False).mean()
     # 7. Drop columns that are entirely NaN (clusters with no cells)
     distance_matrix = distance_matrix.dropna(axis=1, how="all")
     return distance_matrix
@@ -270,7 +334,11 @@ def compute_cophenetic_distances_from_df(
     celltype_col: str = "celltype",
     output_dir: Optional[str] = None,
     method: str = "average",
-    show_corr: bool = False
+    show_corr: bool = False,
+    backend: str = "cpu",
+    device: str = "cuda",
+    gpu_dtype: str = "float64",
+    gpu_max_memory_gb: float = 4.0,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Compute and return cophenetic distance matrices in both row and column dimensions,
@@ -303,7 +371,17 @@ def compute_cophenetic_distances_from_df(
         output_dir = os.getcwd()
     os.makedirs(output_dir, exist_ok=True)
     # 1. Compute inter-cluster average nearest-neighbor distance matrix
-    distance_matrix = compute_searcher_findee_distance_matrix_from_df(df, x_col, y_col, z_col, celltype_col)
+    distance_matrix = compute_searcher_findee_distance_matrix_from_df(
+        df,
+        x_col,
+        y_col,
+        z_col,
+        celltype_col,
+        backend=backend,
+        device=device,
+        gpu_dtype=gpu_dtype,
+        gpu_max_memory_gb=gpu_max_memory_gb,
+    )
     # 2. Check if the matrix is empty
     if distance_matrix.empty:
         raise ValueError("df_group_mean_clean is empty, please check the data.")

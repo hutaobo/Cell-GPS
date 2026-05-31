@@ -22,6 +22,10 @@ _LAZY_EXPORTS = {
         ".searcher_findee_score",
         "compute_searcher_findee_distance_matrix_from_df",
     ),
+    "compute_searcher_findee_distance_matrix_from_df_gpu": (
+        ".searcher_findee_score_gpu",
+        "compute_searcher_findee_distance_matrix_from_df_gpu",
+    ),
     "compute_cophenetic_distances_from_group_mean_matrix": (
         ".binned_analysis",
         "compute_cophenetic_distances_from_group_mean_matrix",

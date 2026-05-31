@@ -72,6 +72,10 @@ _LAZY_EXPORTS = {
         ".analysis.searcher_findee_score",
         "compute_searcher_findee_distance_matrix_from_df",
     ),
+    "compute_searcher_findee_distance_matrix_from_df_gpu": (
+        ".analysis.searcher_findee_score_gpu",
+        "compute_searcher_findee_distance_matrix_from_df_gpu",
+    ),
     "compute_weighted_searcher_findee_distance_matrix_from_df": (
         ".analysis.topology_extensions",
         "compute_weighted_searcher_findee_distance_matrix_from_df",
