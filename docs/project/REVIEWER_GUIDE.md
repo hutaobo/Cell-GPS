@@ -8,7 +8,7 @@ This repository contains the code used to develop the Cell-GPS workflow describe
 - Python import package: `cellgps`
 - Python GitHub repository: `https://github.com/hutaobo/Cell-GPS`
 - R package/repository: `cellgpsr`, hosted at `https://github.com/hutaobo/cellgpsr`
-- Windows executable: `cellgps.exe`, released at `https://zenodo.org/records/17859173`
+- Windows executable: `cellgps.exe`, released at `https://zenodo.org/records/19482685`
 
 ## Where to start
 

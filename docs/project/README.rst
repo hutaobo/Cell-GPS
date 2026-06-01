@@ -2,11 +2,10 @@
 Cell-GPS
 ========
 
-``Cell-GPS`` is a Python package for spatial topology analysis in spatial omics data.
-New code should import ``cellgps``; the legacy ``sfplot`` namespace remains available
-for backward compatibility. Cell-GPS is used to compute
-cophenetic distance-based structure maps, analyze cell-cell and transcript-cell
-relationships, and visualize multiscale tissue organization.
+``Cell-GPS`` is a Python package for spatial topology analysis in spatial omics
+data. Cell-GPS is used to compute cophenetic distance-based structure maps,
+analyze cell-cell and transcript-cell relationships, and visualize multiscale
+tissue organization.
 
 Package names
 -------------
@@ -15,7 +14,7 @@ Package names
 * Python import package: ``cellgps``
 * R package/repository: ``cellgpsr``
 * Windows executable: ``cellgps.exe``
-* Windows release: https://zenodo.org/records/17859173
+* Windows release: https://zenodo.org/records/19482685
 
 Key features
 ------------

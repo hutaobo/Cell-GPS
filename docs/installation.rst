@@ -70,4 +70,4 @@ Related Packages
 
 * Python repository: https://github.com/hutaobo/Cell-GPS
 * R package repository: https://github.com/hutaobo/cellgpsr
-* Windows executable release: https://zenodo.org/records/17859173
+* Windows executable release: https://zenodo.org/records/19482685

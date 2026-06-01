@@ -12,7 +12,7 @@ Package naming
 * Python import package: ``cellgps``
 * Python GitHub repository: https://github.com/hutaobo/Cell-GPS
 * R package/repository: ``cellgpsr`` at https://github.com/hutaobo/cellgpsr
-* Windows executable: ``cellgps.exe`` at https://zenodo.org/records/17859173
+* Windows executable: ``cellgps.exe`` at https://zenodo.org/records/19482685
 
 Suggested reading order
 -----------------------

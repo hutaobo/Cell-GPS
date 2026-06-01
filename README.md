@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
 [![Upload Python Package](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml)
 
-`Cell-GPS` is the Python package and reference implementation for Cophenetic Spatial Topology Embedding (COSTE), a spatial topology analysis framework for spatial omics data. New Python code should import `cellgps`; the historical `sfplot` import namespace is retained for backward compatibility.
+`Cell-GPS` is the Python package and reference implementation for Cophenetic Spatial Topology Embedding (COSTE), a spatial topology analysis framework for spatial omics data.
 
 This repository is maintained as both the installable Python package and the code companion for the Cell-GPS/COSTE bioRxiv preprint.
 
@@ -36,7 +36,7 @@ The notebooks are intentionally output-free and preserve the original manuscript
 - R package/repository: `cellgpsr`
 - Windows executable: `cellgps.exe`
 
-The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo: <https://zenodo.org/records/17859173>.
+The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo: <https://zenodo.org/records/19482685>.
 
 ## What Cell-GPS does
 
@@ -161,7 +161,6 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 
 ## Notes for reviewers
 
-- The recommended Python import namespace is `cellgps`; the legacy `sfplot` namespace remains available for older scripts.
 - The curated figure and table notebooks for the bioRxiv preprint are kept in `Cell-GPS manuscript code/`.
 - Raw experimental datasets are not bundled in this repository because of size and distribution constraints. The code expects standard spatial omics outputs such as Xenium folders or tabular coordinate inputs.
 - When a `cellgps_tbc_formal_wta/results`-style directory is already available, the LR and pathway topology extensions are designed to reuse its `t_and_c_result_*.csv` and `StructureMap_table_*.csv` outputs as the preferred gene-level topology anchors before falling back to recomputation.
