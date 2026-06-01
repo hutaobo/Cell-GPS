@@ -50,6 +50,7 @@ cellgps-gui = "cellgps.gui.gui_app:main"
 [project.urls]
 Homepage = "https://github.com/hutaobo/cellgps"
 Repository = "https://github.com/hutaobo/cellgps"
+Documentation = "https://cell-gps.readthedocs.io/en/latest/"
 Preprint = "https://www.biorxiv.org/content/10.64898/2026.05.26.727847v1"
 "Manuscript code" = "https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code"
 "Conda channel" = "https://github.com/hutaobo/conda-channel"

@@ -1,6 +1,7 @@
 # Cell-GPS
 
 [![PyPI version](https://img.shields.io/pypi/v/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
+[![Documentation Status](https://readthedocs.org/projects/cell-gps/badge/?version=latest)](https://cell-gps.readthedocs.io/en/latest/?badge=latest)
 [![Conda channel](https://img.shields.io/badge/conda-hutaobo%2Fconda--channel-blue)](https://github.com/hutaobo/conda-channel)
 [![Python versions](https://img.shields.io/pypi/pyversions/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
@@ -168,6 +169,9 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 - A short repository walkthrough is available in [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md).
 
 ## Documentation
+
+Read the Docs documentation is available at <https://cell-gps.readthedocs.io/en/latest/>.
+The manuscript-focused pages introduce the bioRxiv preprint, explain how to use the curated figure/table notebooks, and map each figure and supplementary table to its GitHub code location.
 
 Sphinx documentation sources are available in `docs/`.
 
