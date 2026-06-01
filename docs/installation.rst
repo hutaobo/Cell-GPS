@@ -13,6 +13,15 @@ Install the Python package:
 
    $ pip install Cell-GPS
 
+From conda-forge
+----------------
+
+Install the official conda-forge package:
+
+.. code-block:: console
+
+   $ conda install -c conda-forge cell-gps
+
 From GitHub
 -----------
 

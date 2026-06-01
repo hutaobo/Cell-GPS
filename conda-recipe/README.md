@@ -1,8 +1,15 @@
-# Conda Channel Publishing
+# Legacy local conda recipe
 
-This recipe is used by `.github/workflows/publish-conda-channel.yml` to publish `cell-gps` into the static channel at `hutaobo/conda-channel`.
+Cell-GPS is now distributed through the official conda-forge package:
 
-The workflow runs when a GitHub release is published, when a `v*` tag is pushed, or manually through `workflow_dispatch` with a version. It builds from the PyPI sdist for the resolved version, copies the noarch package into the channel repository, re-indexes the channel, and pushes the channel update.
+```bash
+conda install -c conda-forge cell-gps
+```
 
-Required repository secret: `CONDA_CHANNEL_PAT`, a GitHub token with write access to `hutaobo/conda-channel`.
+The canonical conda recipe is maintained in the conda-forge feedstock:
+
+https://github.com/conda-forge/cell-gps-feedstock
+
+This local recipe is retained only as historical packaging context and is not
+used for official distribution.
 

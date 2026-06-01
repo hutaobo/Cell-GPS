@@ -2,11 +2,17 @@
 History
 =======
 
+Unreleased
+----------
+
+* Updated README and documentation installation instructions to use the official conda-forge package.
+* Removed the legacy GitHub Actions workflow for publishing the old non-conda-forge package.
+
 0.0.6 (2026-05-30)
 ------------------
 
-* Corrected README conda installation instructions to use the maintained static conda channel.
-* Hardened the GitHub Actions workflow used to publish and verify conda channel packages.
+* Corrected README conda installation instructions while preparing conda packaging.
+* Hardened the GitHub Actions workflow previously used during early conda packaging.
 
 0.0.5 (2026-05-30)
 ------------------

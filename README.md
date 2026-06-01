@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![Documentation Status](https://readthedocs.org/projects/cell-gps/badge/?version=latest)](https://cell-gps.readthedocs.io/en/latest/?badge=latest)
-[![Conda channel](https://img.shields.io/badge/conda-hutaobo%2Fconda--channel-blue)](https://github.com/hutaobo/conda-channel)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/cell-gps.svg)](https://anaconda.org/conda-forge/cell-gps)
 [![Python versions](https://img.shields.io/pypi/pyversions/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
 [![Upload Python Package](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml)
@@ -67,10 +67,10 @@ Install from PyPI:
 pip install Cell-GPS
 ```
 
-Install from the maintained conda channel:
+Install from conda-forge:
 
 ```bash
-conda install -c https://raw.githubusercontent.com/hutaobo/conda-channel/main cell-gps
+conda install -c conda-forge cell-gps
 ```
 
 Install directly from GitHub:
