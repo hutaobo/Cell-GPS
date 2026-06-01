@@ -25,12 +25,14 @@ If you only have a few minutes, read the files in this order:
   Recommended Python import namespace.
 - `src/sfplot/`
   Legacy compatibility namespace and current implementation modules.
-- `sfplot-manuscript/`
-  Manuscript-facing notebooks, generated figures, and intermediate outputs.
-- `benchmarking/`
-  Benchmarking material.
 - `docs/`
   Lightweight package documentation.
+- `Cell-GPS manuscript code/`
+  Curated manuscript figure and supplementary table notebooks.
+- `examples/`
+  Compact package usage examples and small example data files.
+- `packaging/`
+  Historical packaging recipes and Windows executable build assets.
 
 ## Minimal install
 

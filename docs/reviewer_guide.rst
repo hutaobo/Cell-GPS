@@ -27,9 +27,10 @@ Repository map
 
 * ``src/cellgps/``: recommended Python import namespace
 * ``src/sfplot/``: legacy compatibility namespace and current implementation modules
-* ``sfplot-manuscript/``: manuscript-facing notebooks and outputs
-* ``benchmarking/``: benchmarking material
 * ``docs/``: package documentation
+* ``Cell-GPS manuscript code/``: curated manuscript figure and table notebooks
+* ``examples/``: compact package usage examples and small example data files
+* ``packaging/``: historical packaging recipes and Windows executable build assets
 
 Minimal install
 ---------------

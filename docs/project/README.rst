@@ -47,6 +47,6 @@ Reviewer note
 -------------
 
 The recommended import namespace is ``src/cellgps/``. Legacy compatibility modules
-remain in ``src/sfplot/``. Manuscript-specific notebooks and
-derived figure assets are stored in ``sfplot-manuscript/``. See
+remain in ``src/sfplot/``. Curated manuscript figure and supplementary table
+notebooks are stored in ``Cell-GPS manuscript code/``. See
 ``docs/project/REVIEWER_GUIDE.md`` for a short walkthrough of the repository.

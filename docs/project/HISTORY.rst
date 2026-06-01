@@ -6,6 +6,7 @@ Unreleased
 ----------
 
 * Organized root-level project notes and Windows packaging assets into dedicated folders.
+* Moved legacy conda recipe and small example data files out of the repository root.
 * Updated README and documentation installation instructions to use the official conda-forge package.
 * Removed the legacy GitHub Actions workflow for publishing the old non-conda-forge package.
 

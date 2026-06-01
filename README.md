@@ -56,10 +56,9 @@ The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R pack
 - `docs/`: Sphinx documentation.
 - `docs/project/`: project notes, changelog, authors, and reviewer guide.
 - `Cell-GPS manuscript code/`: curated preprint figure and table notebooks.
+- `examples/`: compact usage examples and small example data files.
+- `packaging/conda-recipe/`: legacy local conda recipe retained for reference.
 - `packaging/pyinstaller/`: Windows executable build scripts and PyInstaller assets.
-- `sfplot-manuscript/`: legacy manuscript-specific notebooks, figures, and derived outputs.
-- `benchmarking/`: benchmarking-related material.
-- `segmentation_methods/`: supporting segmentation workflows.
 
 ## Installation
 
@@ -164,7 +163,6 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 
 - The recommended Python import namespace is `cellgps`; the legacy `sfplot` namespace remains available for older scripts.
 - The curated figure and table notebooks for the bioRxiv preprint are kept in `Cell-GPS manuscript code/`.
-- `sfplot-manuscript/` is retained as a legacy manuscript workspace with additional notebooks, generated figure assets, and intermediate outputs.
 - Raw experimental datasets are not bundled in this repository because of size and distribution constraints. The code expects standard spatial omics outputs such as Xenium folders or tabular coordinate inputs.
 - When a `cellgps_tbc_formal_wta/results`-style directory is already available, the LR and pathway topology extensions are designed to reuse its `t_and_c_result_*.csv` and `StructureMap_table_*.csv` outputs as the preferred gene-level topology anchors before falling back to recomputation.
 - Xenium loading depends on `pyXenium>=0.4.3`. Visium helpers remain optional through the separate `Cell-GPS[visium]` extra.
