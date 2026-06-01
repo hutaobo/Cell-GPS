@@ -105,17 +105,17 @@ class TestSearcherFindeeGpuEquivalence(unittest.TestCase):
         _assert_frame_equal_values(c_cpu, c_gpu, self.EXACT)
 
     def test_cophenetic_from_adata(self):
-        tmp = tempfile.mkdtemp()
-        adata = _fake_adata(seed=5)
-        r_cpu, c_cpu = compute_cophenetic_distances_from_adata(
-            adata, cluster_col="Cluster", output_dir=tmp, backend="cpu"
-        )
-        r_gpu, c_gpu = compute_cophenetic_distances_from_adata(
-            adata, cluster_col="Cluster", output_dir=tmp,
-            backend="gpu", device="cpu", gpu_dtype="float64",
-        )
-        _assert_frame_equal_values(r_cpu, r_gpu, self.EXACT)
-        _assert_frame_equal_values(c_cpu, c_gpu, self.EXACT)
+        with tempfile.TemporaryDirectory() as tmp:
+            adata = _fake_adata(seed=5)
+            r_cpu, c_cpu = compute_cophenetic_distances_from_adata(
+                adata, cluster_col="Cluster", output_dir=tmp, backend="cpu"
+            )
+            r_gpu, c_gpu = compute_cophenetic_distances_from_adata(
+                adata, cluster_col="Cluster", output_dir=tmp,
+                backend="gpu", device="cpu", gpu_dtype="float64",
+            )
+            _assert_frame_equal_values(r_cpu, r_gpu, self.EXACT)
+            _assert_frame_equal_values(c_cpu, c_gpu, self.EXACT)
 
     def test_auto_backend_matches_cpu(self):
         # On a CPU-only machine "auto" resolves to CPU and must match exactly.
