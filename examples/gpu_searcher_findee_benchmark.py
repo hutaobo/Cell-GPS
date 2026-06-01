@@ -92,8 +92,8 @@ def main() -> int:
     cuda_ok = torch.cuda.is_available()
     print(f"torch {torch.__version__}  device={args.device}  cuda_available={cuda_ok}")
     if args.device.startswith("cuda") and not cuda_ok:
-        print("WARNING: CUDA not available; GPU timings will fall back to CPU and be meaningless.")
-    print(f"params: k={args.k} dims={args.dims} gpu_dtype={args.dtype} max_n={args.max_n}\n")
+        print("WARNING: CUDA not available; switching --device to 'cpu' (no GPU timing).")
+        args.device = "cpu"
 
     gpu_kw = dict(z_col=z_col, backend="gpu", device=args.device,
                   gpu_dtype=args.dtype, gpu_max_memory_gb=args.max_memory_gb)
