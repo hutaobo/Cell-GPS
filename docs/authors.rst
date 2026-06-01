@@ -1,1 +1,1 @@
-.. include:: ../AUTHORS.rst
+.. include:: project/AUTHORS.rst

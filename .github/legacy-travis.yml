@@ -1,4 +1,5 @@
-# Config file for automatic testing at travis-ci.com
+# Historical Travis CI config retained for reference. This file is not active
+# from the .github directory; current releases use GitHub Actions.
 
 language: python
 python:

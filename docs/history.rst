@@ -1,1 +1,1 @@
-.. include:: ../HISTORY.rst
+.. include:: project/HISTORY.rst

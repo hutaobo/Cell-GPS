@@ -25,9 +25,7 @@ wheels/
 .installed.cfg
 *.egg
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+# PyInstaller generated files
 *.manifest
 *.spec
 
@@ -117,12 +115,7 @@ sfplot-manuscript/
 # Windows thumbnail cache
 Thumbs.db
 
-# PyInstaller / splash assets
+# PyInstaller / splash assets generated outside the committed packaging folder
 *.ico
 splash.png
-
-# PyInstaller hooks committed to root
-hook-tkinter.py
-my_startup_hook.py
-disable_xsdata_entrypoints.py
 

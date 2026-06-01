@@ -4,7 +4,8 @@ from pathlib import Path
 from PyInstaller.utils.hooks import collect_submodules, copy_metadata
 
 
-project_root = Path(SPECPATH)
+spec_dir = Path(SPECPATH)
+project_root = spec_dir.parents[1]
 metadata_datas = []
 for package_name in ("anndata", "pyXenium", "scanpy", "h5py", "pyarrow"):
     metadata_datas += copy_metadata(package_name)
@@ -23,13 +24,13 @@ a = Analysis(
     ]
     + collect_submodules("pyXenium")
     + collect_submodules("pygments"),
-    hookspath=[str(project_root)],
+    hookspath=[str(spec_dir)],
     hooksconfig={
         "matplotlib": {
             "backends": ["Agg"],
         },
     },
-    runtime_hooks=[str(project_root / "my_startup_hook.py")],
+    runtime_hooks=[str(spec_dir / "my_startup_hook.py")],
     excludes=[
         "keras",
         "pytest",
@@ -67,5 +68,5 @@ exe = EXE(
     upx=False,
     console=False,
     disable_windowed_traceback=False,
-    icon=str(project_root / "cell_gps_icon.ico"),
+    icon=str(spec_dir / "cell_gps_icon.ico"),
 )

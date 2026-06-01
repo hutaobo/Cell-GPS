@@ -5,6 +5,7 @@ History
 Unreleased
 ----------
 
+* Organized root-level project notes and Windows packaging assets into dedicated folders.
 * Updated README and documentation installation instructions to use the official conda-forge package.
 * Removed the legacy GitHub Actions workflow for publishing the old non-conda-forge package.
 

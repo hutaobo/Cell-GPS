@@ -1,13 +1,16 @@
-include AUTHORS.rst
-include CONTRIBUTING.rst
-include HISTORY.rst
+include .github/CONTRIBUTING.rst
+include .github/CODE_OF_CONDUCT.rst
+include docs/project/AUTHORS.rst
+include docs/project/HISTORY.rst
 include LICENSE
 include README.md
-include README.rst
-include REVIEWER_GUIDE.md
+include docs/project/README.rst
+include docs/project/REVIEWER_GUIDE.md
 
 recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
-recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
+recursive-include docs *.rst *.md conf.py Makefile make.bat *.jpg *.png *.gif
+prune docs/_build
+global-exclude Thumbs.db .DS_Store

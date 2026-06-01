@@ -4,7 +4,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptDir "..\..")
 Push-Location $repoRoot
 
 try {
@@ -20,7 +21,7 @@ try {
         Remove-Item ".\dist\error.log" -Force
     }
 
-    & $PythonExe -m PyInstaller --clean --noconfirm ".\cellgps.spec"
+    & $PythonExe -m PyInstaller --clean --noconfirm ".\packaging\pyinstaller\cellgps.spec"
 }
 finally {
     Pop-Location

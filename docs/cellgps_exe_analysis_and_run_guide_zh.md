@@ -35,7 +35,7 @@
 - `vcruntime140.dll`
 - `tcl8.6`
 - `tk8.6`
-- `splash.png`
+- `packaging/pyinstaller/splash.png`
 - `scanpy`
 - `pyXenium`
 - `pyarrow`

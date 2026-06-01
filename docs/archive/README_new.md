@@ -83,7 +83,7 @@ These are convenience wrappers for quick heatmap generation from common input ty
 ## Recommended reading order
 
 1. `README.md`
-2. `REVIEWER_GUIDE.md`
+2. `../project/REVIEWER_GUIDE.md`
 3. `src/sfplot/analysis/searcher_findee_score.py`
 4. `src/sfplot/preprocessing/data_processing.py`
 5. `src/sfplot/analysis/tbc_analysis.py`
