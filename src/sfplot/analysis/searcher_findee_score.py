@@ -19,6 +19,12 @@ def _resolve_backend(backend: str) -> str:
     """
     b = str(backend or "cpu").lower()
     if b in ("gpu", "cuda"):
+        try:
+            import torch  # noqa: F401
+        except Exception as exc:
+            raise ImportError(
+                "GPU backend requires PyTorch; install via `pip install Cell-GPS[gpu]`."
+            ) from exc
         return "gpu"
     if b == "cpu":
         return "cpu"
