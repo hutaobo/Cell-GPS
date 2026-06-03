@@ -5,7 +5,7 @@
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cell-gps.svg)](https://anaconda.org/conda-forge/cell-gps)
 [![Python versions](https://img.shields.io/pypi/pyversions/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
-[![Upload Python Package](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml)
+[![Upload Python Package](https://github.com/hutaobo/Cell-GPS/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/Cell-GPS/actions/workflows/python-publish.yml)
 
 `Cell-GPS` is the Python package and reference implementation for Cophenetic Spatial Topology Embedding (COSTE), a spatial topology analysis framework for spatial omics data.
 
@@ -21,22 +21,24 @@ Versioned bioRxiv page: <https://www.biorxiv.org/content/10.64898/2026.05.26.727
 
 If you use the Python package, the Windows executable, the R companion package, or the manuscript figure/table code, please cite this preprint.
 
-The code used to generate the preprint figures and supplementary tables is organized in [`Cell-GPS manuscript code/`](https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code):
+The code used to generate the preprint figures and supplementary tables is organized in [`Cell-GPS manuscript code/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code):
 
-- [`main_figures/`](https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code/main_figures): notebooks for main figure analyses.
-- [`supplementary_figures/`](https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code/supplementary_figures): notebooks for supplementary figure analyses.
-- [`supplementary_tables/`](https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code/supplementary_tables): notebooks for supplementary table analyses.
+- [`main_figures/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/main_figures): notebooks for main figure analyses.
+- [`supplementary_figures/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/supplementary_figures): notebooks for supplementary figure analyses.
+- [`supplementary_tables/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/supplementary_tables): notebooks for supplementary table analyses.
 
-The notebooks are intentionally output-free and preserve the original manuscript data paths where those paths were required for reproduction. A detailed mapping from manuscript results to source code is available in [`docs/cellgps_science_manuscript_code_inventory.md`](https://github.com/hutaobo/cellgps/blob/main/docs/cellgps_science_manuscript_code_inventory.md).
+The notebooks are intentionally output-free and preserve the original manuscript data paths where those paths were required for reproduction. A detailed mapping from manuscript results to source code is available in [`docs/cellgps_science_manuscript_code_inventory.md`](https://github.com/hutaobo/Cell-GPS/blob/main/docs/cellgps_science_manuscript_code_inventory.md).
 
 ## Package Names
 
 - Python distribution: `Cell-GPS`
+- Conda-forge distribution: `cell-gps`
 - Python import package: `cellgps`
+- Legacy Python compatibility namespace: `sfplot` (not a separate distribution; retained for existing scripts)
 - R package/repository: `cellgpsr`
 - Windows executable: `cellgps.exe`
 
-The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo: <https://zenodo.org/records/19482685>.
+The Python package is hosted at `https://github.com/hutaobo/Cell-GPS`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo: <https://zenodo.org/records/19482685>.
 
 ## What Cell-GPS does
 
@@ -51,7 +53,7 @@ The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R pack
 ## Repository layout
 
 - `src/cellgps/`: recommended Python import namespace.
-- `src/sfplot/`: legacy compatibility namespace and current implementation modules.
+- `src/sfplot/`: legacy compatibility namespace that currently hosts implementation modules; new code should import through `cellgps`.
 - `tests/`: package tests and smoke checks.
 - `docs/`: Sphinx documentation.
 - `docs/project/`: project notes, changelog, authors, and reviewer guide.
@@ -84,7 +86,7 @@ For local development or reviewer inspection:
 
 ```bash
 git clone https://github.com/hutaobo/Cell-GPS.git
-cd cellgps
+cd Cell-GPS
 pip install -e .
 ```
 
@@ -152,7 +154,7 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 - `compute_entity_structuremap`: build StructureMap-style topology among arbitrary weighted entities.
 - `plot_cophenetic_heatmap`: generate StructureMap and related clustered heatmaps.
 - `transcript_by_cell_analysis`: analyze transcript-to-cell spatial structure at scale.
-- `ligand_receptor_topology_analysis`: score sender→receiver ligand-receptor candidates using topology, structure compatibility, and local contact.
+- `ligand_receptor_topology_analysis`: score sender->receiver ligand-receptor candidates using topology, structure compatibility, and local contact.
 - `ligand_receptor_target_consistency`: add a NicheNet-style downstream target-consistency layer.
 - `compute_pathway_activity_matrix`: compute rank-based or weighted pathway activities per cell.
 - `pathway_topology_analysis`: analyze pathway-to-cell and pathway-to-pathway spatial topology.
@@ -163,6 +165,7 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 
 - The curated figure and table notebooks for the bioRxiv preprint are kept in `Cell-GPS manuscript code/`.
 - Raw experimental datasets are not bundled in this repository because of size and distribution constraints. The code expects standard spatial omics outputs such as Xenium folders or tabular coordinate inputs.
+- Conda-forge packages the upstream Python distribution as `cell-gps`. The `sfplot` top-level namespace is bundled only as legacy compatibility inside the same distribution, not as a separate conda or PyPI package.
 - When a `cellgps_tbc_formal_wta/results`-style directory is already available, the LR and pathway topology extensions are designed to reuse its `t_and_c_result_*.csv` and `StructureMap_table_*.csv` outputs as the preferred gene-level topology anchors before falling back to recomputation.
 - Xenium loading depends on `pyXenium>=0.4.3`. Visium helpers remain optional through the separate `Cell-GPS[visium]` extra.
 - A short repository walkthrough is available in [docs/project/REVIEWER_GUIDE.md](docs/project/REVIEWER_GUIDE.md).
