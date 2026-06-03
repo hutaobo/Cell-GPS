@@ -109,6 +109,7 @@ ENV/
 # Local workspaces that should stay out of the repo
 benchmarking/
 sfplot-manuscript/
+nc_revision_work/
 .codex_tmp/
 !CellGPS.spec
 
