@@ -4,7 +4,7 @@
 
 这份 `Y:\long\projects\Packagedevelopment\Cell-GPS\cellgps\dist\cellgps.exe` 基本可以判断为一个 PyInstaller `--onefile` 风格的 Windows GUI 打包产物。
 
-官方 Windows 单文件发布页：<https://zenodo.org/records/19482685>
+官方 Windows 单文件发布页：<https://zenodo.org/records/17859173>
 
 它的“standalone”结论是：
 

@@ -25,7 +25,7 @@ The current official release has the following characteristics:
 - subsystem: `Windows GUI`
 - packaging style: `single-file executable`
 - official release file: `cellgps.exe`
-- official release page: <https://zenodo.org/records/19482685>
+- official release page: <https://zenodo.org/records/17859173>
 - official release size: about `297 MB`
 
 This release prioritizes stability and compatibility for the CSV and Xenium workflows over aggressive size reduction.

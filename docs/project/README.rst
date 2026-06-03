@@ -14,7 +14,7 @@ Package names
 * Python import package: ``cellgps``
 * R package/repository: ``cellgpsr``
 * Windows executable: ``cellgps.exe``
-* Windows release: https://zenodo.org/records/19482685
+* Windows release: https://zenodo.org/records/17859173
 
 Key features
 ------------
