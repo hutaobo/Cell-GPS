@@ -5,7 +5,9 @@ This repository contains the code used to develop the Cell-GPS workflow describe
 ## Naming
 
 - Python distribution: `Cell-GPS`
+- Conda-forge distribution: `cell-gps`
 - Python import package: `cellgps`
+- Legacy Python compatibility namespace: `sfplot` (not a separate distribution; retained for existing scripts)
 - Python GitHub repository: `https://github.com/hutaobo/Cell-GPS`
 - R package/repository: `cellgpsr`, hosted at `https://github.com/hutaobo/cellgpsr`
 - Windows executable: `cellgps.exe`, released at `https://zenodo.org/records/19482685`
@@ -24,7 +26,7 @@ If you only have a few minutes, read the files in this order:
 - `src/cellgps/`
   Recommended Python import namespace.
 - `src/sfplot/`
-  Legacy compatibility namespace and current implementation modules.
+  Legacy compatibility namespace that currently hosts implementation modules; new code should import through `cellgps`.
 - `docs/`
   Lightweight package documentation.
 - `Cell-GPS manuscript code/`
@@ -38,7 +40,7 @@ If you only have a few minutes, read the files in this order:
 
 ```bash
 git clone https://github.com/hutaobo/Cell-GPS.git
-cd cellgps
+cd Cell-GPS
 pip install -e .
 ```
 
