@@ -4,7 +4,9 @@
 
 这份 `Y:\long\projects\Packagedevelopment\Cell-GPS\cellgps\dist\cellgps.exe` 基本可以判断为一个 PyInstaller `--onefile` 风格的 Windows GUI 打包产物。
 
-官方 Windows 单文件发布页：<https://zenodo.org/records/17859173>
+官方 Windows 单文件最新 open v2 DOI：<https://doi.org/10.5281/zenodo.19482685>
+
+版本序列入口：<https://zenodo.org/records/17859173>
 
 它的“standalone”结论是：
 
@@ -21,7 +23,7 @@
 - `dist` 目录里只有两个文件：
   - `cellgps.exe`
   - `error.log`
-- `cellgps.exe` 体积约 `425 MB`
+- `cellgps.exe` 最新 open v2 发布文件体积约 `297 MB`
 - 可执行文件是 `Windows GUI` 子系统
 - 架构是 `x64`
 

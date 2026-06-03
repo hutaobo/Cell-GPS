@@ -71,4 +71,4 @@ Related Packages
 * Python repository: https://github.com/hutaobo/cellgps
 * Conda-forge package: https://anaconda.org/conda-forge/cell-gps
 * R package repository: https://github.com/hutaobo/cellgpsr
-* Windows executable release: https://zenodo.org/records/17859173
+* Windows executable release: latest open v2 DOI https://doi.org/10.5281/zenodo.19482685; version-series route https://zenodo.org/records/17859173

@@ -10,7 +10,7 @@ This repository contains the code used to develop the Cell-GPS workflow describe
 - Legacy Python compatibility namespace: `sfplot` (not a separate distribution; retained for existing scripts)
 - Python GitHub repository: `https://github.com/hutaobo/cellgps`
 - R package/repository: `cellgpsr`, hosted at `https://github.com/hutaobo/cellgpsr`
-- Windows executable: `cellgps.exe`, released at `https://zenodo.org/records/17859173`
+- Windows executable: `cellgps.exe`, latest open v2 DOI `https://doi.org/10.5281/zenodo.19482685`; version-series route `https://zenodo.org/records/17859173`
 
 ## Where to start
 

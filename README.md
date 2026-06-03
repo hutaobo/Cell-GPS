@@ -38,7 +38,7 @@ The notebooks are intentionally output-free and preserve the original manuscript
 - R package/repository: `cellgpsr`
 - Windows executable: `cellgps.exe`
 
-The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo: <https://zenodo.org/records/17859173>.
+The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo; use the latest open v2 DOI <https://doi.org/10.5281/zenodo.19482685> or the version-series route <https://zenodo.org/records/17859173>.
 
 ## What Cell-GPS does
 
