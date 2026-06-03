@@ -29,7 +29,7 @@ Install directly from the public repository:
 
 .. code-block:: console
 
-   $ pip install git+https://github.com/hutaobo/Cell-GPS.git
+   $ pip install git+https://github.com/hutaobo/cellgps.git
 
 For local inspection
 --------------------
@@ -38,8 +38,8 @@ Clone the repository and install it in editable mode:
 
 .. code-block:: console
 
-   $ git clone https://github.com/hutaobo/Cell-GPS.git
-   $ cd Cell-GPS
+   $ git clone https://github.com/hutaobo/cellgps.git
+   $ cd cellgps
    $ pip install -e .
 
 Requirements
@@ -68,7 +68,7 @@ Install Visium support:
 Related Packages
 ----------------
 
-* Python repository: https://github.com/hutaobo/Cell-GPS
+* Python repository: https://github.com/hutaobo/cellgps
 * Conda-forge package: https://anaconda.org/conda-forge/cell-gps
 * R package repository: https://github.com/hutaobo/cellgpsr
 * Windows executable release: https://zenodo.org/records/17859173

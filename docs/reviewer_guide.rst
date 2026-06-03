@@ -10,7 +10,7 @@ Package naming
 
 * Python distribution: ``Cell-GPS``
 * Python import package: ``cellgps``
-* Python GitHub repository: https://github.com/hutaobo/Cell-GPS
+* Python GitHub repository: https://github.com/hutaobo/cellgps
 * R package/repository: ``cellgpsr`` at https://github.com/hutaobo/cellgpsr
 * Windows executable: ``cellgps.exe`` at https://zenodo.org/records/17859173
 
@@ -37,9 +37,20 @@ Minimal install
 
 .. code-block:: console
 
-   $ git clone https://github.com/hutaobo/Cell-GPS.git
+   $ git clone https://github.com/hutaobo/cellgps.git
    $ cd cellgps
    $ pip install -e .
+
+Manuscript validation scope
+---------------------------
+
+The manuscript-validated scope is the COSTE/SSS workflow and the figure/table
+analyses mapped in ``Cell-GPS manuscript code/`` and
+``docs/cellgps_science_manuscript_code_inventory.md``. Ligand-receptor
+topology, pathway topology, Visium helpers, GUI entry points and other
+convenience APIs are included for reuse and development, but should be treated
+as optional or exploratory unless a manuscript notebook or documentation page
+explicitly maps them to a reported analysis.
 
 Input contract
 --------------

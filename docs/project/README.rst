@@ -32,13 +32,13 @@ Install from GitHub:
 
 .. code-block:: bash
 
-   pip install git+https://github.com/hutaobo/Cell-GPS.git
+   pip install git+https://github.com/hutaobo/cellgps.git
 
 For local inspection:
 
 .. code-block:: bash
 
-   git clone https://github.com/hutaobo/Cell-GPS.git
+   git clone https://github.com/hutaobo/cellgps.git
    cd cellgps
    pip install -e .
 
