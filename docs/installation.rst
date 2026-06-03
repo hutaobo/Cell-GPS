@@ -39,7 +39,7 @@ Clone the repository and install it in editable mode:
 .. code-block:: console
 
    $ git clone https://github.com/hutaobo/Cell-GPS.git
-   $ cd cellgps
+   $ cd Cell-GPS
    $ pip install -e .
 
 Requirements
@@ -69,5 +69,6 @@ Related Packages
 ----------------
 
 * Python repository: https://github.com/hutaobo/Cell-GPS
+* Conda-forge package: https://anaconda.org/conda-forge/cell-gps
 * R package repository: https://github.com/hutaobo/cellgpsr
 * Windows executable release: https://zenodo.org/records/19482685
