@@ -81,3 +81,37 @@ Selection score:
 Top selected genes by the filtered di-sim importance score included `SLC30A8`, `CLIC6`, `HSPB8`, `GRIA2`, `NIBAN1`, `PIP`, `SERPINA6`, `MYBPC1`, `TAT`, `KCNQ3`, `MSMB`, `BMPER`, and `SERPINA1`.
 
 Interpretation: full di-sim is practical for all 18028 genes on A100 when the full directed matrix is stored as float32 `.npy` rather than CSV. The di-sim-selected COSTE subset gives a focused hierarchical readout over genes with strong directional source/target behavior. The low row/column ARI and moderate asymmetry RMSE indicate that many genes have different source-like and target-like roles, which is exactly the signal di-sim is designed to expose before COSTE is used for detailed cophenetic structure.
+
+## COSTE-Seeded HistoSeg Domains
+
+Output:
+`/data/taobo.hu/atera_breast_coste1024_histoseg/coste1024_modules16_domains12`
+
+This run used the 1024 genes selected from full di-sim, clustered them into 16 COSTE gene modules using the combined row/column cophenetic matrix, projected module expression back to all 170057 cells, smoothed module scores over spatial nearest neighbors, and clustered cells into 12 HistoSeg-style spatial domains.
+
+| field | value |
+| --- | ---: |
+| selected COSTE genes | 1024 |
+| COSTE gene modules | 16 |
+| HistoSeg-style domains | 12 |
+| cells assigned | 170057 |
+| spatial smoothing neighbors | 16 |
+| runtime seconds | 23.35 |
+
+Main outputs:
+
+- `histoseg_domains.parquet`: cell-level domain calls with `histoseg_structure_id`, `histoseg_structure_name`, and approximate boundary distance.
+- `histoseg_domain_summary.csv`: domain sizes, dominant cell types, top COSTE module, and representative genes.
+- `coste_gene_modules.csv`: 1024 selected genes assigned to COSTE modules.
+- `coste_histoseg_domains.png/svg`: spatial domain preview.
+
+Selected domain examples:
+
+| domain | cells | top module genes | dominant cell type |
+| --- | ---: | --- | --- |
+| COSTE-HistoSeg-02 | 29984 | SERPINA6/KCNQ3/MSMB/BMPER/SERPINA1 | 11q13 Invasive Tumor Cells |
+| COSTE-HistoSeg-04 | 9080 | HSPB8/PIP | Luminal-like Amorphous DCIS Cells |
+| COSTE-HistoSeg-08 | 35333 | CCL22/SAA2/MS4A1/LTB/IGLC7 | CAFs, DCIS Associated |
+| COSTE-HistoSeg-10 | 2576 | SLC30A8 | 11q13 Invasive Tumor Cells |
+
+Interpretation: this is a COSTE-driven molecular HistoSeg, not an H&E-image HistoSeg run. It uses the COSTE-selected genes as spatial molecular landmarks, so the domains should be interpreted as expression/topology-informed tissue regions. The result separates broad stromal/immune-rich areas, invasive tumor-rich regions, and smaller luminal/apocrine-like islands while preserving a cell-level output format compatible with downstream histoseg-style domain summaries.
