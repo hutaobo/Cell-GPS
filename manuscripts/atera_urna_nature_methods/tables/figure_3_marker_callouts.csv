@@ -1,0 +1,36 @@
+gene,paper_marker_group,urna_best_cluster,full_best_cluster,best_cluster_match,sss_spearman_vs_full
+CCND1,11q13,11q13 Invasive Tumor Cells,11q13 Invasive Tumor Cells,True,0.9985107958974752
+ELOVL2,11q13,11q13 Invasive Tumor Cells,11q13 Invasive Tumor Cells,True,0.9999999999999998
+KCNJ3,11q13,11q13 Invasive Tumor Cells,11q13 Invasive Tumor Cells,True,0.9999999999999998
+FGF19,11q13,11q13 Invasive Tumor Cells,11q13 Invasive Tumor Cells,True,0.9970104566885288
+KRT23,Basal-like DCIS,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+DSC3,Basal-like DCIS,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,0.6490406876192876
+SOSTDC1,Basal-like DCIS,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+KLK5,Basal-like DCIS,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+KLK7,Basal-like DCIS,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+ITGB6,Basal-like DCIS,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+MMP7,Basal-like DCIS,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+C3,Macrophage,Macrophages,Macrophages,True,0.9971305536258588
+C1QA,Macrophage,Macrophages,Macrophages,True,1.0
+CSF1R,Macrophage,Macrophages,Macrophages,True,0.698357948627907
+CD163,Macrophage,Macrophages,Macrophages,True,0.698357948627907
+SIGLEC1,Macrophage,Macrophages,Macrophages,True,0.3318646446792027
+IGHA1,Plasma,Plasma Cells,Plasma Cells,True,1.0
+IGHM,Plasma,Plasma Cells,Plasma Cells,True,1.0
+IGHA2,Plasma,Plasma Cells,Plasma Cells,True,1.0
+JCHAIN,Plasma,Plasma Cells,Plasma Cells,True,1.0
+PIP,Rare epithelial,Luminal-like Amorphous DCIS Cells,Luminal-like Amorphous DCIS Cells,True,1.0
+HSPB8,Rare epithelial,Luminal-like Amorphous DCIS Cells,Luminal-like Amorphous DCIS Cells,True,1.0
+CLIC6,Rare epithelial,Luminal-like Amorphous DCIS Cells,Luminal-like Amorphous DCIS Cells,True,1.0
+TAT,Rare epithelial,Apocrine Cells,Apocrine Cells,True,1.0
+FOXA1,Tumor/DCIS interface,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,0.6490406876192876
+CTTN,Tumor/DCIS interface,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+ANO1,Tumor/DCIS interface,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+ESR1,Tumor/DCIS interface,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+FADD,Tumor/DCIS interface,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,1.0
+PGR,Tumor/DCIS interface,Basal-like Structured DCIS Cells,Basal-like Structured DCIS Cells,True,0.6490406876192876
+ERBB2,Tumor/DCIS interface,CXCL14+ Fibroblasts,Basal-like Structured DCIS Cells,False,0.2267132323862387
+FGF3,Tumor/DCIS interface,11q13 Invasive Tumor Cells,Basal-like Structured DCIS Cells,False,0.8692653731488574
+EPAS1,Vascular,Pericytes,Pericytes,True,1.0
+CDH5,Vascular,Endothelial Cells,Endothelial Cells,True,1.0
+MMRN2,Vascular,Endothelial Cells,Endothelial Cells,True,1.0
