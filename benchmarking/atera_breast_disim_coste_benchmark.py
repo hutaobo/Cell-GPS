@@ -110,6 +110,10 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
 
 
+def _log(message: str) -> None:
+    print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {message}", flush=True)
+
+
 def normalize_matrix(df: pd.DataFrame) -> pd.DataFrame:
     values = df.to_numpy(dtype=float)
     finite = np.isfinite(values)
@@ -386,6 +390,7 @@ def _compute_weighted_centroid_directed_matrix(
 
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
             if device.type == "cuda":
+                _log(f"building directed matrix on CUDA for {n_genes} genes")
                 w = torch.as_tensor(dense_weights, dtype=torch.float32, device=device)
                 coords = torch.as_tensor(bin_coords, dtype=torch.float32, device=device)
                 center_t = torch.as_tensor(centers, dtype=torch.float32, device=device)
@@ -396,10 +401,13 @@ def _compute_weighted_centroid_directed_matrix(
                     stop = min(start + target_batch_size, n_genes)
                     dist = torch.cdist(coords, center_t[start:stop])
                     out[:, start:stop] = (wt @ dist) / denom
+                    if start == 0 or stop == n_genes or (start // target_batch_size) % 20 == 0:
+                        _log(f"directed matrix columns {start:,}-{stop:,} / {n_genes:,}")
                 return out.cpu().numpy()
         except Exception as exc:
             print(f"[warn] GPU path failed; falling back to NumPy: {exc}", flush=True)
 
+    _log(f"building directed matrix on CPU for {n_genes} genes")
     out = np.empty((n_genes, n_genes), dtype=np.float32)
     wt = dense_weights.T
     denom = gene_sums[:, None]
@@ -408,6 +416,8 @@ def _compute_weighted_centroid_directed_matrix(
         diff = bin_coords[:, None, :] - centers[None, start:stop, :]
         dist = np.sqrt(np.sum(diff * diff, axis=2, dtype=np.float32))
         out[:, start:stop] = (wt @ dist) / denom
+        if start == 0 or stop == n_genes or (start // target_batch_size) % 20 == 0:
+            _log(f"directed matrix columns {start:,}-{stop:,} / {n_genes:,}")
     return out
 
 
@@ -476,6 +486,7 @@ def run_disim(
     affinity_transform: str,
     zero_diagonal: bool,
     random_state: int,
+    return_affinity: bool = True,
 ) -> dict[str, Any]:
     affinity = distance_to_affinity(
         distance_matrix,
@@ -500,6 +511,8 @@ def run_disim(
         singular_values = singular_values[order]
         u = u[:, order]
         v = vt[order, :].T
+    row_raw_norms = np.linalg.norm(u, axis=1)
+    col_raw_norms = np.linalg.norm(v, axis=1)
     row_embedding = _row_normalize(u)
     col_embedding = _row_normalize(v)
     row_clusters = min(n_clusters, row_embedding.shape[0])
@@ -507,9 +520,10 @@ def run_disim(
     row_labels = KMeans(n_clusters=row_clusters, n_init=50, random_state=random_state).fit_predict(row_embedding)
     col_labels = KMeans(n_clusters=col_clusters, n_init=50, random_state=random_state).fit_predict(col_embedding)
     result: dict[str, Any] = {
-        "affinity": affinity,
         "row_embedding": pd.DataFrame(row_embedding, index=distance_matrix.index),
         "col_embedding": pd.DataFrame(col_embedding, index=distance_matrix.columns),
+        "row_raw_norm": pd.Series(row_raw_norms, index=distance_matrix.index, name="row_raw_norm"),
+        "col_raw_norm": pd.Series(col_raw_norms, index=distance_matrix.columns, name="col_raw_norm"),
         "assignments": pd.DataFrame(
             {
                 "node": list(distance_matrix.index) + list(distance_matrix.columns),
@@ -523,10 +537,46 @@ def run_disim(
         "row_cluster_count": int(row_clusters),
         "col_cluster_count": int(col_clusters),
     }
+    if return_affinity:
+        result["affinity"] = affinity
     if distance_matrix.shape[0] == distance_matrix.shape[1] and list(distance_matrix.index) == list(distance_matrix.columns):
         result["row_column_adjusted_rand"] = float(adjusted_rand_score(row_labels, col_labels))
         result["embedding_asymmetry_rmse"] = float(np.sqrt(np.mean((row_embedding - col_embedding) ** 2)))
     return result
+
+
+def compute_disim_importance(disim: dict[str, Any], feature_table: pd.DataFrame | None = None) -> pd.DataFrame:
+    row_embedding = disim["row_embedding"]
+    col_embedding = disim["col_embedding"]
+    col_names = set(col_embedding.index)
+    shared = [name for name in row_embedding.index if name in col_names]
+    row = row_embedding.loc[shared].to_numpy(dtype=float)
+    col = col_embedding.loc[shared].to_numpy(dtype=float)
+    row_raw = disim["row_raw_norm"].reindex(shared).to_numpy(dtype=float)
+    col_raw = disim["col_raw_norm"].reindex(shared).to_numpy(dtype=float)
+    asymmetry = np.linalg.norm(row - col, axis=1)
+    leverage = np.maximum(row_raw, col_raw)
+
+    table = pd.DataFrame(
+        {
+            "gene": shared,
+            "disim_asymmetry": asymmetry,
+            "row_raw_norm": row_raw,
+            "col_raw_norm": col_raw,
+            "spectral_leverage": leverage,
+        }
+    )
+    row_assign = disim["assignments"].loc[disim["assignments"]["role"] == "row", ["node", "cluster"]]
+    col_assign = disim["assignments"].loc[disim["assignments"]["role"] == "column", ["node", "cluster"]]
+    table = table.merge(row_assign.rename(columns={"node": "gene", "cluster": "row_cluster"}), on="gene", how="left")
+    table = table.merge(col_assign.rename(columns={"node": "gene", "cluster": "col_cluster"}), on="gene", how="left")
+    table["asymmetry_percentile"] = table["disim_asymmetry"].rank(pct=True)
+    table["leverage_percentile"] = table["spectral_leverage"].rank(pct=True)
+    table["importance_score"] = 0.7 * table["asymmetry_percentile"] + 0.3 * table["leverage_percentile"]
+    if feature_table is not None and "gene" in feature_table.columns:
+        keep_cols = [c for c in ("gene", "feature_id", "total_counts", "nonzero_entries") if c in feature_table.columns]
+        table = table.merge(feature_table[keep_cols], on="gene", how="left")
+    return table.sort_values("importance_score", ascending=False).reset_index(drop=True)
 
 
 def embedding_distance_matrix(embedding: pd.DataFrame) -> pd.DataFrame:
@@ -593,6 +643,10 @@ def build_matrix(args: argparse.Namespace) -> tuple[pd.DataFrame, dict[str, Any]
 
 
 def run(args: argparse.Namespace) -> None:
+    if args.workflow == "disim-select-coste":
+        run_disim_select_coste(args)
+        return
+
     output_dir = args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     benchmark_rows: list[dict[str, Any]] = []
@@ -601,7 +655,7 @@ def run(args: argparse.Namespace) -> None:
     matrix, matrix_metadata, extra_tables = matrix_result.payload
     benchmark_rows.append(_timed_row(matrix_result, method="shared", n_items=matrix.shape[0]))
 
-    matrix.to_csv(output_dir / "directed_searcher_findee_matrix.csv")
+    write_matrix_outputs(matrix, output_dir, args.matrix_output, stem="directed_searcher_findee_matrix")
     for name, table in extra_tables.items():
         table.to_csv(output_dir / f"{name}.csv", index=False)
 
@@ -626,6 +680,7 @@ def run(args: argparse.Namespace) -> None:
         affinity_transform=args.affinity_transform,
         zero_diagonal=not args.keep_diagonal,
         random_state=args.random_state,
+        return_affinity=True,
     )
     disim = disim_result.payload
     benchmark_rows.append(_timed_row(disim_result, method="PNAS_di_sim", n_items=matrix.shape[0]))
@@ -670,6 +725,131 @@ def run(args: argparse.Namespace) -> None:
     print(json.dumps(summary, indent=2, sort_keys=True), flush=True)
 
 
+def write_matrix_outputs(matrix: pd.DataFrame, output_dir: Path, matrix_output: str, *, stem: str) -> None:
+    if matrix_output in {"csv", "both"}:
+        matrix.to_csv(output_dir / f"{stem}.csv")
+    if matrix_output in {"npy", "both"}:
+        np.save(output_dir / f"{stem}.float32.npy", matrix.to_numpy(dtype=np.float32))
+        pd.Series(matrix.index, name="row_label").to_csv(output_dir / f"{stem}.rows.csv", index=False)
+        pd.Series(matrix.columns, name="column_label").to_csv(output_dir / f"{stem}.columns.csv", index=False)
+
+
+def run_disim_select_coste(args: argparse.Namespace) -> None:
+    output_dir = args.output_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
+    benchmark_rows: list[dict[str, Any]] = []
+
+    if args.mode != "gene-bin":
+        raise ValueError("disim-select-coste workflow currently expects --mode gene-bin")
+    if args.max_genes != 0:
+        _log(f"workflow uses the requested top {args.max_genes} genes; pass --max-genes 0 for the full panel")
+
+    _log("building directed gene matrix")
+    matrix_result = timed("matrix_build", build_matrix, args)
+    matrix, matrix_metadata, extra_tables = matrix_result.payload
+    benchmark_rows.append(_timed_row(matrix_result, method="shared", n_items=matrix.shape[0]))
+    write_matrix_outputs(matrix, output_dir, args.matrix_output, stem="directed_searcher_findee_matrix")
+    for name, table in extra_tables.items():
+        table.to_csv(output_dir / f"{name}.csv", index=False)
+
+    _log("running full di-sim")
+    disim_result = timed(
+        "full_disim",
+        run_disim,
+        matrix,
+        n_clusters=args.n_clusters,
+        n_components=args.n_components,
+        affinity_transform=args.affinity_transform,
+        zero_diagonal=not args.keep_diagonal,
+        random_state=args.random_state,
+        return_affinity=False,
+    )
+    disim = disim_result.payload
+    benchmark_rows.append(_timed_row(disim_result, method="PNAS_di_sim_full", n_items=matrix.shape[0]))
+    disim["row_embedding"].to_csv(output_dir / "full_disim_row_embedding.csv")
+    disim["col_embedding"].to_csv(output_dir / "full_disim_col_embedding.csv")
+    disim["assignments"].to_csv(output_dir / "full_disim_assignments.csv", index=False)
+
+    feature_table = extra_tables.get("selected_genes")
+    importance = compute_disim_importance(disim, feature_table=feature_table)
+    importance.to_csv(output_dir / "full_disim_gene_importance.csv", index=False)
+
+    eligible_importance = importance
+    if args.min_selected_total_counts > 0 and "total_counts" in eligible_importance.columns:
+        eligible_importance = eligible_importance.loc[
+            pd.to_numeric(eligible_importance["total_counts"], errors="coerce").fillna(0)
+            >= args.min_selected_total_counts
+        ].copy()
+    selected_count = min(args.selected_coste_genes, len(eligible_importance))
+    selected_genes = eligible_importance.head(selected_count)["gene"].astype(str).tolist()
+    selected_importance = eligible_importance.head(selected_count).copy()
+    selected_importance.to_csv(output_dir / f"selected_top{selected_count}_genes_for_coste.csv", index=False)
+    selected_matrix = matrix.loc[selected_genes, selected_genes].copy()
+    write_matrix_outputs(selected_matrix, output_dir, "csv", stem=f"selected_top{selected_count}_directed_matrix")
+
+    _log(f"running COSTE cophenetic on {selected_count} di-sim-selected genes")
+    coste_result = timed(
+        "selected_coste_cophenetic",
+        compute_coste_cophenetic,
+        selected_matrix,
+        method=args.linkage_method,
+        metric=args.cophenetic_metric,
+    )
+    coste = coste_result.payload
+    benchmark_rows.append(_timed_row(coste_result, method="COSTE_selected", n_items=selected_matrix.shape[0]))
+    coste["row_cophenetic"].to_csv(output_dir / f"selected_top{selected_count}_coste_row_cophenetic.csv")
+    coste["col_cophenetic"].to_csv(output_dir / f"selected_top{selected_count}_coste_col_cophenetic.csv")
+
+    selected_disim = {
+        **disim,
+        "row_embedding": disim["row_embedding"].loc[selected_genes],
+        "col_embedding": disim["col_embedding"].loc[selected_genes],
+    }
+    comparison = compare_coste_disim(coste, selected_disim)
+    pd.DataFrame([comparison]).to_csv(output_dir / f"selected_top{selected_count}_coste_disim_comparison.csv", index=False)
+
+    summary = {
+        "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "workflow": args.workflow,
+        "input_metadata": load_xenium_metadata(args.input_dir),
+        "matrix_metadata": matrix_metadata,
+        "matrix_stats": matrix_stats(matrix),
+        "selected_coste_gene_count": int(selected_count),
+        "selected_coste_selection_rule": "top importance_score = 0.7 * di-sim row/column asymmetry percentile + 0.3 * spectral leverage percentile",
+        "selected_coste_min_total_counts": float(args.min_selected_total_counts),
+        "selected_coste_eligible_gene_count": int(len(eligible_importance)),
+        "selected_matrix_stats": matrix_stats(selected_matrix),
+        "coste_selected": {
+            "row_cophenetic_corr": coste["row_cophenetic_corr"],
+            "col_cophenetic_corr": coste["col_cophenetic_corr"],
+            "linkage_method": args.linkage_method,
+            "cophenetic_metric": args.cophenetic_metric,
+        },
+        "disim_full": {
+            key: value
+            for key, value in disim.items()
+            if key
+            not in {
+                "affinity",
+                "row_embedding",
+                "col_embedding",
+                "row_raw_norm",
+                "col_raw_norm",
+                "assignments",
+            }
+        },
+        "selected_comparison": comparison,
+        "pnas_di_sim_reference": {
+            "doi": "10.1073/pnas.1525793113",
+            "method": "regularized directed graph Laplacian, top singular vectors, row-normalized left/right embeddings, k-means co-clustering",
+        },
+        "repo_revision": _git_revision(args.repo_root),
+    }
+    _write_json(output_dir / "benchmark_manifest.json", summary)
+    pd.DataFrame(benchmark_rows).to_csv(output_dir / "method_summary.csv", index=False)
+    print(json.dumps(summary, indent=2, sort_keys=True), flush=True)
+
+
 def _timed_row(result: TimedResult, *, method: str, n_items: int) -> dict[str, Any]:
     return {
         "step": result.name,
@@ -694,12 +874,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--input-dir", type=Path, default=DEFAULT_INPUT_DIR)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument(
+        "--workflow",
+        choices=["benchmark", "disim-select-coste"],
+        default="benchmark",
+        help="benchmark runs COSTE and di-sim on the whole matrix; disim-select-coste runs full di-sim then COSTE on important genes.",
+    )
     parser.add_argument("--mode", choices=["celltype", "gene-bin"], default="gene-bin")
     parser.add_argument("--max-cells", type=int, default=None, help="Optional cell subsample for celltype mode.")
     parser.add_argument("--max-genes", type=int, default=1024, help="Top expressed genes for gene-bin mode; 0 means all genes.")
     parser.add_argument("--grid-bins", type=positive_int, default=96, help="Spatial bins per axis for gene-bin mode.")
     parser.add_argument("--target-batch-size", type=positive_int, default=128)
     parser.add_argument("--cpu-only", action="store_true", help="Disable torch/cuda for gene-bin matrix construction.")
+    parser.add_argument("--matrix-output", choices=["csv", "npy", "both", "none"], default="csv")
+    parser.add_argument("--selected-coste-genes", type=positive_int, default=1024)
+    parser.add_argument(
+        "--min-selected-total-counts",
+        type=float,
+        default=0.0,
+        help="Minimum total Xenium counts for genes eligible for selected-gene COSTE.",
+    )
     parser.add_argument("--linkage-method", default="average")
     parser.add_argument("--cophenetic-metric", default="euclidean")
     parser.add_argument("--n-components", type=positive_int, default=8)

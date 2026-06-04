@@ -50,3 +50,34 @@ For gene-level runs, the script uses the full 18028-gene panel as the feature un
 The two methods share the same mathematical object: an asymmetric matrix with separate row/source and column/target roles. di-sim factorizes a degree-regularized version of that matrix into low-dimensional row and column embeddings; COSTE turns row and column profiles into hierarchical cophenetic metric spaces. The benchmark reflects that relationship: the gene-level di-sim embedding distances correlate with COSTE cophenetic distances, but they are not interchangeable. COSTE preserves a hierarchy over the full directed profiles, while di-sim compresses those profiles into a small number of singular-vector dimensions and flat k-means labels.
 
 Runtime separates cleanly by step. Matrix construction is dominated by reading and aggregating the full Xenium HDF5 matrix. Once the directed matrix exists, di-sim is much faster than exact COSTE cophenetic clustering at 2048 and 4096 genes. COSTE's cost grows sharply because exact row/column pairwise distances and hierarchical linkage scale with the square of item count and profile length; di-sim's truncated SVD stays comparatively cheap for the tested ranks.
+
+## Full di-sim Then Selected COSTE
+
+Output:
+`/data/taobo.hu/atera_breast_disim_coste_benchmark/full_disim_18028_select1024_min5000_grid96_k16`
+
+This run used all 18028 genes for di-sim, then selected 1024 genes for COSTE from the di-sim importance ranking. The selected-COSTE eligibility filter required total Xenium counts >= 5000 to avoid choosing unstable low-count genes.
+
+Selection score:
+`0.7 * di-sim row/column asymmetry percentile + 0.3 * spectral leverage percentile`
+
+| step | items | seconds | peak GB |
+| --- | ---: | ---: | ---: |
+| matrix build | 18028 | 52.60 | 6.98 |
+| full di-sim | 18028 | 60.20 | 14.02 |
+| selected COSTE cophenetic | 1024 | 0.86 | 2.13 |
+
+| metric | value |
+| --- | ---: |
+| eligible genes after count filter | 12339 |
+| selected genes for COSTE | 1024 |
+| full di-sim row/column ARI | 0.188 |
+| full di-sim embedding asymmetry RMSE | 0.321 |
+| selected COSTE row cophenetic corr | 0.774 |
+| selected COSTE col cophenetic corr | 0.911 |
+| selected row COSTE-vs-di-sim Pearson | 0.265 |
+| selected col COSTE-vs-di-sim Pearson | 0.179 |
+
+Top selected genes by the filtered di-sim importance score included `SLC30A8`, `CLIC6`, `HSPB8`, `GRIA2`, `NIBAN1`, `PIP`, `SERPINA6`, `MYBPC1`, `TAT`, `KCNQ3`, `MSMB`, `BMPER`, and `SERPINA1`.
+
+Interpretation: full di-sim is practical for all 18028 genes on A100 when the full directed matrix is stored as float32 `.npy` rather than CSV. The di-sim-selected COSTE subset gives a focused hierarchical readout over genes with strong directional source/target behavior. The low row/column ARI and moderate asymmetry RMSE indicate that many genes have different source-like and target-like roles, which is exactly the signal di-sim is designed to expose before COSTE is used for detailed cophenetic structure.
