@@ -1,0 +1,9 @@
+{
+  "total_rows": 740442119,
+  "gene_rows": 738289569,
+  "qv_gene_rows": 624095990,
+  "unassigned_rows": 122716153,
+  "n_genes": 18028,
+  "n_genes_with_unassigned": 18023,
+  "elapsed_seconds": 182.52666306495667
+}

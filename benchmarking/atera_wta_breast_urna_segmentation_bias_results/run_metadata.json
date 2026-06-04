@@ -1,0 +1,18 @@
+{
+  "total_rows": 740442119,
+  "gene_rows": 738289569,
+  "qv_gene_rows": 624095990,
+  "unassigned_rows": 122716153,
+  "n_genes": 18028,
+  "n_genes_with_unassigned": 18023,
+  "elapsed_seconds": 182.52666306495667,
+  "cells": "/data/taobo.hu/SpatialPerturb/inputs/xenium_wta_breast/cells.csv.gz",
+  "cell_groups": "/data/taobo.hu/SpatialPerturb/inputs/xenium_wta_breast/WTA_Preview_FFPE_Breast_Cancer_cell_groups.csv",
+  "transcripts": "/data/taobo.hu/atera_raw/WTA_Preview_FFPE_Breast_Cancer_outs/transcripts.parquet",
+  "full_tbc": "/data/taobo.hu/atera_urna_segmentation_bias_20260604/t_and_c_result_WTA_Preview_FFPE_Breast_Cancer_formal.csv",
+  "qv_min": 20.0,
+  "min_urna_count": 100,
+  "top_genes": 500,
+  "n_selected_genes": 530,
+  "n_urna_sss_genes": 530
+}
