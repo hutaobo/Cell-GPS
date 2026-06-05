@@ -88,6 +88,25 @@ def style_axis(ax):
     ax.yaxis.label.set_color(INK)
 
 
+def draw_scale_bar(ax, scale_um: float, label: str, x_right: float = 0.94):
+    xmin, xmax = ax.get_xlim()
+    width = scale_um / abs(xmax - xmin)
+    x_left = x_right - width
+    x_mid = (x_left + x_right) / 2
+    ax.plot([x_left, x_right], [0.12, 0.12], transform=ax.transAxes, color=INK, lw=1.1, clip_on=False)
+    ax.text(
+        x_mid,
+        0.025,
+        label,
+        transform=ax.transAxes,
+        fontsize=5.5,
+        ha="center",
+        va="bottom",
+        color=INK,
+        clip_on=False,
+    )
+
+
 def plot_overview(ax, overview: pd.DataFrame, metadata: pd.DataFrame):
     ax.scatter(overview["x"], overview["y"], s=0.8, color="#c7cdd4", alpha=0.35, linewidths=0, rasterized=True)
     meta = metadata.set_index("gene")
@@ -125,11 +144,7 @@ def plot_overview(ax, overview: pd.DataFrame, metadata: pd.DataFrame):
         spine.set_linewidth(0.7)
     ax.set_title("Whole-section overview", fontsize=7.2, color=INK, pad=3)
 
-    scale_um = 1000
-    x0 = overview["x"].max() - 1200
-    y0 = overview["y"].max() - 180
-    ax.plot([x0, x0 + scale_um], [y0, y0], color=INK, lw=1.1)
-    ax.text(x0 + scale_um / 2, y0 - 90, "1 mm", fontsize=5.5, ha="center", va="top", color=INK)
+    draw_scale_bar(ax, 1000, "1 mm")
 
 
 def plot_spatial(ax, points: pd.DataFrame, metadata: pd.Series, gene: str):
@@ -158,11 +173,7 @@ def plot_spatial(ax, points: pd.DataFrame, metadata: pd.Series, gene: str):
 
     ax.set_title(f"{gene} | {short_cluster(str(metadata['target_celltype']))}", fontsize=6.8, color=color, pad=2.5)
 
-    scale_um = 200
-    x0 = cx + half - 250
-    y0 = cy + half - 65
-    ax.plot([x0, x0 + scale_um], [y0, y0], color=INK, lw=1.1)
-    ax.text(x0 + scale_um / 2, y0 - 24, "200 um", fontsize=5.5, ha="center", va="top", color=INK)
+    draw_scale_bar(ax, 200, "200 um")
 
 
 def plot_sss_heatmap(ax, sss: pd.DataFrame, metadata: pd.DataFrame):
@@ -180,7 +191,7 @@ def plot_sss_heatmap(ax, sss: pd.DataFrame, metadata: pd.DataFrame):
         target = metadata.set_index("gene").loc[gene, "target_celltype"]
         if target in REPRESENTATIVE_CELLTYPES:
             j = REPRESENTATIVE_CELLTYPES.index(target)
-            ax.add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False, ec="#ffffff", lw=1.4))
+            ax.add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False, ec="#000000", lw=2.0))
     ax.set_title("uRNA-only COSTE proximity", fontsize=8, color=INK, pad=5)
     return image
 
@@ -278,9 +289,9 @@ def make_figure():
         4,
         5,
         figure=fig,
-        height_ratios=[1.0, 1.0, 1.18, 1.0],
-        hspace=0.60,
-        wspace=0.60,
+        height_ratios=[1.08, 1.08, 1.18, 1.0],
+        hspace=0.42,
+        wspace=0.46,
         top=0.965,
         bottom=0.045,
         left=0.06,
@@ -296,7 +307,9 @@ def make_figure():
         row, col = zoom_positions[idx]
         ax = fig.add_subplot(gs[row, col])
         plot_spatial(ax, points, metadata.set_index("gene").loc[gene], gene)
-        panel_label(ax, chr(ord("b") + idx), x=-0.08, y=1.12)
+        label = chr(ord("b") + idx)
+        label_x = -0.16 if label in {"b", "f"} else -0.08
+        panel_label(ax, label, x=label_x, y=1.12)
 
     ax_heat = fig.add_subplot(gs[2, 0:2])
     heat_image = plot_sss_heatmap(ax_heat, sss, metadata)
@@ -305,7 +318,7 @@ def make_figure():
     cbar.set_label("1 - SSS", fontsize=6, labelpad=1.0)
     cbar.ax.tick_params(labelsize=5.6, length=2)
 
-    ax_hist = fig.add_subplot(gs[2, 3:5])
+    ax_hist = fig.add_subplot(gs[2, 2:5])
     plot_concordance_context(ax_hist, summary, metadata)
     panel_label(ax_hist, "h", x=-0.10, y=1.12)
 
