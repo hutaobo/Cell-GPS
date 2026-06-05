@@ -311,7 +311,7 @@ Figure logic:
 
 | panel type | purpose |
 | --- | --- |
-| story flow | turns each pathology question into a connected five-step visual argument |
+| story flow | turns each pathology question into a connected five-step point-vs-cell visual argument |
 | global H&E overlap | shows tissue-wide location of each point-domain pathology signal |
 | local H&E overlap | zooms into the densest representative point-domain/cell-domain overlap region |
 | full-data statistics | uses all 60906532 selected-gene transcript points, not the visual preview |
@@ -327,7 +327,7 @@ Core pathology explanations:
 
 Main exported figures:
 
-- `nature_pathology_story_tumor_rich_steps.png/svg/pdf/tiff`: five-step story figure for the tumor-rich question, moving from H&E context to point signal, local overlap, top full-data support, and pathology answer.
+- `nature_pathology_story_tumor_rich_steps.png/svg/pdf/tiff`: five-step story figure for the tumor-rich question, moving from P10 point-domain global, to C10 cell-domain global, to P10/C10 local overlap, top full-data support, and pathology answer.
 - `nature_pathology_story_immune_stroma_steps.png/svg/pdf/tiff`: five-step story figure for the immune/stroma interface question.
 - `nature_pathology_story_mixed_luminal_apocrine_steps.png/svg/pdf/tiff`: five-step story figure for the mixed luminal/DCIS and apocrine microenvironment question, with separate local zooms for both local contexts.
 - `nature_pathology_triptych_summary.png/svg/pdf/tiff`: one compact three-row summary of the three pathology explanations.
@@ -340,4 +340,4 @@ Main exported figures:
 
 Important caveat: the H&E overlay panels use a 500000-point preview plus cell centroids so the figure remains readable. The bar plots and interpretation statistics use the full 60906532 selected-gene transcript-point comparison. No spatial grid is used in this pathology figure workflow.
 
-Story-flow design note: the three `nature_pathology_story_*_steps` figures are intended for presentation or manuscript narrative. Each one asks a single pathology question and then follows the same evidence chain: official-aligned H&E context, transcript-point domain overlay, densest local H&E overlap, top full-data point-vs-cell support, and a final pathology answer. This makes the three findings separable while keeping their visual grammar consistent.
+Story-flow design note: the three `nature_pathology_story_*_steps` figures are intended for presentation or manuscript narrative. Each one asks a single pathology question and then follows the same evidence chain: example point-domain global on official-aligned H&E, matched cell-domain global on the same H&E context, densest local point/cell overlap, top full-data point-vs-cell support, and a final pathology answer. This makes the point-domain and cell-domain evidence separable before the zoom panel, while keeping the three findings visually consistent.

@@ -559,6 +559,71 @@ def plot_global_he_context(
     ax.set_title("1. H&E context", fontsize=6.5, pad=1.5)
 
 
+def domain_label(examples: list[dict[str, Any]], key: str, prefix: str) -> str:
+    values = sorted({int(example[key]) for example in examples})
+    return "/".join(f"{prefix}{value:02d}" for value in values)
+
+
+def plot_example_point_global(
+    ax: plt.Axes,
+    data: dict[str, Any],
+    story: dict[str, Any],
+    examples: list[dict[str, Any]],
+    rois: list[ROI],
+    tissue_bounds: ROI,
+) -> None:
+    draw_he(ax, data, tissue_bounds, OVERVIEW_LEVEL, OVERVIEW_DOWNSAMPLE)
+    points = data["points"]
+    point_domains = {int(example["point_domain"]) for example in examples}
+    point_subset = points.loc[points["histoseg_structure_id"].isin(point_domains)]
+    if len(point_subset) > 45_000:
+        point_subset = point_subset.sample(45_000, random_state=31)
+    ax.scatter(point_subset["x"], point_subset["y"], s=0.34, c=story["color"], alpha=0.58, linewidths=0, rasterized=True)
+    for idx, roi in enumerate(rois, start=1):
+        ax.add_patch(Rectangle((roi.xmin, roi.ymin), roi.xmax - roi.xmin, roi.ymax - roi.ymin, fill=False, ec=story["accent"], lw=0.9))
+        ax.text(
+            roi.xmin + 15,
+            roi.ymin + 40,
+            f"zoom {idx}",
+            color=story["accent"],
+            fontsize=5.5,
+            weight="bold",
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.65, "pad": 0.4},
+        )
+    add_scale_bar(ax, tissue_bounds, 1000, color="black")
+    ax.set_title(f"1. {domain_label(examples, 'point_domain', 'P')} point global", fontsize=6.3, pad=1.5)
+
+
+def plot_example_cell_global(
+    ax: plt.Axes,
+    data: dict[str, Any],
+    story: dict[str, Any],
+    examples: list[dict[str, Any]],
+    rois: list[ROI],
+    tissue_bounds: ROI,
+) -> None:
+    draw_he(ax, data, tissue_bounds, OVERVIEW_LEVEL, OVERVIEW_DOWNSAMPLE)
+    cells = data["cells"]
+    cell_domains = {int(example["cell_domain"]) for example in examples}
+    cell_subset = cells.loc[cells["histoseg_structure_id"].isin(cell_domains)]
+    if len(cell_subset) > 26_000:
+        cell_subset = cell_subset.sample(26_000, random_state=37)
+    ax.scatter(cell_subset["x"], cell_subset["y"], s=1.25, c=story["accent"], alpha=0.42, linewidths=0, rasterized=True)
+    for idx, roi in enumerate(rois, start=1):
+        ax.add_patch(Rectangle((roi.xmin, roi.ymin), roi.xmax - roi.xmin, roi.ymax - roi.ymin, fill=False, ec=story["accent"], lw=0.9))
+        ax.text(
+            roi.xmin + 15,
+            roi.ymin + 40,
+            f"zoom {idx}",
+            color=story["accent"],
+            fontsize=5.5,
+            weight="bold",
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.65, "pad": 0.4},
+        )
+    add_scale_bar(ax, tissue_bounds, 1000, color="black")
+    ax.set_title(f"2. {domain_label(examples, 'cell_domain', 'C')} cell global", fontsize=6.3, pad=1.5)
+
+
 def plot_story_caption(ax: plt.Axes, story: dict[str, Any], step: str, title: str, body: str) -> None:
     ax.axis("off")
     ax.add_patch(
@@ -759,6 +824,7 @@ def make_story_plate(data: dict[str, Any], story_key: str, story: dict[str, Any]
 
 def make_story_flow(data: dict[str, Any], story_key: str, story: dict[str, Any], output_dir: Path, tissue_bounds: ROI) -> dict[str, Any]:
     rois = [example_roi(data["points"], example, tissue_bounds) for example in story["local_examples"]]
+    examples = story["local_examples"]
     fig = plt.figure(figsize=(7.2, 3.7))
     grid = GridSpec(
         2,
@@ -770,16 +836,15 @@ def make_story_flow(data: dict[str, Any], story_key: str, story: dict[str, Any],
         wspace=0.42,
     )
 
-    ax_he = fig.add_subplot(grid[0, 0])
-    plot_global_he_context(ax_he, data, story, rois, tissue_bounds)
+    ax_point_global = fig.add_subplot(grid[0, 0])
+    plot_example_point_global(ax_point_global, data, story, examples, rois, tissue_bounds)
 
-    ax_signal = fig.add_subplot(grid[0, 1])
-    plot_global_overlay(ax_signal, data, story, rois, tissue_bounds)
-    ax_signal.set_title("2. Point-domain signal", fontsize=6.5, pad=1.5)
+    ax_cell_global = fig.add_subplot(grid[0, 1])
+    plot_example_cell_global(ax_cell_global, data, story, examples, rois, tissue_bounds)
 
     local_grid = GridSpecFromSubplotSpec(len(rois), 1, subplot_spec=grid[0, 2], hspace=0.16)
     local_axes: list[plt.Axes] = []
-    for idx, (example, roi) in enumerate(zip(story["local_examples"], rois)):
+    for idx, (example, roi) in enumerate(zip(examples, rois)):
         ax = fig.add_subplot(local_grid[idx, 0])
         plot_local_overlay(ax, data, story, example, roi)
         ax.set_title("3. Local overlap" if idx == 0 else "Local overlap", fontsize=6.2, pad=1.4)
@@ -793,23 +858,25 @@ def make_story_flow(data: dict[str, Any], story_key: str, story: dict[str, Any],
     plot_story_answer(ax_answer, data, story)
 
     genes = story["local_examples"][0]["genes"]
+    point_domains = domain_label(examples, "point_domain", "P")
+    cell_domains = domain_label(examples, "cell_domain", "C")
     captions = [
-        ("1", "Histology first", "Start from the official-aligned H&E image and mark the zoom region."),
-        ("2", "Add point signal", f"Overlay the selected transcript-point domains carrying {genes}."),
+        ("1", "Point global", f"Show {point_domains} alone on the official-aligned H&E context; this is the transcript-point domain."),
+        ("2", "Cell global", f"Show {cell_domains} alone on the same H&E context; this is the matched cell-domain reference."),
         (
             "3",
             "Inspect overlap",
-            "Zoom into the densest point/cell overlap region." if len(rois) == 1 else "Inspect both luminal/DCIS and apocrine local examples.",
+            f"Zoom into the densest {point_domains}/{cell_domains} overlap region." if len(rois) == 1 else "Inspect each point-domain/cell-domain pair locally.",
         ),
         ("4", "Check all points", "Use the full 60.9M selected-gene transcript-point comparison; color is point fraction and gray is Jaccard."),
-        ("5", "Answer question", "Combine marker logic, H&E context, and overlap statistics into one pathology readout."),
+        ("5", "Answer question", f"Combine {genes} marker logic, H&E context, and overlap statistics into one pathology readout."),
     ]
     for col, (step, title, body) in enumerate(captions):
         ax_caption = fig.add_subplot(grid[1, col])
         plot_story_caption(ax_caption, story, step, title, body)
 
     fig.suptitle(story["question"], x=0.02, y=0.995, ha="left", fontsize=8.2, fontweight="bold")
-    add_flow_arrows(fig, [ax_he, ax_signal, local_axes[0], ax_stats, ax_answer], story["accent"])
+    add_flow_arrows(fig, [ax_point_global, ax_cell_global, local_axes[0], ax_stats, ax_answer], story["accent"])
     paths = save_pub(fig, output_dir, f"nature_pathology_story_{story_key}_steps")
     return {
         "story": story_key,
