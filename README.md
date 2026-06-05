@@ -5,7 +5,7 @@
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/cell-gps.svg)](https://anaconda.org/conda-forge/cell-gps)
 [![Python versions](https://img.shields.io/pypi/pyversions/Cell-GPS.svg)](https://pypi.org/project/Cell-GPS/)
 [![License](https://img.shields.io/pypi/l/Cell-GPS.svg)](LICENSE)
-[![Upload Python Package](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/cellgps/actions/workflows/python-publish.yml)
+[![Upload Python Package](https://github.com/hutaobo/Cell-GPS/actions/workflows/python-publish.yml/badge.svg)](https://github.com/hutaobo/Cell-GPS/actions/workflows/python-publish.yml)
 
 `Cell-GPS` is the Python package and reference implementation for Cophenetic Spatial Topology Embedding (COSTE), a spatial topology analysis framework for spatial omics data.
 
@@ -21,13 +21,13 @@ Versioned bioRxiv page: <https://www.biorxiv.org/content/10.64898/2026.05.26.727
 
 If you use the Python package, the Windows executable, the R companion package, or the manuscript figure/table code, please cite this preprint.
 
-The code used to generate the preprint figures and supplementary tables is organized in [`Cell-GPS manuscript code/`](https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code):
+The code used to generate the preprint figures and supplementary tables is organized in [`Cell-GPS manuscript code/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code):
 
-- [`main_figures/`](https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code/main_figures): notebooks for main figure analyses.
-- [`supplementary_figures/`](https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code/supplementary_figures): notebooks for supplementary figure analyses.
-- [`supplementary_tables/`](https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code/supplementary_tables): notebooks for supplementary table analyses.
+- [`main_figures/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/main_figures): notebooks for main figure analyses.
+- [`supplementary_figures/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/supplementary_figures): notebooks for supplementary figure analyses.
+- [`supplementary_tables/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/supplementary_tables): notebooks for supplementary table analyses.
 
-The notebooks are intentionally output-free and preserve the original manuscript data paths where those paths were required for reproduction. A detailed mapping from manuscript results to source code is available in [`docs/cellgps_science_manuscript_code_inventory.md`](https://github.com/hutaobo/cellgps/blob/main/docs/cellgps_science_manuscript_code_inventory.md).
+The notebooks are intentionally output-free and preserve the original manuscript data paths where those paths were required for reproduction. A detailed mapping from manuscript results to source code is available in [`docs/cellgps_science_manuscript_code_inventory.md`](https://github.com/hutaobo/Cell-GPS/blob/main/docs/cellgps_science_manuscript_code_inventory.md).
 
 ## Package Names
 
@@ -38,7 +38,7 @@ The notebooks are intentionally output-free and preserve the original manuscript
 - R package/repository: `cellgpsr`
 - Windows executable: `cellgps.exe`
 
-The Python package is hosted at `https://github.com/hutaobo/cellgps`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo; use the latest open v2 DOI <https://doi.org/10.5281/zenodo.19482685> or the version-series route <https://zenodo.org/records/17859173>.
+The Python package is hosted at `https://github.com/hutaobo/Cell-GPS`. The R package is hosted separately at `https://github.com/hutaobo/cellgpsr`. The Windows single-file executable is distributed through Zenodo; use the latest open v2 DOI <https://doi.org/10.5281/zenodo.19482685> or the version-series route <https://zenodo.org/records/17859173>.
 
 ## What Cell-GPS does
 
@@ -79,13 +79,13 @@ conda install -c conda-forge cell-gps
 Install directly from GitHub:
 
 ```bash
-pip install git+https://github.com/hutaobo/cellgps.git
+pip install git+https://github.com/hutaobo/Cell-GPS.git
 ```
 
 For local development or reviewer inspection:
 
 ```bash
-git clone https://github.com/hutaobo/cellgps.git
+git clone https://github.com/hutaobo/Cell-GPS.git
 cd cellgps
 pip install -e .
 ```
