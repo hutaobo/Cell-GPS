@@ -1,8 +1,8 @@
+from __future__ import annotations
+
 import glob
 import os
 import pandas as pd
-import geopandas as gpd
-from shapely.geometry import Polygon
 from typing import List, Tuple, Dict
 
 # ========== 1.2) Utility: get the table link key ==========
@@ -119,10 +119,18 @@ def _normalize_transcript_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 # ========== 3.1) Utility: convert transcripts to GeoDataFrame ==========
-def _transcripts_to_gdf(tx_df: pd.DataFrame) -> gpd.GeoDataFrame:
+def _transcripts_to_gdf(tx_df: pd.DataFrame):
     """
     Guess x/y column names and convert to GeoDataFrame (crs=None).
     """
+    try:
+        import geopandas as gpd
+    except ImportError as exc:
+        raise ImportError(
+            "geopandas is required to convert transcript coordinates to a GeoDataFrame. "
+            "Install geopandas in the active environment before calling this helper."
+        ) from exc
+
     x_candidates = ["x_location", "x", "X", "x_um", "global_x"]
     y_candidates = ["y_location", "y", "Y", "y_um", "global_y"]
     xcol = next((c for c in x_candidates if c in tx_df.columns), None)
