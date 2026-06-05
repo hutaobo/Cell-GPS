@@ -107,6 +107,11 @@ def draw_scale_bar(ax, scale_um: float, label: str, x_right: float = 0.94):
     )
 
 
+def shift_axis_y(ax, dy: float):
+    pos = ax.get_position()
+    ax.set_position([pos.x0, pos.y0 + dy, pos.width, pos.height])
+
+
 def plot_overview(ax, overview: pd.DataFrame, metadata: pd.DataFrame):
     ax.scatter(overview["x"], overview["y"], s=0.8, color="#c7cdd4", alpha=0.35, linewidths=0, rasterized=True)
     meta = metadata.set_index("gene")
@@ -319,11 +324,14 @@ def make_figure():
     cbar = fig.colorbar(heat_image, ax=ax_heat, fraction=0.030, pad=0.010)
     cbar.set_label("1 - SSS", fontsize=6, labelpad=1.0)
     cbar.ax.tick_params(labelsize=5.6, length=2)
+    gh_y_shift = 0.025
+    shift_axis_y(ax_heat, gh_y_shift)
+    shift_axis_y(cbar.ax, gh_y_shift)
 
     ax_hist = fig.add_subplot(gs[2, 2:5])
     plot_concordance_context(ax_hist, summary, metadata)
     hist_pos = ax_hist.get_position()
-    ax_hist.set_position([hist_pos.x0 + 0.060, hist_pos.y0, hist_pos.width - 0.060, hist_pos.height])
+    ax_hist.set_position([hist_pos.x0 + 0.060, hist_pos.y0 + gh_y_shift, hist_pos.width - 0.060, hist_pos.height])
     panel_label(ax_hist, "h", x=-0.10, y=1.12)
 
     ax_marker = fig.add_subplot(gs[3, 0:2])
