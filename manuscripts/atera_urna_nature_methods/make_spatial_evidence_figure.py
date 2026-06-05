@@ -289,9 +289,10 @@ def make_figure():
         4,
         5,
         figure=fig,
-        height_ratios=[1.08, 1.08, 1.18, 1.0],
-        hspace=0.42,
-        wspace=0.46,
+        width_ratios=[1.0, 1.0, 1.15, 1.15, 1.15],
+        height_ratios=[1.18, 1.18, 1.14, 1.0],
+        hspace=0.22,
+        wspace=0.28,
         top=0.965,
         bottom=0.045,
         left=0.06,
@@ -307,6 +308,7 @@ def make_figure():
         row, col = zoom_positions[idx]
         ax = fig.add_subplot(gs[row, col])
         plot_spatial(ax, points, metadata.set_index("gene").loc[gene], gene)
+        ax.set_anchor("S" if row == 0 else "N")
         label = chr(ord("b") + idx)
         label_x = -0.16 if label in {"b", "f"} else -0.08
         panel_label(ax, label, x=label_x, y=1.12)
@@ -320,6 +322,8 @@ def make_figure():
 
     ax_hist = fig.add_subplot(gs[2, 2:5])
     plot_concordance_context(ax_hist, summary, metadata)
+    hist_pos = ax_hist.get_position()
+    ax_hist.set_position([hist_pos.x0 + 0.060, hist_pos.y0, hist_pos.width - 0.060, hist_pos.height])
     panel_label(ax_hist, "h", x=-0.10, y=1.12)
 
     ax_marker = fig.add_subplot(gs[3, 0:2])
