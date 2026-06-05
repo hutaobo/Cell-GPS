@@ -32,15 +32,17 @@ Tumor and DCIS interface markers were more heterogeneous. FOXA1, CTTN, ANO1, ESR
 
 Graphical Abstract. Workflow showing extraction of high-quality uRNAs, uRNA-only COSTE and orthogonal comparison to all-transcript SSS profiles.
 
-Figure 1. Dataset scale and uRNA-only cell-group attribution. Panel A shows transcript counts through filtering. Panel B shows the distribution of gene-level uRNA fractions. Panel C shows genes with the highest uRNA counts. Panel D shows the uRNA-only best COSTE cell group for analyzed genes.
+Figure 1. Dataset scale and analysis universe. Panel A shows transcript counts through filtering. Panel B defines the transition from the 18,028-gene panel to the 530 genes analyzed by uRNA-only COSTE. Panel C shows the distribution of gene-level uRNA fractions across all panel genes, with the analyzed genes overlaid. Panel D shows genes with the highest uRNA counts.
 
-Figure 2. Concordance between uRNA-only and all-transcript COSTE profiles. Panel A relates uRNA count to per-gene Spearman concordance. Panel B shows the concordance distribution. Panel C summarizes concordance thresholds. Panel D summarizes module-level concordance.
+Figure 2. uRNA-only COSTE attribution and concordance. Panel A shows uRNA-only best cell-group calls for the 530 analyzed genes. Panel B relates uRNA count to per-gene Spearman concordance. Panel C shows the concordance distribution. Panel D summarizes concordance thresholds.
 
-Figure 3. Marker validation heatmap. Curated marker genes are shown against representative cell groups using 1 - SSS, where higher values indicate closer COSTE proximity.
+Figure 3. Marker group recovery. Curated marker groups are summarized against representative cell groups using 1 - SSS, where higher values indicate closer COSTE proximity. The figure also summarizes marker-group concordance and identifies concordant positive-control groups used for spatial inspection.
 
-Figure 4. Lowest-concordance genes. The figure highlights genes for which uRNA-only and all-transcript profiles diverge, showing that discordance is not only explained by low uRNA coverage.
+Figure 4. Spatial example selection rationale. The figure shows how the analysis moves from the 18,028-gene panel to 530 analyzed genes, curated marker controls and the five genes selected for real spatial inspection.
 
 Figure 5. Real spatial examples. The figure combines a whole-section overview, true local uRNA/cell-coordinate zoom maps, SSS heatmaps, concordance context, marker-validation statistics and per-example calls. CCND1, C1QA, JCHAIN and CDH5 are concordant positive examples; ERBB2 is a discordant example whose uRNA-only best group differs from the all-transcript best group.
+
+Supplementary Figure 1. Lowest-concordance genes. This figure highlights genes for which uRNA-only and all-transcript profiles diverge, showing that discordance is not explained only by low uRNA coverage.
 
 ## Supplementary Tables
 
