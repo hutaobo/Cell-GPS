@@ -167,7 +167,7 @@ def plot_spatial(ax, points: pd.DataFrame, metadata: pd.Series, gene: str):
 
 def plot_sss_heatmap(ax, sss: pd.DataFrame, metadata: pd.DataFrame):
     heat = 1 - sss.loc[EXAMPLE_GENES, REPRESENTATIVE_CELLTYPES].astype(float).clip(0, 1)
-    image = ax.imshow(heat.to_numpy(), aspect="auto", cmap="viridis", vmin=0, vmax=1)
+    image = ax.imshow(heat.to_numpy(), aspect="auto", cmap="RdBu_r", vmin=0, vmax=1)
     ax.set_xticks(range(len(REPRESENTATIVE_CELLTYPES)))
     ax.set_xticklabels([CELLTYPE_LABELS[c] for c in REPRESENTATIVE_CELLTYPES], fontsize=6)
     ax.set_yticks(range(len(EXAMPLE_GENES)))
@@ -218,7 +218,7 @@ def plot_marker_summary(ax, marker_summary: pd.DataFrame):
     ax.set_xticklabels(["11q13", "Macro.", "Plasma", "Vascular", "Tumor/\nDCIS"], fontsize=6)
     ax.set_ylabel("fraction or rho")
     ax.set_title("Curated marker validation", fontsize=8, color=INK, pad=5)
-    ax.legend(frameon=False, fontsize=5.8, loc="lower left", handlelength=1.0)
+    ax.legend(frameon=False, fontsize=5.8, loc="upper left", bbox_to_anchor=(0.0, -0.18), ncol=2, handlelength=1.0)
     style_axis(ax)
 
 
@@ -280,7 +280,7 @@ def make_figure():
         figure=fig,
         height_ratios=[1.0, 1.0, 1.18, 1.0],
         hspace=0.60,
-        wspace=0.34,
+        wspace=0.48,
         top=0.965,
         bottom=0.045,
         left=0.06,
@@ -299,8 +299,11 @@ def make_figure():
         panel_label(ax, chr(ord("b") + idx), x=-0.08, y=1.12)
 
     ax_heat = fig.add_subplot(gs[2, 0:3])
-    plot_sss_heatmap(ax_heat, sss, metadata)
+    heat_image = plot_sss_heatmap(ax_heat, sss, metadata)
     panel_label(ax_heat, "g", x=-0.08, y=1.12)
+    cbar = fig.colorbar(heat_image, ax=ax_heat, fraction=0.018, pad=0.008)
+    cbar.set_label("1 - SSS", fontsize=6, labelpad=1.0)
+    cbar.ax.tick_params(labelsize=5.6, length=2)
 
     ax_hist = fig.add_subplot(gs[2, 3:5])
     plot_concordance_context(ax_hist, summary, metadata)
