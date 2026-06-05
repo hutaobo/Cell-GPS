@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.gridspec import GridSpec
-from matplotlib.lines import Line2D
 
 
 HERE = Path(__file__).resolve().parent
@@ -112,18 +111,7 @@ def plot_spatial(ax, points: pd.DataFrame, metadata: pd.Series, gene: str):
         spine.set_color("#a6b3c1")
         spine.set_linewidth(0.7)
 
-    ax.text(0.03, 0.96, gene, transform=ax.transAxes, fontsize=8, fontweight="bold", color=INK, ha="left", va="top")
-    ax.text(
-        0.03,
-        0.86,
-        short_cluster(str(metadata["target_celltype"])),
-        transform=ax.transAxes,
-        fontsize=6.2,
-        color=color,
-        ha="left",
-        va="top",
-        linespacing=1.0,
-    )
+    ax.set_title(f"{gene} | {short_cluster(str(metadata['target_celltype']))}", fontsize=6.8, color=color, pad=2.5)
 
     scale_um = 200
     x0 = cx + half - 250
@@ -248,7 +236,7 @@ def make_figure():
         height_ratios=[1.18, 1.22, 1.25, 1.00],
         hspace=0.55,
         wspace=0.32,
-        top=0.93,
+        top=0.96,
         bottom=0.04,
         left=0.06,
         right=0.985,
@@ -274,13 +262,6 @@ def make_figure():
     ax_table = fig.add_subplot(gs[3, :])
     plot_example_table(ax_table, metadata)
     panel_label(ax_table, "i", x=-0.012, y=1.08)
-
-    legend_items = [
-        Line2D([0], [0], marker="o", color="none", markerfacecolor="#111827", markeredgewidth=0, markersize=4, alpha=0.55, label="uRNA"),
-        Line2D([0], [0], marker="o", color="none", markerfacecolor="#c7cdd4", markeredgewidth=0, markersize=4, alpha=0.70, label="other cells"),
-        Line2D([0], [0], marker="o", color=INK, markerfacecolor="none", markersize=4, lw=0, label="target cells"),
-    ]
-    fig.legend(handles=legend_items, loc="upper center", bbox_to_anchor=(0.50, 0.992), frameon=False, ncol=3, fontsize=6.5)
 
     fig.savefig(FIGURES / "figure_5_spatial_evidence_multipanel.pdf", bbox_inches="tight")
     fig.savefig(FIGURES / "figure_5_spatial_evidence_multipanel.png", bbox_inches="tight", dpi=600)
