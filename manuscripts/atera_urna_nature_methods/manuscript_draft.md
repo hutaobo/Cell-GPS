@@ -50,6 +50,8 @@ Immune and vascular markers showed the same principle. C3, C1QA, CSF1R, CD163 an
 
 Rare epithelial markers were also recovered in a biologically interpretable way. PIP, HSPB8 and CLIC6 were closest to luminal-like amorphous DCIS cells, whereas TAT localized to apocrine cells. These results are consistent with the Atera dataset annotation strategy, in which apocrine cells were identified by histology and PIP expression and tumor substructures were annotated using molecular and spatial evidence related to breast atlas and tumor-microenvironment resources [9-11]. Together, the marker analyses show that uRNAs retain gene-specific spatial proximity to expected cell groups across tumor, stromal, immune and vascular compartments.
 
+To verify that these COSTE proximity calls corresponded to real spatial arrangements rather than only matrix-level statistics, we generated local position maps for selected examples. For CCND1, C1QA, JCHAIN and CDH5, the plotted uRNAs overlapped the corresponding 11q13 tumor, macrophage, plasma-cell and endothelial landmarks in 850-um windows chosen from the true transcript and cell-coordinate data (Fig. 5a-d). The same examples were highlighted in the uRNA-only SSS heatmap and global concordance distribution, showing that their local spatial patterns matched their low-SSS target cell groups and high all-transcript concordance (Fig. 5f-i). ERBB2 was included as a discordant example: its uRNAs were closest to CXCL14+ fibroblasts in the uRNA-only analysis, whereas its all-transcript profile favored basal-like structured DCIS cells (Fig. 5e-i).
+
 ### Discordant uRNA profiles highlight boundary-sensitive biology
 
 The strongest argument for using uRNAs as a diagnostic is not that every uRNA-only profile matches the all-transcript profile. It is that discordance is interpretable and actionable. Some genes with substantial uRNA support showed low or negative Spearman concordance with all-transcript SSS profiles (Fig. 4). These discordant genes were not simply the lowest-coverage cases; several had tens to hundreds of thousands of high-quality uRNAs and uRNA fractions in the range observed for well-concordant genes.
@@ -100,6 +102,10 @@ uRNA-only SSS profiles were compared with a previously generated all-transcript 
 
 Curated marker groups were defined before analysis. The 11q13 group included CCND1, ELOVL2, KCNJ3 and FGF19. Basal-like DCIS markers included KRT23, DSC3, SOSTDC1, KLK5, KLK7, ITGB6 and MMP7. Macrophage markers included C3, C1QA, CSF1R, CD163 and SIGLEC1. Plasma-cell markers included IGHA1, IGHM, IGHA2 and JCHAIN. Rare epithelial markers included PIP, HSPB8, CLIC6 and TAT. Tumor/DCIS interface genes included FOXA1, CTTN, ANO1, ESR1, FADD, PGR, ERBB2 and FGF3. Vascular markers included EPAS1, CDH5 and MMRN2.
 
+### Spatial example windows
+
+Spatial example windows were extracted from the cached uRNA-coordinate parquet file generated on the A100 server. We selected CCND1, C1QA, JCHAIN and CDH5 as concordant examples and ERBB2 as a discordant example. For each gene, an 850-um square window was chosen by scoring grid bins for joint enrichment of the gene's uRNA coordinates and the target cell group. Target groups were 11q13 invasive tumor cells for CCND1, macrophages for C1QA, plasma cells for JCHAIN, endothelial cells for CDH5 and CXCL14+ fibroblasts for ERBB2. The Figure 5 maps show true uRNA coordinates, true target cell centroids and sampled non-target cell centroids from each selected window. To maintain readability, uRNAs were downsampled to at most 7,000 plotted points per example and non-target cells to at most 3,500 plotted points; all target cells in the window were retained.
+
 ### Statistics and visualization
 
 All summary statistics were computed in Python from the generated CSV files. Concordance was summarized using Spearman correlation, median, mean and interquartile range. Exact best-cell-group agreement was reported as a fraction of genes. Figures were generated with Matplotlib from the committed benchmark outputs using `make_manuscript_assets.py`.
@@ -141,6 +147,10 @@ Heatmap of uRNA-only COSTE proximity for curated markers and representative cell
 ### Figure 4. Discordant genes nominate segmentation-sensitive signals
 
 Left, genes with the lowest Spearman concordance between uRNA-only and all-transcript SSS profiles. Right, uRNA fraction and uRNA count for low-concordance genes, showing that discordance is not explained only by low molecular coverage.
+
+### Figure 5. Real spatial examples support uRNA-only COSTE calls
+
+a-e, True spatial windows for CCND1, C1QA, JCHAIN, CDH5 and ERBB2. Black points are high-quality uRNAs for the plotted gene, open colored circles are the target cell group and pale gray points are other cells in the same 850-um window. f, uRNA-only COSTE proximity for the five examples and representative cell groups, plotted as 1 - SSS so higher values indicate closer proximity. White boxes mark the plotted target cell group. g, Global distribution of Spearman concordance between uRNA-only and all-transcript SSS profiles, with selected examples highlighted. h, Marker group validation summary. i, Per-example statistics, including uRNA-only SSS, concordance, best-cell-group match and the uRNA-only versus all-transcript best cell group.
 
 ## References
 

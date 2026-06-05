@@ -1,0 +1,17 @@
+{
+  "source_dir": "/data/taobo.hu/atera_urna_segmentation_bias_20260604",
+  "cells": "/data/taobo.hu/SpatialPerturb/inputs/xenium_wta_breast/cells.csv.gz",
+  "cell_groups": "/data/taobo.hu/SpatialPerturb/inputs/xenium_wta_breast/WTA_Preview_FFPE_Breast_Cancer_cell_groups.csv",
+  "genes": [
+    "CCND1",
+    "C1QA",
+    "JCHAIN",
+    "CDH5",
+    "ERBB2"
+  ],
+  "window_um": 850.0,
+  "grid_um": 120.0,
+  "max_urna_points": 7000,
+  "max_other_cells": 3500,
+  "seed": 17
+}

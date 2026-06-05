@@ -40,6 +40,8 @@ Figure 3. Marker validation heatmap. Curated marker genes are shown against repr
 
 Figure 4. Lowest-concordance genes. The figure highlights genes for which uRNA-only and all-transcript profiles diverge, showing that discordance is not only explained by low uRNA coverage.
 
+Figure 5. Real spatial examples. The figure combines true local uRNA/cell-coordinate maps with SSS heatmaps, concordance context, marker-validation statistics and per-example calls. CCND1, C1QA, JCHAIN and CDH5 are concordant positive examples; ERBB2 is a discordant example whose uRNA-only best group differs from the all-transcript best group.
+
 ## Supplementary Tables
 
 Supplementary Table 1 (`tables/summary_statistics.csv`). Overall transcript, gene coverage and concordance statistics.
