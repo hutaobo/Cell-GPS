@@ -322,7 +322,7 @@ def make_figure():
     heat_image = plot_sss_heatmap(ax_heat, sss, metadata)
     panel_label(ax_heat, "g", x=-0.18, y=1.12)
     cbar = fig.colorbar(heat_image, ax=ax_heat, fraction=0.030, pad=0.010)
-    cbar.set_label("1 - SSS", fontsize=6, labelpad=1.0)
+    cbar.set_label("1 - SSS", fontsize=6, labelpad=4.0)
     cbar.ax.tick_params(labelsize=5.6, length=2)
     gh_y_shift = 0.025
     shift_axis_y(ax_heat, gh_y_shift)
