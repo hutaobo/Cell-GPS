@@ -55,6 +55,7 @@ CLUSTER_LABELS = {
     "Apocrine Cells": "Apocrine",
     "Pericytes": "Pericyte",
     "Endothelial Cells": "Endoth.",
+    "CAFs, DCIS Associated": "CAFs/DCIS",
 }
 
 SPATIAL_EXAMPLE_GENES = ["CCND1", "C1QA", "JCHAIN", "CDH5", "ERBB2"]
@@ -680,6 +681,332 @@ def figure_gene_selection_rationale(metadata, counts, summary, urna_sss, overall
     plt.close(fig)
 
 
+def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
+    df = summary.copy()
+    marker_summary = marker_group_summary(summary).set_index("paper_marker_group")
+
+    fig = plt.figure(figsize=(7.15, 7.12), dpi=600)
+    gs = GridSpec(
+        4,
+        6,
+        figure=fig,
+        height_ratios=[1.0, 1.08, 0.94, 0.86],
+        hspace=0.36,
+        wspace=0.72,
+    )
+
+    ax = fig.add_subplot(gs[0, 0:2])
+    labels = ["all\nrows", "gene\nrows", "QV>=20\ngene", "QV>=20\nuRNA"]
+    values = [
+        metadata["total_rows"],
+        metadata["gene_rows"],
+        metadata["qv_gene_rows"],
+        metadata["unassigned_rows"],
+    ]
+    colors = ["#cfd6df", "#9eb3c7", PALETTE["blue"], PALETTE["red"]]
+    bars = ax.bar(np.arange(len(values)), np.array(values) / 1e6, color=colors, width=0.68)
+    for bar, value in zip(bars, values):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 18,
+            fmt_millions(value),
+            ha="center",
+            va="bottom",
+            fontsize=5.4,
+            color=PALETTE["ink"],
+        )
+    ax.set_xticks(np.arange(len(labels)))
+    ax.set_xticklabels(labels, fontsize=5.8)
+    ax.set_ylabel("transcripts (millions)")
+    ax.set_title("Molecular scale", fontsize=7.6, pad=4)
+    ax.text(
+        0.98,
+        0.78,
+        "19.7%\nhigh-quality\nuRNAs",
+        transform=ax.transAxes,
+        ha="right",
+        va="top",
+        fontsize=5.5,
+        color=PALETTE["red"],
+        linespacing=1.05,
+    )
+    style_axes(ax)
+    panel_label(ax, "a", x=-0.20, y=1.12)
+
+    ax = fig.add_subplot(gs[0, 2:4])
+    ax.set_axis_off()
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    stages = [
+        ("18,028", "assayed panel genes"),
+        ("18,023", "genes with >=1 uRNA"),
+        ("top 500\n+ markers", "selection rule"),
+        ("530", "COSTE/concordance"),
+    ]
+    y_positions = [0.78, 0.57, 0.36, 0.15]
+    widths = [0.90, 0.84, 0.78, 0.70]
+    for idx, ((number, label), y0, width) in enumerate(zip(stages, y_positions, widths)):
+        x0 = 0.50 - width / 2
+        rect = plt.Rectangle(
+            (x0, y0),
+            width,
+            0.125,
+            facecolor="#ffffff" if idx == 3 else "#f5f7fa",
+            edgecolor=PALETTE["teal"] if idx == 3 else "#a9b8c8",
+            linewidth=0.9,
+        )
+        ax.add_patch(rect)
+        ax.text(
+            x0 + 0.035,
+            y0 + 0.063,
+            number,
+            ha="left",
+            va="center",
+            fontsize=5.8 if idx == 2 else 6.8,
+            fontweight="bold",
+            color=PALETTE["ink"],
+            linespacing=0.85,
+        )
+        ax.text(
+            x0 + width - 0.030,
+            y0 + 0.063,
+            label,
+            ha="right",
+            va="center",
+            fontsize=4.8,
+            color=PALETTE["muted"],
+            linespacing=0.95,
+        )
+        if idx < len(stages) - 1:
+            ax.annotate(
+                "",
+                xy=(0.50, y_positions[idx + 1] + 0.140),
+                xytext=(0.50, y0 - 0.012),
+                arrowprops=dict(arrowstyle="-|>", lw=0.8, color=PALETTE["teal"]),
+            )
+    ax.text(
+        0.5,
+        0.015,
+        "Only these 530 genes enter COSTE/concordance.",
+        ha="center",
+        va="bottom",
+        fontsize=5.2,
+        color=PALETTE["ink"],
+    )
+    ax.set_title("Analysis universe", fontsize=7.6, pad=4)
+    panel_label(ax, "b", x=-0.14, y=1.12)
+
+    ax = fig.add_subplot(gs[0, 4:6])
+    max_fraction = counts["unassigned_fraction"].quantile(0.995)
+    bins = np.linspace(0, max_fraction, 44)
+    ax.hist(
+        counts["unassigned_fraction"].clip(upper=max_fraction),
+        bins=bins,
+        color="#cfd6df",
+        edgecolor="white",
+        linewidth=0.25,
+        label="18,028 panel",
+    )
+    ax.hist(
+        df["unassigned_fraction"].clip(upper=max_fraction),
+        bins=bins,
+        histtype="step",
+        color=PALETTE["teal"],
+        linewidth=1.15,
+        label="530 analyzed",
+    )
+    median_all = counts["unassigned_fraction"].median()
+    ax.axvline(median_all, color=PALETTE["ink"], linewidth=0.9)
+    ax.text(
+        median_all + 0.010,
+        ax.get_ylim()[1] * 0.88,
+        "median\n0.160",
+        fontsize=5.4,
+        color=PALETTE["ink"],
+        va="top",
+    )
+    ax.set_xlabel("uRNA fraction per gene")
+    ax.set_ylabel("genes")
+    ax.set_title("Full-panel uRNA coverage", fontsize=7.6, pad=4)
+    ax.legend(frameon=False, fontsize=5.0, loc="upper right", handlelength=1.0)
+    style_axes(ax)
+    panel_label(ax, "c", x=-0.20, y=1.12)
+
+    ax = fig.add_subplot(gs[1, 0:3])
+    top_clusters = cluster_counts.head(8).copy()
+    top_clusters["label"] = top_clusters["urna_best_cluster"].map(
+        lambda value: CLUSTER_LABELS.get(value, value.replace(" Cells", ""))
+    )
+    top_clusters = top_clusters.sort_values("n_genes")
+    bar_colors = [
+        PALETTE["green"] if "Macrophage" in cluster else PALETTE["blue"]
+        for cluster in top_clusters["urna_best_cluster"]
+    ]
+    ax.barh(top_clusters["label"], top_clusters["n_genes"], color=bar_colors)
+    for y, value in enumerate(top_clusters["n_genes"]):
+        ax.text(value + 4, y, str(int(value)), va="center", fontsize=5.6, color=PALETTE["ink"])
+    ax.set_xlim(0, max(top_clusters["n_genes"]) * 1.22)
+    ax.set_xlabel("genes among 530")
+    ax.set_title("uRNA-only COSTE best cell-group calls", fontsize=7.6, pad=4)
+    style_axes(ax)
+    panel_label(ax, "d", x=-0.15, y=1.10)
+
+    ax = fig.add_subplot(gs[1, 3:6])
+    ax.set_axis_off()
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    metrics = [
+        ("median rho", overall["median_spearman_vs_full"], PALETTE["blue"]),
+        ("best-group match", overall["best_cluster_exact_match_rate"], PALETTE["green"]),
+        ("rho >= 0.5", (df["sss_spearman_vs_full"] >= 0.5).mean(), PALETTE["gold"]),
+        ("rho >= 0.8", (df["sss_spearman_vs_full"] >= 0.8).mean(), PALETTE["teal"]),
+    ]
+    for idx, (label, value, color) in enumerate(metrics):
+        row = 3 - idx
+        y0 = 0.12 + row * 0.19
+        ax.text(0.02, y0 + 0.045, label, ha="left", va="center", fontsize=5.8, color=PALETTE["ink"])
+        ax.add_patch(plt.Rectangle((0.36, y0 + 0.018), 0.50, 0.052, facecolor="#edf1f5", edgecolor="none"))
+        ax.add_patch(plt.Rectangle((0.36, y0 + 0.018), 0.50 * value, 0.052, facecolor=color, edgecolor="none"))
+        ax.text(0.89, y0 + 0.045, f"{value:.3f}", ha="left", va="center", fontsize=5.8, color=PALETTE["ink"])
+    ax.text(
+        0.02,
+        0.035,
+        "Middle-ground agreement: uRNAs recover many compartments\nwithout copying the cell-assigned signal.",
+        ha="left",
+        va="bottom",
+        fontsize=5.25,
+        color=PALETTE["muted"],
+        linespacing=1.1,
+    )
+    ax.set_title("Global concordance, summarized", fontsize=7.6, pad=4)
+    panel_label(ax, "e", x=-0.10, y=1.10)
+
+    ax = fig.add_subplot(gs[2, :])
+    ax.set_axis_off()
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    marker_flow = [
+        ("11q13", "11q13 tumor", "CCND1"),
+        ("Basal-like DCIS", "Basal DCIS", "KRT23"),
+        ("Macrophage", "Macrophage", "C1QA"),
+        ("Plasma", "Plasma", "JCHAIN"),
+        ("Rare epithelial", "Luminal / apocrine", "PIP"),
+        ("Vascular", "Endoth. / pericyte", "CDH5"),
+        ("Tumor/DCIS interface", "mixed boundary", "ERBB2"),
+    ]
+    x_edges = np.linspace(0.015, 0.985, len(marker_flow) + 1)
+    for idx, (group, target, exemplar) in enumerate(marker_flow):
+        x0 = x_edges[idx] + 0.006
+        width = x_edges[idx + 1] - x_edges[idx] - 0.012
+        edge = PALETTE["gold"] if group == "Tumor/DCIS interface" else "#9eb3c7"
+        face = "#fff8ed" if group == "Tumor/DCIS interface" else "#ffffff"
+        rect = plt.Rectangle((x0, 0.15), width, 0.60, facecolor=face, edgecolor=edge, linewidth=0.85)
+        ax.add_patch(rect)
+        if group in marker_summary.index:
+            match = marker_summary.loc[group, "best_cluster_match_rate"]
+            rho = marker_summary.loc[group, "median_spearman_vs_full"]
+        else:
+            match = np.nan
+            rho = np.nan
+        status = "mixed" if group == "Tumor/DCIS interface" else "recovered"
+        ax.text(
+            x0 + width / 2,
+            0.66,
+            MARKER_GROUP_LABELS[group].replace("\n", " "),
+            ha="center",
+            va="center",
+            fontsize=5.4,
+            fontweight="bold",
+            color=PALETTE["ink"],
+        )
+        ax.text(
+            x0 + width / 2,
+            0.50,
+            target,
+            ha="center",
+            va="center",
+            fontsize=5.0,
+            color=PALETTE["muted"],
+        )
+        ax.text(
+            x0 + width / 2,
+            0.35,
+            f"{status}\nmatch {match:.2g}; rho {rho:.2g}",
+            ha="center",
+            va="center",
+            fontsize=4.75,
+            color=PALETTE["gold"] if group == "Tumor/DCIS interface" else PALETTE["teal"],
+            linespacing=1.0,
+        )
+        ax.text(
+            x0 + width / 2,
+            0.075,
+            exemplar,
+            ha="center",
+            va="center",
+            fontsize=5.1,
+            color=GENE_COLORS.get(exemplar, PALETTE["ink"]),
+            fontweight="bold" if exemplar in GENE_COLORS else "normal",
+        )
+    ax.text(
+        0.015,
+        0.93,
+        "Curated markers define interpretable positive controls before local spatial inspection",
+        ha="left",
+        va="center",
+        fontsize=6.0,
+        color=PALETTE["ink"],
+    )
+    ax.set_title("Marker-control logic", fontsize=7.6, pad=4)
+    panel_label(ax, "f", x=-0.02, y=1.08)
+
+    ax = fig.add_subplot(gs[3, :])
+    ax.set_axis_off()
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    example_cards = [
+        ("CCND1", "11q13 tumor", "matched positive"),
+        ("C1QA", "macrophage", "matched positive"),
+        ("JCHAIN", "plasma cell", "matched positive"),
+        ("CDH5", "endothelial", "matched positive"),
+        ("ERBB2", "CXCL14+ fibroblast", "discordant control"),
+    ]
+    widths = [0.165, 0.165, 0.165, 0.165, 0.185]
+    x0 = 0.025
+    for idx, (gene, target, status) in enumerate(example_cards):
+        width = widths[idx]
+        color = GENE_COLORS[gene]
+        face = "#fff8ed" if gene == "ERBB2" else "#ffffff"
+        ax.add_patch(plt.Rectangle((x0, 0.26), width, 0.54, facecolor=face, edgecolor=color, linewidth=1.0))
+        ax.text(x0 + width / 2, 0.66, gene, ha="center", va="center", fontsize=7.1, fontweight="bold", color=color)
+        ax.text(x0 + width / 2, 0.50, target, ha="center", va="center", fontsize=5.4, color=PALETTE["ink"])
+        ax.text(x0 + width / 2, 0.36, status, ha="center", va="center", fontsize=5.1, color=PALETTE["muted"])
+        if idx < len(example_cards) - 1:
+            ax.annotate(
+                "",
+                xy=(x0 + width + 0.020, 0.53),
+                xytext=(x0 + width + 0.004, 0.53),
+                arrowprops=dict(arrowstyle="-|>", lw=0.65, color="#9eb3c7"),
+            )
+        x0 += width + 0.026
+    ax.text(
+        0.5,
+        0.08,
+        "These five choices are visualized with true uRNA and cell coordinates in Figure 5.",
+        ha="center",
+        va="center",
+        fontsize=5.8,
+        color=PALETTE["ink"],
+    )
+    ax.set_title("Bridge to the spatial evidence figure", fontsize=7.6, pad=4)
+    panel_label(ax, "g", x=-0.02, y=1.08)
+
+    fig.subplots_adjust(left=0.073, right=0.986, top=0.963, bottom=0.052)
+    fig.savefig(FIGURES / "figure_4_combined_lead_in.png", bbox_inches="tight")
+    fig.savefig(FIGURES / "figure_4_combined_lead_in.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+
 def figure_supplementary_discordance(summary):
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.8), dpi=220)
     df = summary.copy()
@@ -714,10 +1041,7 @@ def main():
     summary = add_marker_groups(summary)
     overall, cluster_counts, _by_marker, _marker_rows = save_tables(metadata, counts, summary)
     figure_graphical_abstract(metadata, overall)
-    figure_overview(metadata, counts, summary, cluster_counts)
-    figure_concordance(summary, overall)
-    figure_marker_validation(summary, urna_sss)
-    figure_gene_selection_rationale(metadata, counts, summary, urna_sss, overall)
+    figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts)
     figure_supplementary_discordance(summary)
 
 
