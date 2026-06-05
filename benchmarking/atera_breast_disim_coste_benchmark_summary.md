@@ -293,3 +293,45 @@ Main outputs:
 - `point_vs_cell_pathology_interpretation.md`: concise pathology interpretation report.
 - `point_vs_cell_overlap_heatmap.png/svg`: overlap heatmap.
 - `point_vs_cell_spatial_comparison.png/svg`: side-by-side cell map, point map, and point preview colored by nearest cell-domain label.
+
+## Alignment-Based Nature-Style Pathology Explanation Figures
+
+Output:
+`/data/taobo.hu/atera_breast_histoseg_nature_figures/pathology_explanations_aligned`
+
+Script:
+`benchmarking/atera_breast_nature_pathology_figures.py`
+
+The H&E overlays now use the official 10x Xenium Explorer alignment file:
+`WTA_Preview_FFPE_Breast_Cancer_he_alignment.csv`. The remote copy used by the script is
+`/data/taobo.hu/pyxenium_lazyslide_breast_wta_20260507/data/WTA_Preview_FFPE_Breast_Cancer_he_alignment.csv`,
+paired with the official H&E OME image and keypoint file. Alignment QC against 12 official keypoints gives mean error 12.24 px, median error 14.42 px, and max error 21.77 px. Using 0.2125 um per fixed image pixel, that is mean error 2.60 um and max error 4.63 um, which is appropriate for transcript/cell overlay interpretation at this scale.
+
+Figure logic:
+
+| panel type | purpose |
+| --- | --- |
+| global H&E overlap | shows tissue-wide location of each point-domain pathology signal |
+| local H&E overlap | zooms into the densest representative point-domain/cell-domain overlap region |
+| full-data statistics | uses all 60906532 selected-gene transcript points, not the visual preview |
+| marker/interpretation panel | links overlap, COSTE marker genes, and pathology interpretation |
+
+Core pathology explanations:
+
+| explanation | point domains and cell-domain context | statistical support | interpretation |
+| --- | --- | --- | --- |
+| tumor-rich molecular signal | SERPINA6/MSMB/KCNQ3/SERPINA1-rich point domains overlap invasive/tumor-rich COSTE-HistoSeg contexts | P10->C10 has 0.903 point-to-cell fraction; P07->C12 has 0.685; P01->C02 has 0.402 | the transcript-point map clearly recovers tumor-rich molecular regions and further splits broad tumor cell domains into transcript-level subdomains |
+| immune/stroma interface | CCL22/DPT/IGF2/BMPER/RERGL-rich point domains overlap immune/stromal interface contexts | P06->C08 has 0.627 point-to-cell fraction and 0.511 Jaccard; P03->C03 has 0.790 and 0.776 | the point-level map captures an immune/stromal interface signal, rather than a pure tumor-only signal |
+| mixed luminal/apocrine microenvironment | RERGL/BMPER/IGF2/DPT/CCL22-like point domains fall inside luminal/DCIS C04 and apocrine C03 cell-domain contexts | P02->C04 has 0.494; P11->C04 has 0.541; P03->C03 has 0.790 | these regions are best interpreted as local microenvironment mixing inside epithelial pathological contexts, not as a single pure cell type zone |
+
+Main exported figures:
+
+- `nature_pathology_triptych_summary.png/svg/pdf/tiff`: one compact three-row summary of the three pathology explanations.
+- `nature_pathology_tumor_rich_plate.png/svg/pdf/tiff`: global H&E, local H&E, full-data statistics, and marker interpretation for the tumor-rich signal.
+- `nature_pathology_immune_stroma_plate.png/svg/pdf/tiff`: the same four-panel structure for the immune/stroma interface signal.
+- `nature_pathology_mixed_luminal_apocrine_plate.png/svg/pdf/tiff`: the same structure for the mixed luminal/DCIS and apocrine microenvironment signal.
+- `nature_pathology_source_domain_statistics.csv`: source rows from the full point-vs-cell domain statistics used in the figures.
+- `nature_pathology_figure_manifest.json`: input paths, alignment QC, output paths, and ROI coordinates.
+- `nature_pathology_figure_contract.json`: figure intent and image-integrity notes.
+
+Important caveat: the H&E overlay panels use a 500000-point preview plus cell centroids so the figure remains readable. The bar plots and interpretation statistics use the full 60906532 selected-gene transcript-point comparison. No spatial grid is used in this pathology figure workflow.
