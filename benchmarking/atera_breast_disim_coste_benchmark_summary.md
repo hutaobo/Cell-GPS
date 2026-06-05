@@ -242,3 +242,54 @@ Main outputs:
 - `transcript_point_histoseg_domains.png/svg`: no-grid transcript-point spatial preview.
 
 Interpretation: this is the corrected cell-free HistoSeg formulation. It does not try to segment all 624M transcripts, because di-sim has already selected the informative genes. Instead, it segments the 60.9M transcript points belonging to the 1024 selected genes. Runtime is dominated by streaming assignment and parquet writing, not memory; peak RSS stayed below 1 GB. Compared with the grid prototype, the point map is no longer blocky and preserves transcript-level molecular structure, but it is naturally sparse where the selected genes have little expression.
+
+## Transcript-Point vs Cell-Based COSTE-HistoSeg Comparison
+
+Output:
+`/data/taobo.hu/atera_breast_histoseg_comparison/point_vs_cell_coste1024`
+
+Script:
+`benchmarking/atera_breast_point_vs_cell_histoseg_comparison.py`
+
+Comparison unit: each selected-gene transcript point from the no-grid point-level HistoSeg run was matched to the nearest cell-based COSTE-HistoSeg cell centroid. The overlap is transcript-weighted and uses no spatial grid.
+
+| field | value |
+| --- | ---: |
+| transcript points compared | 60906532 |
+| cell-based cells used as reference | 170057 |
+| point domains | 12 |
+| cell-based domains | 12 |
+| nearest-cell mean distance | 5.12 um |
+| nearest-cell median distance | 4.37 um |
+| nearest-cell 95th percentile distance | 10.99 um |
+| overlap matching time | 224.96 sec |
+| peak RSS | 0.36 GB |
+
+| metric | value |
+| --- | ---: |
+| adjusted Rand index | 0.261 |
+| normalized mutual information | 0.392 |
+| point-to-cell purity | 0.450 |
+| cell-to-point purity | 0.623 |
+| weighted mean best Jaccard | 0.314 |
+
+High-overlap domain examples:
+
+| point domain | best cell-based domain | point-to-cell fraction | Jaccard | pathology interpretation |
+| --- | --- | ---: | ---: | --- |
+| TranscriptPoint-HistoSeg-10 | COSTE-HistoSeg-10 | 0.903 | 0.176 | invasive/tumor-rich -> invasive/tumor-rich |
+| TranscriptPoint-HistoSeg-03 | COSTE-HistoSeg-03 | 0.790 | 0.776 | immune/stroma signature over apocrine region |
+| TranscriptPoint-HistoSeg-07 | COSTE-HistoSeg-12 | 0.685 | 0.353 | tumor-rich -> tumor/stroma interface |
+| TranscriptPoint-HistoSeg-06 | COSTE-HistoSeg-08 | 0.627 | 0.511 | immune/stroma interface -> immune/stroma interface |
+| TranscriptPoint-HistoSeg-01 | COSTE-HistoSeg-02 | 0.402 | 0.338 | invasive/tumor-rich -> invasive/tumor-rich; shared SERPINA6/KCNQ3/MSMB/SERPINA1 signature |
+
+Interpretation: the maps are related but not identical. ARI/NMI are moderate, while point-to-cell purity and the heatmap show clear dominant matches for several domains. This means the point-level HistoSeg is not simply reproducing the cell-level COSTE-HistoSeg; it often splits broad cell-based regions into transcript-level molecular micro-regions. Pathology interpretation is strongest when both overlap and marker logic agree, such as the SERPINA6/MSMB/KCNQ3/SERPINA1 tumor-rich domains and the CCL22/SAA2/MS4A1/LTB/IGLC7 immune/stroma-associated domain. It is weaker or mixed when the selected transcript signature falls inside a different cell-level context, such as RERGL/BMPER/IGF2/DPT/CCL22 points overlapping luminal/DCIS or apocrine cell-domain regions. These labels are molecular/pathology heuristics, not formal H&E diagnoses.
+
+Main outputs:
+
+- `point_vs_cell_overlap_counts.csv`: 12 x 12 transcript-weighted overlap counts.
+- `point_vs_cell_overlap_point_fraction.csv`: row-normalized overlap, used to read point-domain purity.
+- `point_vs_cell_best_domain_matches.csv`: best cell-domain match, Jaccard, nearest dominant cell type, and marker interpretation for each point domain.
+- `point_vs_cell_pathology_interpretation.md`: concise pathology interpretation report.
+- `point_vs_cell_overlap_heatmap.png/svg`: overlap heatmap.
+- `point_vs_cell_spatial_comparison.png/svg`: side-by-side cell map, point map, and point preview colored by nearest cell-domain label.
