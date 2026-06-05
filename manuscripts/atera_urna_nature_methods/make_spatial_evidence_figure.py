@@ -24,9 +24,9 @@ REPRESENTATIVE_CELLTYPES = [
     "Endothelial Cells",
 ]
 CELLTYPE_LABELS = {
-    "11q13 Invasive Tumor Cells": "11q13\nTumor",
-    "Basal-like Structured DCIS Cells": "Basal-like\nDCIS",
-    "CXCL14+ Fibroblasts": "CXCL14+\nFib.",
+    "11q13 Invasive Tumor Cells": "11q13",
+    "Basal-like Structured DCIS Cells": "Basal",
+    "CXCL14+ Fibroblasts": "CXCL14+",
     "Macrophages": "Macro.",
     "Plasma Cells": "Plasma",
     "Endothelial Cells": "Endoth.",
@@ -181,7 +181,7 @@ def plot_sss_heatmap(ax, sss: pd.DataFrame, metadata: pd.DataFrame):
         if target in REPRESENTATIVE_CELLTYPES:
             j = REPRESENTATIVE_CELLTYPES.index(target)
             ax.add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False, ec="#ffffff", lw=1.4))
-    ax.set_title("uRNA-only COSTE proximity (1 - SSS; higher is closer)", fontsize=8, color=INK, pad=5)
+    ax.set_title("uRNA-only COSTE proximity", fontsize=8, color=INK, pad=5)
     return image
 
 
@@ -280,7 +280,7 @@ def make_figure():
         figure=fig,
         height_ratios=[1.0, 1.0, 1.18, 1.0],
         hspace=0.60,
-        wspace=0.48,
+        wspace=0.60,
         top=0.965,
         bottom=0.045,
         left=0.06,
@@ -298,10 +298,10 @@ def make_figure():
         plot_spatial(ax, points, metadata.set_index("gene").loc[gene], gene)
         panel_label(ax, chr(ord("b") + idx), x=-0.08, y=1.12)
 
-    ax_heat = fig.add_subplot(gs[2, 0:3])
+    ax_heat = fig.add_subplot(gs[2, 0:2])
     heat_image = plot_sss_heatmap(ax_heat, sss, metadata)
-    panel_label(ax_heat, "g", x=-0.08, y=1.12)
-    cbar = fig.colorbar(heat_image, ax=ax_heat, fraction=0.018, pad=0.008)
+    panel_label(ax_heat, "g", x=-0.18, y=1.12)
+    cbar = fig.colorbar(heat_image, ax=ax_heat, fraction=0.030, pad=0.010)
     cbar.set_label("1 - SSS", fontsize=6, labelpad=1.0)
     cbar.ax.tick_params(labelsize=5.6, length=2)
 
