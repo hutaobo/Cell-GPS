@@ -17,6 +17,7 @@ and the manuscript companion code.
    reviewer_guide
    installation
    usage
+   api
    contributing
    authors
    history
