@@ -116,7 +116,7 @@ Selected domain examples:
 
 Interpretation: this is a COSTE-driven molecular HistoSeg, not an H&E-image HistoSeg run. It uses the COSTE-selected genes as spatial molecular landmarks, so the domains should be interpreted as expression/topology-informed tissue regions. The result separates broad stromal/immune-rich areas, invasive tumor-rich regions, and smaller luminal/apocrine-like islands while preserving a cell-level output format compatible with downstream histoseg-style domain summaries.
 
-## Cell-Free Transcript-Only di-sim/COSTE/HistoSeg
+## Cell-Free Transcript-Grid Prototype and di-sim/COSTE Input
 
 Output:
 `/data/taobo.hu/atera_breast_cellfree_transcript_pipeline/full_transcript_grid96_qv20_select1024_geneonly`
@@ -180,12 +180,65 @@ Selected cell-free domain examples:
 | cell-free transcript | build directed matrix | 18028 genes | 4.03 | 3.63 |
 | cell-free transcript | full di-sim | 18028 genes | 28.28 | 7.27 |
 | cell-free transcript | selected COSTE | 1024 genes | 0.82 | 3.69 |
-| cell-free transcript | HistoSeg domains | 9072 bins | 2.74 | 3.74 |
+| cell-free grid prototype | HistoSeg domains, superseded | 9072 bins | 2.74 | 3.74 |
+| cell-free transcript-point | collect HistoSeg training points | 750000 points | 36.16 | 0.39 |
+| cell-free transcript-point | fit point HistoSeg | 750000 points | 24.69 | 0.76 |
+| cell-free transcript-point | assign selected transcript points | 60906532 points | 356.29 | 0.94 |
 | cell-based | build directed matrix from cells | 18028 genes | 52.60 | 6.98 |
 | cell-based | full di-sim | 18028 genes | 60.20 | 14.02 |
 | cell-based | selected COSTE | 1024 genes | 0.86 | 2.13 |
 | cell-based | HistoSeg domains | 170057 cells | 23.35 | n/a |
 
-Interpretation: the cell-free path spends most of its time reading the 740M-row transcript table twice: once to discover gene counts and coordinate bounds, and once to aggregate into the spatial grid. That makes the end-to-end cell-free run slower than the already materialized cell-based benchmark if transcript IO is included. After the transcript grid exists, however, the cell-free core is faster and lighter: directed matrix + full di-sim + selected COSTE + HistoSeg takes about 35.87 seconds, versus about 84.40 seconds for the analogous cell-based post-matrix steps. The lower peak memory for cell-free full di-sim also reflects that the transcript-grid matrix is spatially compressed to 9072 occupied bins before the directed gene matrix is computed.
+Interpretation: the cell-free path spends most of its time reading transcript points and then assigning point domains. The old 9072-bin HistoSeg timing is fast but is only a coarse prototype. The corrected transcript-point HistoSeg assigns 60906532 selected-gene transcript points in 356.29 seconds after a 60.85-second sample-and-fit stage, while keeping peak RSS below 1 GB. That is slower than the 170057-cell HistoSeg run because it assigns about 358x more spatial objects, but it matches the intended cell-free unit: transcript points from the genes already selected by di-sim/COSTE.
 
-The cell-free PNG preview is a valid spatial map, but it is a grid-domain map rather than a cell-domain map. It preserves the tissue outline and broad domain structure, with more block-like regions because each call belongs to a 96 x 96 grid bin instead of an individual cell.
+The cell-free PNG preview is a valid spatial map, but it is a grid-domain map rather than a cell-domain map. It preserves the tissue outline and broad domain structure, with more block-like regions because each call belongs to a 96 x 96 grid bin instead of an individual cell. For that reason, the HistoSeg part of this run should be treated as a coarse prototype only. The corrected cell-free HistoSeg result below uses transcript points directly.
+
+## Corrected Transcript-Point HistoSeg
+
+Output:
+`/data/taobo.hu/atera_breast_transcript_point_histoseg/coste1024_point_knn_train750k_assign_all`
+
+Script:
+`benchmarking/atera_breast_transcript_point_histoseg.py`
+
+This corrected run does not build a spatial grid. It takes the 1024 genes selected by full di-sim and organized by COSTE modules, then works directly on the transcript points from those selected genes. The HistoSeg-style feature for a point is the local composition of COSTE modules in its transcript-point neighborhood, plus a weak spatial coordinate term. The model trains on a 750000-point reservoir sample and then streams through the transcript table again to assign every selected-gene transcript point.
+
+| field | value |
+| --- | ---: |
+| uses spatial grid | false |
+| HistoSeg unit | transcript point |
+| selected COSTE genes | 1024 |
+| selected-gene transcript points | 60906532 |
+| training transcript points | 750000 |
+| preview transcript points | 500000 |
+| COSTE gene modules | 16 |
+| HistoSeg-style domains | 12 |
+| local neighborhood k | 128 |
+| assignment neighbors | 15 |
+| written parquet parts | 371 |
+
+| step | items | seconds | peak GB |
+| --- | ---: | ---: | ---: |
+| collect transcript-point training sample | 750000 | 36.16 | 0.39 |
+| fit transcript-point HistoSeg | 750000 | 24.69 | 0.76 |
+| assign selected transcript points | 60906532 | 356.29 | 0.94 |
+
+Selected transcript-point domain examples:
+
+| domain | transcript points | fraction | top module genes |
+| --- | ---: | ---: | --- |
+| TranscriptPoint-HistoSeg-01 | 22106213 | 0.363 | HBB/SERPINA6/MSMB/KCNQ3/SERPINA1 |
+| TranscriptPoint-HistoSeg-02 | 5400966 | 0.089 | RERGL/BMPER/IGF2/DPT/CCL22 |
+| TranscriptPoint-HistoSeg-06 | 5965642 | 0.098 | RERGL/BMPER/IGF2/DPT/CCL22 |
+| TranscriptPoint-HistoSeg-09 | 5203948 | 0.085 | HBB/SERPINA6/MSMB/KCNQ3/SERPINA1 |
+| TranscriptPoint-HistoSeg-12 | 10367916 | 0.170 | HBB/SERPINA6/MSMB/KCNQ3/SERPINA1 |
+
+Main outputs:
+
+- `transcript_point_domain_chunks/part_*.parquet`: point-level domain calls for all 60906532 selected-gene transcript points.
+- `transcript_point_histoseg_domain_summary.csv`: domain sizes and dominant COSTE module summaries.
+- `transcript_point_histoseg_training_domains.parquet`: 750000 training transcript points with fitted domain labels.
+- `transcript_point_histoseg_preview_points.parquet/csv`: 500000 point preview used for plotting.
+- `transcript_point_histoseg_domains.png/svg`: no-grid transcript-point spatial preview.
+
+Interpretation: this is the corrected cell-free HistoSeg formulation. It does not try to segment all 624M transcripts, because di-sim has already selected the informative genes. Instead, it segments the 60.9M transcript points belonging to the 1024 selected genes. Runtime is dominated by streaming assignment and parquet writing, not memory; peak RSS stayed below 1 GB. Compared with the grid prototype, the point map is no longer blocky and preserves transcript-level molecular structure, but it is naturally sparse where the selected genes have little expression.
