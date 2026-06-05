@@ -53,10 +53,11 @@ LIGHT = "#d8dde5"
 def load_inputs():
     points = pd.read_csv(SPATIAL / "spatial_example_points.csv")
     metadata = pd.read_csv(SPATIAL / "spatial_example_metadata.csv")
+    overview = pd.read_csv(SPATIAL / "overview_cell_points.csv")
     summary = pd.read_csv(RESULTS / "urna_segmentation_bias_gene_summary.csv")
     sss = pd.read_csv(RESULTS / "urna_only_t_and_c_result.csv", index_col=0)
     marker_summary = pd.read_csv(TABLES / "marker_group_summary.csv")
-    return points, metadata, summary, sss, marker_summary
+    return points, metadata, overview, summary, sss, marker_summary
 
 
 def setup_matplotlib():
@@ -85,6 +86,50 @@ def style_axis(ax):
     ax.tick_params(colors=INK, labelsize=6, length=2.5, pad=1)
     ax.xaxis.label.set_color(INK)
     ax.yaxis.label.set_color(INK)
+
+
+def plot_overview(ax, overview: pd.DataFrame, metadata: pd.DataFrame):
+    ax.scatter(overview["x"], overview["y"], s=0.8, color="#c7cdd4", alpha=0.35, linewidths=0, rasterized=True)
+    meta = metadata.set_index("gene")
+    for gene in EXAMPLE_GENES:
+        row = meta.loc[gene]
+        color = TARGET_COLORS[gene]
+        half = float(row["window_um"]) / 2
+        rect = plt.Rectangle(
+            (float(row["center_x"]) - half, float(row["center_y"]) - half),
+            float(row["window_um"]),
+            float(row["window_um"]),
+            fill=False,
+            ec=color,
+            lw=1.2,
+        )
+        ax.add_patch(rect)
+        ax.text(
+            float(row["center_x"]),
+            float(row["center_y"]) - half - 95,
+            gene,
+            color=color,
+            fontsize=6.0,
+            fontweight="bold",
+            ha="center",
+            va="bottom",
+        )
+    ax.set_xlim(overview["x"].min() - 150, overview["x"].max() + 150)
+    ax.set_ylim(overview["y"].min() - 150, overview["y"].max() + 150)
+    ax.invert_yaxis()
+    ax.set_aspect("equal")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for spine in ax.spines.values():
+        spine.set_color("#a6b3c1")
+        spine.set_linewidth(0.7)
+    ax.set_title("Whole-section overview", fontsize=7.2, color=INK, pad=3)
+
+    scale_um = 1000
+    x0 = overview["x"].max() - 1200
+    y0 = overview["y"].max() - 180
+    ax.plot([x0, x0 + scale_um], [y0, y0], color=INK, lw=1.1)
+    ax.text(x0 + scale_um / 2, y0 - 90, "1 mm", fontsize=5.5, ha="center", va="top", color=INK)
 
 
 def plot_spatial(ax, points: pd.DataFrame, metadata: pd.Series, gene: str):
@@ -197,8 +242,8 @@ def plot_example_table(ax, metadata: pd.DataFrame):
     headers = ["gene", "uRNA\nSSS", "rho", "match", "uRNA best", "full best"]
     table = ax.table(cellText=rows, colLabels=headers, loc="center", cellLoc="left", colLoc="left")
     table.auto_set_font_size(False)
-    table.set_fontsize(5.8)
-    table.scale(1, 1.35)
+    table.set_fontsize(5.4)
+    table.scale(1, 1.18)
     for (r, c), cell in table.get_celld().items():
         cell.set_edgecolor("#d0d7df")
         cell.set_linewidth(0.35)
@@ -225,43 +270,49 @@ def short_cluster(name: str) -> str:
 def make_figure():
     setup_matplotlib()
     FIGURES.mkdir(parents=True, exist_ok=True)
-    points, metadata, summary, sss, marker_summary = load_inputs()
+    points, metadata, overview, summary, sss, marker_summary = load_inputs()
     metadata = metadata.set_index("gene").loc[EXAMPLE_GENES].reset_index()
 
-    fig = plt.figure(figsize=(7.15, 8.0), dpi=600)
+    fig = plt.figure(figsize=(7.15, 7.2), dpi=600)
     gs = GridSpec(
         4,
         5,
         figure=fig,
-        height_ratios=[1.18, 1.22, 1.25, 1.00],
-        hspace=0.55,
-        wspace=0.32,
-        top=0.96,
-        bottom=0.04,
+        height_ratios=[1.0, 1.0, 1.18, 1.0],
+        hspace=0.60,
+        wspace=0.34,
+        top=0.965,
+        bottom=0.045,
         left=0.06,
         right=0.985,
     )
 
+    ax_overview = fig.add_subplot(gs[0:2, 0:2])
+    plot_overview(ax_overview, overview, metadata)
+    panel_label(ax_overview, "a", x=-0.08, y=1.08)
+
+    zoom_positions = [(0, 2), (0, 3), (0, 4), (1, 2), (1, 3)]
     for idx, gene in enumerate(EXAMPLE_GENES):
-        ax = fig.add_subplot(gs[0, idx])
+        row, col = zoom_positions[idx]
+        ax = fig.add_subplot(gs[row, col])
         plot_spatial(ax, points, metadata.set_index("gene").loc[gene], gene)
-        panel_label(ax, chr(ord("a") + idx), x=-0.08, y=1.12)
+        panel_label(ax, chr(ord("b") + idx), x=-0.08, y=1.12)
 
-    ax_heat = fig.add_subplot(gs[1:3, 0:3])
+    ax_heat = fig.add_subplot(gs[2, 0:3])
     plot_sss_heatmap(ax_heat, sss, metadata)
-    panel_label(ax_heat, "f", x=-0.08, y=1.04)
+    panel_label(ax_heat, "g", x=-0.08, y=1.12)
 
-    ax_hist = fig.add_subplot(gs[1, 3:5])
+    ax_hist = fig.add_subplot(gs[2, 3:5])
     plot_concordance_context(ax_hist, summary, metadata)
-    panel_label(ax_hist, "g", x=-0.10, y=1.12)
+    panel_label(ax_hist, "h", x=-0.10, y=1.12)
 
-    ax_marker = fig.add_subplot(gs[2, 3:5])
+    ax_marker = fig.add_subplot(gs[3, 0:2])
     plot_marker_summary(ax_marker, marker_summary)
-    panel_label(ax_marker, "h", x=-0.10, y=1.12)
+    panel_label(ax_marker, "i", x=-0.10, y=1.12)
 
-    ax_table = fig.add_subplot(gs[3, :])
+    ax_table = fig.add_subplot(gs[3, 2:5])
     plot_example_table(ax_table, metadata)
-    panel_label(ax_table, "i", x=-0.012, y=1.08)
+    panel_label(ax_table, "j", x=-0.05, y=1.12)
 
     fig.savefig(FIGURES / "figure_5_spatial_evidence_multipanel.pdf", bbox_inches="tight")
     fig.savefig(FIGURES / "figure_5_spatial_evidence_multipanel.png", bbox_inches="tight", dpi=600)

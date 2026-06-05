@@ -12,7 +12,7 @@ This folder contains a Nature Methods style draft package for the Atera WTA brea
 - `extract_spatial_example_data.py`: A100-side extractor for real uRNA/cell-coordinate windows used in Figure 5.
 - `make_spatial_evidence_figure.py`: builds the Nature-style multi-panel spatial evidence figure.
 - `paper_level_summary.md`: machine-generated numerical summary.
-- `spatial_examples/`: real extracted uRNA and cell-centroid points for the Figure 5 examples.
+- `spatial_examples/`: real extracted uRNA/cell-centroid points and sampled whole-section cell background for Figure 5.
 - `figures/`: graphical abstract and draft main/extended figures.
 - `tables/`: derived tables used by the draft.
 

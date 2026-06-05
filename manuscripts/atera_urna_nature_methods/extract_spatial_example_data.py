@@ -35,6 +35,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--grid-um", type=float, default=120.0)
     parser.add_argument("--max-urna-points", type=int, default=7000)
     parser.add_argument("--max-other-cells", type=int, default=3500)
+    parser.add_argument("--max-overview-cells", type=int, default=120000)
     parser.add_argument("--seed", type=int, default=17)
     return parser.parse_args()
 
@@ -204,6 +205,8 @@ def main() -> None:
     metadata = pd.DataFrame(meta_rows)
     points.to_csv(args.output_dir / "spatial_example_points.csv", index=False)
     metadata.to_csv(args.output_dir / "spatial_example_metadata.csv", index=False)
+    overview_cells = downsample(cells[["cell_id", "celltype", "x", "y"]].copy(), args.max_overview_cells, rng)
+    overview_cells.to_csv(args.output_dir / "overview_cell_points.csv", index=False)
     (args.output_dir / "spatial_example_config.json").write_text(
         json.dumps(
             {
@@ -215,6 +218,7 @@ def main() -> None:
                 "grid_um": args.grid_um,
                 "max_urna_points": args.max_urna_points,
                 "max_other_cells": args.max_other_cells,
+                "max_overview_cells": args.max_overview_cells,
                 "seed": args.seed,
             },
             indent=2,
