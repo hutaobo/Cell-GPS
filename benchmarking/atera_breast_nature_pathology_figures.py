@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import textwrap
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -14,7 +15,7 @@ import numpy as np
 import pandas as pd
 import tifffile
 from matplotlib.gridspec import GridSpec, GridSpecFromSubplotSpec
-from matplotlib.patches import Rectangle
+from matplotlib.patches import FancyArrowPatch, Rectangle
 from skimage.transform import warp
 
 
@@ -55,7 +56,9 @@ class ROI:
 STORIES: dict[str, dict[str, Any]] = {
     "tumor_rich": {
         "title": "Tumor-rich molecular signal",
+        "question": "Does transcript-point HistoSeg recover the tumor-rich signal?",
         "claim": "SERPINA6/MSMB/KCNQ3/SERPINA1-rich transcript domains recover invasive tumor regions.",
+        "answer": "Yes. The strongest point domain maps onto tumor-rich cell-domain context, while broader tumor signals split into transcript-level subdomains.",
         "color": "#C2185B",
         "accent": "#7A003C",
         "point_domains": [1, 4, 7, 9, 10, 12],
@@ -77,7 +80,9 @@ STORIES: dict[str, dict[str, Any]] = {
     },
     "immune_stroma": {
         "title": "Immune/stroma interface",
+        "question": "Does transcript-point HistoSeg recover the immune/stroma interface?",
         "claim": "CCL22/DPT/IGF2/BMPER/RERGL-rich point domains identify immune-stromal interface regions.",
+        "answer": "Yes. The point domains concentrate at immune/stromal interface regions and share immune/stroma-associated marker logic with their cell-domain context.",
         "color": "#008C8C",
         "accent": "#004F57",
         "point_domains": [2, 3, 5, 6, 8, 11],
@@ -99,7 +104,9 @@ STORIES: dict[str, dict[str, Any]] = {
     },
     "mixed_luminal_apocrine": {
         "title": "Mixed luminal/apocrine microenvironment",
+        "question": "Why do some immune/stroma-like point domains sit inside luminal/DCIS or apocrine contexts?",
         "claim": "Immune/stroma-like transcript domains appear inside luminal/DCIS and apocrine cell-domain contexts.",
+        "answer": "They are best read as local microenvironment mixing inside epithelial pathological contexts, not as one pure luminal, apocrine, immune, or stromal zone.",
         "color": "#E68613",
         "accent": "#8F4A00",
         "point_domains": [2, 3, 11],
@@ -520,6 +527,185 @@ def plot_marker_table(ax: plt.Axes, data: dict[str, Any], story: dict[str, Any])
         y -= 0.092 if line else 0.055
 
 
+def plot_global_he_context(
+    ax: plt.Axes,
+    data: dict[str, Any],
+    story: dict[str, Any],
+    rois: list[ROI],
+    tissue_bounds: ROI,
+) -> None:
+    draw_he(ax, data, tissue_bounds, OVERVIEW_LEVEL, OVERVIEW_DOWNSAMPLE)
+    for idx, roi in enumerate(rois, start=1):
+        ax.add_patch(
+            Rectangle(
+                (roi.xmin, roi.ymin),
+                roi.xmax - roi.xmin,
+                roi.ymax - roi.ymin,
+                fill=False,
+                ec=story["accent"],
+                lw=0.9,
+            )
+        )
+        ax.text(
+            roi.xmin + 15,
+            roi.ymin + 40,
+            f"zoom {idx}",
+            color=story["accent"],
+            fontsize=5.5,
+            weight="bold",
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.65, "pad": 0.4},
+        )
+    add_scale_bar(ax, tissue_bounds, 1000, color="black")
+    ax.set_title("1. H&E context", fontsize=6.5, pad=1.5)
+
+
+def plot_story_caption(ax: plt.Axes, story: dict[str, Any], step: str, title: str, body: str) -> None:
+    ax.axis("off")
+    ax.add_patch(
+        Rectangle(
+            (0.0, 0.0),
+            1.0,
+            1.0,
+            transform=ax.transAxes,
+            fc="#F7F7F7",
+            ec="#D0D0D0",
+            lw=0.35,
+            clip_on=False,
+        )
+    )
+    ax.text(
+        0.035,
+        0.82,
+        step,
+        transform=ax.transAxes,
+        ha="left",
+        va="center",
+        fontsize=6.2,
+        fontweight="bold",
+        color="white",
+        bbox={"boxstyle": "round,pad=0.18", "facecolor": story["color"], "edgecolor": "none"},
+    )
+    ax.text(0.23, 0.86, title, transform=ax.transAxes, ha="left", va="top", fontsize=5.8, fontweight="bold")
+    ax.text(
+        0.035,
+        0.55,
+        textwrap.fill(body, width=28),
+        transform=ax.transAxes,
+        ha="left",
+        va="top",
+        fontsize=5.1,
+        linespacing=1.15,
+    )
+
+
+def plot_story_answer(ax: plt.Axes, data: dict[str, Any], story: dict[str, Any]) -> None:
+    ax.axis("off")
+    best = data["best"].loc[data["best"]["point_domain_id"].isin(story["point_domains"])].copy()
+    best = best.sort_values("point_to_cell_fraction", ascending=False).head(3)
+    support = "; ".join(
+        [
+            f"P{int(row.point_domain_id):02d}->C{int(row.best_cell_domain_id):02d} {row.point_to_cell_fraction:.2f}"
+            for row in best.itertuples(index=False)
+        ]
+    )
+    ax.add_patch(
+        Rectangle(
+            (0.0, 0.0),
+            1.0,
+            1.0,
+            transform=ax.transAxes,
+            fc="#FFFFFF",
+            ec=story["accent"],
+            lw=0.8,
+            clip_on=False,
+        )
+    )
+    ax.text(0.04, 0.94, "5. Pathology answer", transform=ax.transAxes, ha="left", va="top", fontsize=6.4, fontweight="bold")
+    ax.text(
+        0.04,
+        0.78,
+        textwrap.fill(story["answer"], width=31),
+        transform=ax.transAxes,
+        ha="left",
+        va="top",
+        fontsize=5.3,
+        linespacing=1.18,
+    )
+    ax.text(0.04, 0.36, "Full-data support", transform=ax.transAxes, ha="left", va="top", fontsize=5.7, fontweight="bold")
+    ax.text(
+        0.04,
+        0.25,
+        textwrap.fill(support, width=31),
+        transform=ax.transAxes,
+        ha="left",
+        va="top",
+        fontsize=5.0,
+        linespacing=1.15,
+    )
+
+
+def add_local_example_label(ax: plt.Axes, roi: ROI, label: str) -> None:
+    width = roi.xmax - roi.xmin
+    height = roi.ymax - roi.ymin
+    ax.text(
+        roi.xmin + 0.035 * width,
+        roi.ymin + 0.07 * height,
+        label,
+        ha="left",
+        va="top",
+        fontsize=5.3,
+        color="black",
+        bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.72, "pad": 0.6},
+    )
+
+
+def plot_story_support_stats(ax: plt.Axes, data: dict[str, Any], story: dict[str, Any]) -> None:
+    best = data["best"].loc[data["best"]["point_domain_id"].isin(story["point_domains"])].copy()
+    best = best.sort_values("point_to_cell_fraction", ascending=False).head(3)
+    best = best.sort_values("point_to_cell_fraction", ascending=True)
+    labels = [f"P{int(x):02d}-C{int(y):02d}" for x, y in zip(best["point_domain_id"], best["best_cell_domain_id"])]
+    y = np.arange(len(best))
+    ax.barh(y - 0.15, best["point_to_cell_fraction"], height=0.26, color=story["color"], alpha=0.92)
+    ax.barh(y + 0.15, best["jaccard_transcript_weighted"], height=0.26, color="#BDBDBD", alpha=0.95)
+    for yi, label, row in zip(y, labels, best.itertuples(index=False)):
+        ax.text(0.02, yi, label, va="center", ha="left", fontsize=5.3)
+        ax.text(min(float(row.point_to_cell_fraction) + 0.03, 0.96), yi - 0.15, f"{row.point_to_cell_fraction:.2f}", va="center", fontsize=4.8)
+    ax.set_yticks(y)
+    ax.set_yticklabels([])
+    ax.set_xlim(0, 1.0)
+    ax.set_xlabel("Overlap metric", fontsize=5.9)
+    ax.set_title("4. Top full-data support", fontsize=6.4, pad=1.5)
+    ax.grid(axis="x", lw=0.3, color="#D9D9D9")
+    ax.spines["left"].set_visible(False)
+    ax.tick_params(axis="x", labelsize=5.2)
+    ax.tick_params(axis="y", length=0)
+
+
+def add_flow_arrows(fig: plt.Figure, axes: list[plt.Axes], color: str) -> None:
+    fig.canvas.draw()
+    for left, right in zip(axes[:-1], axes[1:]):
+        left_box = left.get_position()
+        right_box = right.get_position()
+        x0 = left_box.x1 + 0.006
+        x1 = right_box.x0 - 0.006
+        if x1 <= x0:
+            continue
+        y = (left_box.y0 + left_box.y1) / 2.0
+        fig.add_artist(
+            FancyArrowPatch(
+                (x0, y),
+                (x1, y),
+                transform=fig.transFigure,
+                arrowstyle="-|>",
+                mutation_scale=8,
+                lw=0.7,
+                color=color,
+                alpha=0.85,
+                clip_on=False,
+            )
+        )
+
+
 def save_pub(fig: plt.Figure, output_dir: Path, stem: str) -> list[str]:
     paths: list[str] = []
     for ext, kwargs in [
@@ -565,6 +751,70 @@ def make_story_plate(data: dict[str, Any], story_key: str, story: dict[str, Any]
     return {
         "story": story_key,
         "title": story["title"],
+        "claim": story["claim"],
+        "local_rois": [roi.__dict__ for roi in rois],
+        "outputs": paths,
+    }
+
+
+def make_story_flow(data: dict[str, Any], story_key: str, story: dict[str, Any], output_dir: Path, tissue_bounds: ROI) -> dict[str, Any]:
+    rois = [example_roi(data["points"], example, tissue_bounds) for example in story["local_examples"]]
+    fig = plt.figure(figsize=(7.2, 3.7))
+    grid = GridSpec(
+        2,
+        5,
+        figure=fig,
+        height_ratios=[0.69, 0.31],
+        width_ratios=[1.05, 1.05, 1.05, 0.95, 0.95],
+        hspace=0.16,
+        wspace=0.42,
+    )
+
+    ax_he = fig.add_subplot(grid[0, 0])
+    plot_global_he_context(ax_he, data, story, rois, tissue_bounds)
+
+    ax_signal = fig.add_subplot(grid[0, 1])
+    plot_global_overlay(ax_signal, data, story, rois, tissue_bounds)
+    ax_signal.set_title("2. Point-domain signal", fontsize=6.5, pad=1.5)
+
+    local_grid = GridSpecFromSubplotSpec(len(rois), 1, subplot_spec=grid[0, 2], hspace=0.16)
+    local_axes: list[plt.Axes] = []
+    for idx, (example, roi) in enumerate(zip(story["local_examples"], rois)):
+        ax = fig.add_subplot(local_grid[idx, 0])
+        plot_local_overlay(ax, data, story, example, roi)
+        ax.set_title("3. Local overlap" if idx == 0 else "Local overlap", fontsize=6.2, pad=1.4)
+        add_local_example_label(ax, roi, example["label"])
+        local_axes.append(ax)
+
+    ax_stats = fig.add_subplot(grid[0, 3])
+    plot_story_support_stats(ax_stats, data, story)
+
+    ax_answer = fig.add_subplot(grid[0, 4])
+    plot_story_answer(ax_answer, data, story)
+
+    genes = story["local_examples"][0]["genes"]
+    captions = [
+        ("1", "Histology first", "Start from the official-aligned H&E image and mark the zoom region."),
+        ("2", "Add point signal", f"Overlay the selected transcript-point domains carrying {genes}."),
+        (
+            "3",
+            "Inspect overlap",
+            "Zoom into the densest point/cell overlap region." if len(rois) == 1 else "Inspect both luminal/DCIS and apocrine local examples.",
+        ),
+        ("4", "Check all points", "Use the full 60.9M selected-gene transcript-point comparison; color is point fraction and gray is Jaccard."),
+        ("5", "Answer question", "Combine marker logic, H&E context, and overlap statistics into one pathology readout."),
+    ]
+    for col, (step, title, body) in enumerate(captions):
+        ax_caption = fig.add_subplot(grid[1, col])
+        plot_story_caption(ax_caption, story, step, title, body)
+
+    fig.suptitle(story["question"], x=0.02, y=0.995, ha="left", fontsize=8.2, fontweight="bold")
+    add_flow_arrows(fig, [ax_he, ax_signal, local_axes[0], ax_stats, ax_answer], story["accent"])
+    paths = save_pub(fig, output_dir, f"nature_pathology_story_{story_key}_steps")
+    return {
+        "story": story_key,
+        "title": story["title"],
+        "question": story["question"],
         "claim": story["claim"],
         "local_rois": [roi.__dict__ for roi in rois],
         "outputs": paths,
@@ -629,6 +879,7 @@ def write_contract(output_dir: Path) -> None:
         "backend": "Python/matplotlib",
         "target": "Nature-style imaging plus quantitative validation",
         "panel_logic": {
+            "story_flow": "turns each pathology question into a five-step visual argument from H&E to interpretation",
             "global_HE_overlap": "shows tissue-wide localization of the point-domain signature on histology",
             "local_HE_overlap": "shows representative microscopic colocalization with cell-domain context",
             "statistics": "uses full 60.9M transcript-point overlap metrics",
@@ -654,8 +905,10 @@ def run(args: argparse.Namespace) -> None:
         ymax=float(max(cells["y"].max(), data["points"]["y"].max())) + 150,
     )
     outputs: list[dict[str, Any]] = []
+    story_flows: list[dict[str, Any]] = []
     for story_key, story in STORIES.items():
         outputs.append(make_story_plate(data, story_key, story, args.output_dir, tissue_bounds))
+        story_flows.append(make_story_flow(data, story_key, story, args.output_dir, tissue_bounds))
     triptych = make_triptych(data, args.output_dir, tissue_bounds)
     write_contract(args.output_dir)
 
@@ -679,6 +932,7 @@ def run(args: argparse.Namespace) -> None:
         "statistics_unit": "all selected-gene transcript points",
         "visual_overlay_unit": "500000 transcript-point preview plus cell centroids",
         "stories": outputs,
+        "story_flows": story_flows,
         "triptych": triptych,
         "outputs": {
             "contract": "nature_pathology_figure_contract.json",

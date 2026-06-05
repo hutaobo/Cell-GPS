@@ -311,6 +311,7 @@ Figure logic:
 
 | panel type | purpose |
 | --- | --- |
+| story flow | turns each pathology question into a connected five-step visual argument |
 | global H&E overlap | shows tissue-wide location of each point-domain pathology signal |
 | local H&E overlap | zooms into the densest representative point-domain/cell-domain overlap region |
 | full-data statistics | uses all 60906532 selected-gene transcript points, not the visual preview |
@@ -326,6 +327,9 @@ Core pathology explanations:
 
 Main exported figures:
 
+- `nature_pathology_story_tumor_rich_steps.png/svg/pdf/tiff`: five-step story figure for the tumor-rich question, moving from H&E context to point signal, local overlap, top full-data support, and pathology answer.
+- `nature_pathology_story_immune_stroma_steps.png/svg/pdf/tiff`: five-step story figure for the immune/stroma interface question.
+- `nature_pathology_story_mixed_luminal_apocrine_steps.png/svg/pdf/tiff`: five-step story figure for the mixed luminal/DCIS and apocrine microenvironment question, with separate local zooms for both local contexts.
 - `nature_pathology_triptych_summary.png/svg/pdf/tiff`: one compact three-row summary of the three pathology explanations.
 - `nature_pathology_tumor_rich_plate.png/svg/pdf/tiff`: global H&E, local H&E, full-data statistics, and marker interpretation for the tumor-rich signal.
 - `nature_pathology_immune_stroma_plate.png/svg/pdf/tiff`: the same four-panel structure for the immune/stroma interface signal.
@@ -335,3 +339,5 @@ Main exported figures:
 - `nature_pathology_figure_contract.json`: figure intent and image-integrity notes.
 
 Important caveat: the H&E overlay panels use a 500000-point preview plus cell centroids so the figure remains readable. The bar plots and interpretation statistics use the full 60906532 selected-gene transcript-point comparison. No spatial grid is used in this pathology figure workflow.
+
+Story-flow design note: the three `nature_pathology_story_*_steps` figures are intended for presentation or manuscript narrative. Each one asks a single pathology question and then follows the same evidence chain: official-aligned H&E context, transcript-point domain overlay, densest local H&E overlap, top full-data point-vs-cell support, and a final pathology answer. This makes the three findings separable while keeping their visual grammar consistent.
