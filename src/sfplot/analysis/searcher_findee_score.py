@@ -9,6 +9,16 @@ from scipy.spatial.distance import squareform, pdist
 from sklearn.neighbors import NearestNeighbors
 
 
+def _ensure_torch_available() -> None:
+    try:
+        import torch  # noqa: F401
+    except ImportError as exc:
+        raise ImportError(
+            "PyTorch is required when backend='gpu' or backend='cuda'. "
+            "Install Cell-GPS[gpu] or install torch in the active environment."
+        ) from exc
+
+
 def _resolve_backend(backend: str) -> str:
     """Resolve a user-facing backend string to ``'cpu'`` or ``'gpu'``.
 
@@ -19,12 +29,7 @@ def _resolve_backend(backend: str) -> str:
     """
     b = str(backend or "cpu").lower()
     if b in ("gpu", "cuda"):
-        try:
-            import torch  # noqa: F401
-        except Exception as exc:
-            raise ImportError(
-                "GPU backend requires PyTorch; install via `pip install Cell-GPS[gpu]`."
-            ) from exc
+        _ensure_torch_available()
         return "gpu"
     if b == "cpu":
         return "cpu"
