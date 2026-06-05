@@ -28,7 +28,10 @@ class TestCellGps(unittest.TestCase):
 
     def test_legacy_import_still_works(self):
         """The historical sfplot namespace should remain compatible."""
-        self.assertEqual(set(cellgps.__all__), set(sfplot.__all__) | {"analysis", "preprocessing", "plotting", "gui"})
+        self.assertEqual(
+            set(cellgps.__all__),
+            set(sfplot.__all__) | {"analysis", "preprocessing", "plotting", "gui", "pp", "tl", "pl"},
+        )
 
     def test_expected_public_exports_exist(self):
         """Key reviewer-facing APIs should remain exposed at the top level."""

@@ -20,7 +20,7 @@ try:
 except PackageNotFoundError:
     __version__ = getattr(_legacy, "__version__", "0.0.6")
 
-_SUBPACKAGES = {"analysis", "preprocessing", "plotting", "gui"}
+_SUBPACKAGES = {"analysis", "preprocessing", "plotting", "gui", "pp", "tl", "pl"}
 
 __all__ = sorted(set(_legacy.__all__) | _SUBPACKAGES)
 

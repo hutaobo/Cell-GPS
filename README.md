@@ -53,6 +53,7 @@ The Python package is hosted at `https://github.com/hutaobo/Cell-GPS`. The R pac
 ## Repository layout
 
 - `src/cellgps/`: recommended Python import namespace.
+- `src/cellgps/pp`, `src/cellgps/tl`, `src/cellgps/pl`: scverse-style aliases for preprocessing, analysis, and plotting APIs.
 - `src/sfplot/`: legacy compatibility namespace that currently hosts implementation modules; new code should import through `cellgps`.
 - `tests/`: package tests and smoke checks.
 - `docs/`: Sphinx documentation.

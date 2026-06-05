@@ -1,0 +1,16 @@
+# Based on the lightweight coverage policy used by scverse templates.
+codecov:
+  require_ci_to_pass: false
+
+coverage:
+  status:
+    project:
+      default:
+        target: 1%
+    patch: false
+    changes: false
+
+comment:
+  layout: diff, flags, files
+  behavior: once
+  require_base: false

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -12,7 +12,11 @@ authors = [
     { name = "Mengping Long", email = "mengping.long@scilifelab.se" },
     { name = "Mats Nilsson", email = "mats.nilsson@scilifelab.se" }
 ]
-license = { text = "MIT License" }
+maintainers = [
+    { name = "Taobo Hu", email = "taobo.hu@scilifelab.se" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -20,7 +24,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
     "pandas>=1.3",
@@ -52,10 +55,84 @@ cellgps-gui = "cellgps.gui.gui_app:main"
 [project.urls]
 Homepage = "https://github.com/hutaobo/Cell-GPS"
 Repository = "https://github.com/hutaobo/Cell-GPS"
+Source = "https://github.com/hutaobo/Cell-GPS"
 Documentation = "https://cell-gps.readthedocs.io/en/latest/"
 Preprint = "https://www.biorxiv.org/content/10.64898/2026.05.26.727847v1"
 "Manuscript code" = "https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code"
 "Conda forge" = "https://anaconda.org/conda-forge/cell-gps"
 
+[dependency-groups]
+dev = [
+    "build",
+    "pre-commit",
+    "ruff",
+    "twine>=4.0.2",
+]
+test = [
+    "anndata",
+    "coverage[toml]>=7.6",
+    "pytest",
+    "pytest-cov",
+]
+doc = [
+    "alabaster",
+    "sphinx>=7.2",
+    "sphinx-autodoc-typehints",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+testpaths = [
+    "tests",
+]
+
+[tool.coverage.run]
+source = [
+    "cellgps",
+    "sfplot",
+]
+omit = [
+    "**/test_*.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 120
+src = [
+    "src",
+    "tests",
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "B",
+    "C4",
+    "E",
+    "F",
+    "I",
+    "RUF100",
+    "UP",
+    "W",
+]
+ignore = [
+    "B008",
+    "E501",
+    "E731",
+    "E741",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"*/__init__.py" = [
+    "F401",
+]

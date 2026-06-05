@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Cell-GPS documentation
+    url: https://cell-gps.readthedocs.io/en/latest/
+    about: Check the documentation before opening an issue.
