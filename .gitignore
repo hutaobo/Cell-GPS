@@ -110,7 +110,11 @@ ENV/
 benchmarking/
 sfplot-manuscript/
 nc_revision_work/
-manuscripts/atera_urna_nature_methods/
+manuscripts/atera_urna/*
+!manuscripts/atera_urna/code/
+!manuscripts/atera_urna/code/**
+manuscripts/atera_urna/code/__pycache__/
+manuscripts/atera_urna/code/**/*.pyc
 .codex_tmp/
 !CellGPS.spec
 
