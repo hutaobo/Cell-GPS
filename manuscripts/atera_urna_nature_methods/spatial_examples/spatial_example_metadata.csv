@@ -1,6 +1,0 @@
-gene,target_celltype,center_x,center_y,window_um,window_urna_points_plotted,window_target_cells,window_other_cells_plotted,total_gene_urna,urna_fraction,urna_best_cluster,urna_best_sss,full_best_cluster,sss_spearman_vs_full,best_cluster_match
-CCND1,11q13 Invasive Tumor Cells,9430.09375,2704.296875,850.0,7000,1406,1943,703247,0.2051128366037777,11q13 Invasive Tumor Cells,0.0725573262349604,11q13 Invasive Tumor Cells,0.9985107958974752,True
-C1QA,Macrophages,7028.59375,2110.890625,850.0,572,70,2659,26608,0.4893695284337526,Macrophages,0.0422048133275898,Macrophages,1.0,True
-JCHAIN,Plasma Cells,559.0625,3941.734375,850.0,225,41,1592,5925,0.3527205619716633,Plasma Cells,0.0636260793154435,Plasma Cells,1.0,True
-CDH5,Endothelial Cells,9548.90625,4397.275064468384,850.0,136,108,1639,6827,0.2423328127218514,Endothelial Cells,0.0422091063948956,Endothelial Cells,1.0,True
-ERBB2,CXCL14+ Fibroblasts,1874.630226135254,2352.7464027404785,850.0,66,133,3500,1947,0.1842528626857197,CXCL14+ Fibroblasts,0.1655461735343762,Basal-like Structured DCIS Cells,0.2267132323862387,False
