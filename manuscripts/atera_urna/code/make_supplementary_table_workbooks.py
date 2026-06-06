@@ -40,13 +40,22 @@ SUMMARY_DESCRIPTIONS = {
 
 TABLE_SPECS = [
     {
-        "number": 3,
+        "number": 1,
         "source": "summary_statistics.csv",
-        "output": "supplementary_table_s3_summary_statistics.xlsx",
-        "title": "Supplementary Table S3. Overall summary statistics",
-        "sheet": "Table S3",
+        "output": "supplementary_table_s1_summary_statistics.xlsx",
+        "title": "Supplementary Table S1. Overall summary statistics",
+        "sheet": "Table S1",
         "purpose": "Overall transcript, gene coverage and concordance statistics used in the manuscript.",
         "manuscript_use": "Supports the dataset-scale and global concordance statements in Results.",
+    },
+    {
+        "number": 2,
+        "source": "top_50_uRNA_genes.csv",
+        "output": "supplementary_table_s2_top_50_urna_genes.xlsx",
+        "title": "Supplementary Table S2. Highest-count uRNA genes",
+        "sheet": "Table S2",
+        "purpose": "The 50 genes with the highest high-quality uRNA counts in the full Atera panel.",
+        "manuscript_use": "Supports the full-panel uRNA-coverage paragraph.",
     },
     {
         "number": 4,
@@ -58,56 +67,47 @@ TABLE_SPECS = [
         "manuscript_use": "Supports Figure 1d and the compartment-attribution paragraph.",
     },
     {
-        "number": 5,
+        "number": 6,
         "source": "marker_group_summary.csv",
-        "output": "supplementary_table_s5_marker_group_summary.xlsx",
-        "title": "Supplementary Table S5. Marker group summary",
-        "sheet": "Table S5",
+        "output": "supplementary_table_s6_marker_group_summary.xlsx",
+        "title": "Supplementary Table S6. Marker group summary",
+        "sheet": "Table S6",
         "purpose": "Group-level marker-control statistics for curated marker classes.",
         "manuscript_use": "Supports the marker-control Results section.",
     },
     {
-        "number": 6,
+        "number": 7,
         "source": "marker_validation_table.csv",
-        "output": "supplementary_table_s6_marker_validation.xlsx",
-        "title": "Supplementary Table S6. Per-marker validation table",
-        "sheet": "Table S6",
+        "output": "supplementary_table_s7_marker_validation.xlsx",
+        "title": "Supplementary Table S7. Per-marker validation table",
+        "sheet": "Table S7",
         "purpose": "Gene-level marker-control results for curated markers.",
         "manuscript_use": "Supports per-marker recovery and discordance statements.",
     },
     {
-        "number": 7,
+        "number": 8,
         "source": "lowest_concordance_genes.csv",
-        "output": "supplementary_table_s7_lowest_concordance_genes.xlsx",
-        "title": "Supplementary Table S7. Lowest-concordance genes",
-        "sheet": "Table S7",
+        "output": "supplementary_table_s8_lowest_concordance_genes.xlsx",
+        "title": "Supplementary Table S8. Lowest-concordance genes",
+        "sheet": "Table S8",
         "purpose": "The 30 genes with the lowest Spearman concordance between uRNA-COSTE and all-transcript SSS profiles.",
         "manuscript_use": "Supports Supplementary Fig. 1 and the discordant-profile Results section.",
-    },
-    {
-        "number": 8,
-        "source": "top_50_uRNA_genes.csv",
-        "output": "supplementary_table_s8_top_50_urna_genes.xlsx",
-        "title": "Supplementary Table S8. Highest-count uRNA genes",
-        "sheet": "Table S8",
-        "purpose": "The 50 genes with the highest high-quality uRNA counts in the full Atera panel.",
-        "manuscript_use": "Supports the full-panel uRNA-coverage paragraph.",
     },
 ]
 
 
 README_CONTENT = {
-    1: {
-        "title": "Supplementary Table S1. 530 analyzed genes for uRNA-COSTE and concordance analysis",
+    3: {
+        "title": "Supplementary Table S3. 530 analyzed genes for uRNA-COSTE and concordance analysis",
         "purpose": "Documents the exact 530-gene analysis universe used for uRNA-COSTE and concordance analyses.",
-        "contents": "The Table S1 sheet lists gene selection source, marker status, transcript counts, uRNA fraction, uRNA-COSTE best cell group, all-transcript best cell group, match status and Spearman concordance.",
+        "contents": "The Table S3 sheet lists gene selection source, marker status, transcript counts, uRNA fraction, uRNA-COSTE best cell group, all-transcript best cell group, match status and Spearman concordance.",
         "notes": "The 530-gene set is the union of the top 500 genes ranked by high-quality uRNA count and curated marker genes, with overlapping genes counted once.",
     },
-    2: {
-        "title": "Supplementary Table S2. Marker-control recovery in uRNA-COSTE",
+    5: {
+        "title": "Supplementary Table S5. Marker-control recovery in uRNA-COSTE",
         "purpose": "Reports gene-level curated marker-control results used to assess whether uRNAs recover interpretable tissue compartments.",
-        "contents": "The Table S2 sheet lists marker group, expected compartment, assigned and unassigned transcript counts, uRNA-COSTE best cell group, all-transcript best cell group, match status and Spearman concordance for each marker gene.",
-        "notes": "Group-level marker summaries are reported separately in Supplementary Table S5.",
+        "contents": "The Table S5 sheet lists marker group, expected compartment, assigned and unassigned transcript counts, uRNA-COSTE best cell group, all-transcript best cell group, match status and Spearman concordance for each marker gene.",
+        "notes": "Group-level marker summaries are reported separately in Supplementary Table S6.",
     },
 }
 
@@ -122,7 +122,7 @@ def clean_value(value):
 
 def read_table(spec):
     df = pd.read_csv(TABLES / spec["source"])
-    if spec["number"] == 3:
+    if spec["number"] == 1:
         df["description"] = df["metric"].map(SUMMARY_DESCRIPTIONS)
     for col in df.columns:
         if df[col].dtype == bool:
@@ -272,6 +272,7 @@ def standardize_sheet_names(wb, path):
         return
 
     primary = f"Table S{table_number}"
+    rename_primary_sheet_if_needed(wb, primary)
 
     if table_number == 1:
         move_sheet_first(wb, primary)
@@ -286,6 +287,15 @@ def standardize_sheet_names(wb, path):
     if "README" in wb.sheetnames:
         move_sheet_last(wb, "README")
         rewrite_readme_sheet(wb["README"], table_number)
+
+
+def rename_primary_sheet_if_needed(wb, primary):
+    if primary in wb.sheetnames:
+        return
+    for ws in wb.worksheets:
+        if ws.title != "README":
+            ws.title = primary
+            return
 
 
 def remove_auxiliary_sheets(wb, primary):
