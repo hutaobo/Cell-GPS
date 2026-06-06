@@ -690,8 +690,8 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         4,
         6,
         figure=fig,
-        height_ratios=[1.0, 1.08, 0.94, 0.86],
-        hspace=0.44,
+        height_ratios=[1.0, 1.08, 0.98, 0.88],
+        hspace=0.36,
         wspace=0.72,
     )
 
@@ -863,6 +863,8 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
     panel_label(ax, "e", x=-0.10, y=1.10)
 
     ax = fig.add_subplot(gs[2, :])
+    pos = ax.get_position()
+    ax.set_position([pos.x0 - 0.020, pos.y0 + 0.006, pos.width + 0.030, pos.height + 0.010])
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -881,7 +883,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         width = x_edges[idx + 1] - x_edges[idx] - 0.006
         edge = PALETTE["gold"] if group == "Tumor/DCIS interface" else "#9eb3c7"
         face = "#fff8ed" if group == "Tumor/DCIS interface" else "#ffffff"
-        rect = plt.Rectangle((x0, 0.22), width, 0.60, facecolor=face, edgecolor=edge, linewidth=0.85)
+        rect = plt.Rectangle((x0, 0.25), width, 0.60, facecolor=face, edgecolor=edge, linewidth=0.85)
         ax.add_patch(rect)
         if group in marker_summary.index:
             match = marker_summary.loc[group, "best_cluster_match_rate"]
@@ -892,7 +894,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         status = "mixed" if group == "Tumor/DCIS interface" else "recovered"
         ax.text(
             x0 + width / 2,
-            0.73,
+            0.76,
             MARKER_GROUP_LABELS[group],
             ha="center",
             va="center",
@@ -903,7 +905,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         )
         ax.text(
             x0 + width / 2,
-            0.58,
+            0.61,
             target,
             ha="center",
             va="center",
@@ -912,7 +914,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         )
         ax.text(
             x0 + width / 2,
-            0.43,
+            0.46,
             f"{status}\nmatch {match:.2g}; rho {rho:.2g}",
             ha="center",
             va="center",
@@ -922,7 +924,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         )
         ax.text(
             x0 + width / 2,
-            0.15,
+            0.18,
             exemplar,
             ha="center",
             va="center",
@@ -934,6 +936,8 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
     panel_label(ax, "f", x=-0.02, y=1.08)
 
     ax = fig.add_subplot(gs[3, :])
+    pos = ax.get_position()
+    ax.set_position([pos.x0 - 0.020, pos.y0 + 0.032, pos.width + 0.030, pos.height + 0.004])
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -950,15 +954,15 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         width = widths[idx]
         color = GENE_COLORS[gene]
         face = "#fff8ed" if gene == "ERBB2" else "#ffffff"
-        ax.add_patch(plt.Rectangle((x0, 0.32), width, 0.54, facecolor=face, edgecolor=color, linewidth=1.0))
-        ax.text(x0 + width / 2, 0.72, gene, ha="center", va="center", fontsize=7.4, fontweight="bold", color=color)
-        ax.text(x0 + width / 2, 0.56, target, ha="center", va="center", fontsize=5.7, color=PALETTE["ink"])
-        ax.text(x0 + width / 2, 0.42, status, ha="center", va="center", fontsize=5.7, color=PALETTE["muted"])
+        ax.add_patch(plt.Rectangle((x0, 0.36), width, 0.54, facecolor=face, edgecolor=color, linewidth=1.0))
+        ax.text(x0 + width / 2, 0.76, gene, ha="center", va="center", fontsize=7.4, fontweight="bold", color=color)
+        ax.text(x0 + width / 2, 0.60, target, ha="center", va="center", fontsize=5.7, color=PALETTE["ink"])
+        ax.text(x0 + width / 2, 0.46, status, ha="center", va="center", fontsize=5.7, color=PALETTE["muted"])
         if idx < len(example_cards) - 1:
             ax.annotate(
                 "",
-                xy=(x0 + width + 0.014, 0.59),
-                xytext=(x0 + width + 0.004, 0.59),
+                xy=(x0 + width + 0.014, 0.63),
+                xytext=(x0 + width + 0.004, 0.63),
                 arrowprops=dict(arrowstyle="-|>", lw=0.65, color="#9eb3c7"),
             )
         x0 += width + 0.018
