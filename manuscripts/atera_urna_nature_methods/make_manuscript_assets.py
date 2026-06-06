@@ -691,7 +691,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         6,
         figure=fig,
         height_ratios=[1.0, 1.08, 0.98, 0.88],
-        hspace=0.36,
+        hspace=0.43,
         wspace=0.72,
     )
 
@@ -864,7 +864,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
 
     ax = fig.add_subplot(gs[2, :])
     pos = ax.get_position()
-    ax.set_position([pos.x0 - 0.020, pos.y0 + 0.006, pos.width + 0.030, pos.height + 0.010])
+    ax.set_position([pos.x0 - 0.040, pos.y0 + 0.006, pos.width + 0.050, pos.height + 0.010])
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -937,7 +937,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
 
     ax = fig.add_subplot(gs[3, :])
     pos = ax.get_position()
-    ax.set_position([pos.x0 - 0.020, pos.y0 + 0.032, pos.width + 0.030, pos.height + 0.004])
+    ax.set_position([pos.x0 - 0.040, pos.y0 + 0.032, pos.width + 0.050, pos.height + 0.004])
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
