@@ -990,7 +990,8 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
 
 
 def figure_supplementary_discordance(summary):
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.8), dpi=220)
+    mm = 1 / 25.4
+    fig, axes = plt.subplots(1, 2, figsize=(183 * mm, 82 * mm), dpi=600)
     df = summary.copy()
 
     ax = axes[0]
@@ -999,17 +1000,57 @@ def figure_supplementary_discordance(summary):
     ax.set_xlabel("Spearman rho")
     ax.set_title("Lowest uRNA/full SSS concordance")
     style_axes(ax)
+    ax.tick_params(labelsize=6)
+    ax.text(-0.13, 1.08, "a", transform=ax.transAxes, fontsize=8, fontweight="bold", color=PALETTE["ink"], ha="left", va="bottom")
 
     ax = axes[1]
     discord["pair"] = discord["full_best_cluster"].astype(str) + "\n-> " + discord["urna_best_cluster"].astype(str)
     ax.scatter(discord["unassigned_fraction"], discord["unassigned_count"], color=PALETTE["red"], s=55, alpha=0.80)
-    for _, row in discord.iterrows():
-        ax.text(row["unassigned_fraction"], row["unassigned_count"] * 1.03, row["gene"], fontsize=7, color=PALETTE["ink"], ha="center")
     ax.set_yscale("log")
+    ax.set_xlim(0.137, 0.287)
+    ax.set_ylim(3.25e4, 2.45e5)
+    label_positions = {
+        "BCL2": (0.142, 3.75e4, "left"),
+        "COG1": (0.157, 4.75e4, "left"),
+        "DDX5": (0.157, 6.70e4, "left"),
+        "TM9SF2": (0.184, 4.45e4, "right"),
+        "AKT1": (0.183, 5.55e4, "right"),
+        "PERP": (0.194, 6.55e4, "center"),
+        "CCNG2": (0.209, 6.45e4, "left"),
+        "RAB18": (0.235, 6.35e4, "left"),
+        "AKR1A1": (0.219, 5.25e4, "left"),
+        "LRRC59": (0.224, 4.60e4, "left"),
+        "FIS1": (0.213, 3.85e4, "center"),
+        "FRS2": (0.226, 1.28e5, "center"),
+        "GNS": (0.200, 2.36e5, "center"),
+        "ANXA5": (0.266, 2.05e5, "center"),
+        "HSPB1": (0.271, 4.25e4, "center"),
+    }
+    for _, row in discord.iterrows():
+        label_x, label_y, ha = label_positions.get(row["gene"], (row["unassigned_fraction"], row["unassigned_count"] * 1.08, "center"))
+        ax.annotate(
+            row["gene"],
+            (row["unassigned_fraction"], row["unassigned_count"]),
+            xytext=(label_x, label_y),
+            textcoords="data",
+            fontsize=6.3,
+            color=PALETTE["ink"],
+            ha=ha,
+            va="center",
+            arrowprops=dict(
+                arrowstyle="-",
+                color="#9eb3c7",
+                lw=0.45,
+                shrinkA=1.5,
+                shrinkB=3.0,
+            ),
+        )
     ax.set_xlabel("uRNA fraction")
     ax.set_ylabel("uRNA count")
     ax.set_title("Discordance is not only low coverage")
     style_axes(ax)
+    ax.tick_params(labelsize=6)
+    ax.text(-0.10, 1.08, "b", transform=ax.transAxes, fontsize=8, fontweight="bold", color=PALETTE["ink"], ha="left", va="bottom")
 
     fig.tight_layout()
     fig.savefig(FIGURES / "supplementary_discordant_genes.png", bbox_inches="tight")
