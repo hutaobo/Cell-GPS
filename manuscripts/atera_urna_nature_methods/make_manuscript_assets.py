@@ -691,7 +691,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         6,
         figure=fig,
         height_ratios=[1.0, 1.08, 0.94, 0.86],
-        hspace=0.50,
+        hspace=0.44,
         wspace=0.72,
     )
 
@@ -855,7 +855,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
     for idx, (label, value, color) in enumerate(metrics):
         row = 3 - idx
         y0 = 0.12 + row * 0.19
-        ax.text(0.02, y0 + 0.045, label, ha="left", va="center", fontsize=5.8, color=PALETTE["ink"])
+        ax.text(0.02, y0 + 0.045, label, ha="left", va="center", fontsize=7.0, color=PALETTE["ink"])
         ax.add_patch(plt.Rectangle((0.36, y0 + 0.018), 0.50, 0.052, facecolor="#edf1f5", edgecolor="none"))
         ax.add_patch(plt.Rectangle((0.36, y0 + 0.018), 0.50 * value, 0.052, facecolor=color, edgecolor="none"))
         ax.text(0.89, y0 + 0.045, f"{value:.3f}", ha="left", va="center", fontsize=5.8, color=PALETTE["ink"])
@@ -875,13 +875,13 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         ("Vascular", "Endoth. / pericyte", "CDH5"),
         ("Tumor/DCIS interface", "mixed boundary", "ERBB2"),
     ]
-    x_edges = np.linspace(0.015, 0.985, len(marker_flow) + 1)
+    x_edges = np.linspace(0.0, 1.0, len(marker_flow) + 1)
     for idx, (group, target, exemplar) in enumerate(marker_flow):
-        x0 = x_edges[idx] + 0.006
-        width = x_edges[idx + 1] - x_edges[idx] - 0.012
+        x0 = x_edges[idx] + 0.003
+        width = x_edges[idx + 1] - x_edges[idx] - 0.006
         edge = PALETTE["gold"] if group == "Tumor/DCIS interface" else "#9eb3c7"
         face = "#fff8ed" if group == "Tumor/DCIS interface" else "#ffffff"
-        rect = plt.Rectangle((x0, 0.15), width, 0.60, facecolor=face, edgecolor=edge, linewidth=0.85)
+        rect = plt.Rectangle((x0, 0.22), width, 0.60, facecolor=face, edgecolor=edge, linewidth=0.85)
         ax.add_patch(rect)
         if group in marker_summary.index:
             match = marker_summary.loc[group, "best_cluster_match_rate"]
@@ -892,40 +892,41 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         status = "mixed" if group == "Tumor/DCIS interface" else "recovered"
         ax.text(
             x0 + width / 2,
-            0.66,
-            MARKER_GROUP_LABELS[group].replace("\n", " "),
+            0.73,
+            MARKER_GROUP_LABELS[group],
             ha="center",
             va="center",
-            fontsize=5.4,
+            fontsize=5.8,
             fontweight="bold",
             color=PALETTE["ink"],
+            linespacing=0.9,
         )
         ax.text(
             x0 + width / 2,
-            0.50,
+            0.58,
             target,
             ha="center",
             va="center",
-            fontsize=5.0,
+            fontsize=5.4,
             color=PALETTE["muted"],
         )
         ax.text(
             x0 + width / 2,
-            0.35,
+            0.43,
             f"{status}\nmatch {match:.2g}; rho {rho:.2g}",
             ha="center",
             va="center",
-            fontsize=4.75,
+            fontsize=5.2,
             color=PALETTE["gold"] if group == "Tumor/DCIS interface" else PALETTE["teal"],
             linespacing=1.0,
         )
         ax.text(
             x0 + width / 2,
-            0.075,
+            0.15,
             exemplar,
             ha="center",
             va="center",
-            fontsize=5.1,
+            fontsize=5.6,
             color=GENE_COLORS.get(exemplar, PALETTE["ink"]),
             fontweight="bold" if exemplar in GENE_COLORS else "normal",
         )
@@ -943,24 +944,24 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         ("CDH5", "endothelial", "matched positive"),
         ("ERBB2", "CXCL14+ fibroblast", "discordant control"),
     ]
-    widths = [0.165, 0.165, 0.165, 0.165, 0.185]
-    x0 = 0.025
+    widths = [0.178, 0.178, 0.178, 0.178, 0.205]
+    x0 = 0.008
     for idx, (gene, target, status) in enumerate(example_cards):
         width = widths[idx]
         color = GENE_COLORS[gene]
         face = "#fff8ed" if gene == "ERBB2" else "#ffffff"
-        ax.add_patch(plt.Rectangle((x0, 0.26), width, 0.54, facecolor=face, edgecolor=color, linewidth=1.0))
-        ax.text(x0 + width / 2, 0.66, gene, ha="center", va="center", fontsize=7.1, fontweight="bold", color=color)
-        ax.text(x0 + width / 2, 0.50, target, ha="center", va="center", fontsize=5.4, color=PALETTE["ink"])
-        ax.text(x0 + width / 2, 0.36, status, ha="center", va="center", fontsize=5.1, color=PALETTE["muted"])
+        ax.add_patch(plt.Rectangle((x0, 0.32), width, 0.54, facecolor=face, edgecolor=color, linewidth=1.0))
+        ax.text(x0 + width / 2, 0.72, gene, ha="center", va="center", fontsize=7.4, fontweight="bold", color=color)
+        ax.text(x0 + width / 2, 0.56, target, ha="center", va="center", fontsize=5.7, color=PALETTE["ink"])
+        ax.text(x0 + width / 2, 0.42, status, ha="center", va="center", fontsize=5.7, color=PALETTE["muted"])
         if idx < len(example_cards) - 1:
             ax.annotate(
                 "",
-                xy=(x0 + width + 0.020, 0.53),
-                xytext=(x0 + width + 0.004, 0.53),
+                xy=(x0 + width + 0.014, 0.59),
+                xytext=(x0 + width + 0.004, 0.59),
                 arrowprops=dict(arrowstyle="-|>", lw=0.65, color="#9eb3c7"),
             )
-        x0 += width + 0.026
+        x0 += width + 0.018
     ax.set_title("Bridge to spatial evidence", fontsize=7.6, pad=4)
     panel_label(ax, "g", x=-0.02, y=1.08)
 
