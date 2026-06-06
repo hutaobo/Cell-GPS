@@ -1,6 +1,10 @@
-# Cell-GPS User Guide and Distribution Notes
+# Cell-GPS/COSTE Manual: Topology-Based Spatial Omics Analysis from Coordinates to StructureMap
 
 ## 1. Executive Summary
+
+Cell-GPS is the reference software implementation for Cophenetic Spatial Topology Embedding (COSTE), a method for converting spatial omics coordinates and biological labels into tissue-scale topology summaries. The associated methods article presents COSTE as a general framework for measuring multiscale tissue architecture, generating StructureMap heatmaps and Spatial Separation Score (SSS) profiles, and extending the same coordinate-based logic to cells, transcripts, pathways, ligand-receptor candidates and other spatial entities.
+
+This manual is the practical companion to that methods article. It explains what the Windows executable contains, how it should be distributed, which workflows are exposed in the current graphical interface and how users should describe the standalone build accurately.
 
 `cellgps.exe` is a Windows x64 single-file GUI application packaged from the `Cell-GPS` codebase.
 
@@ -17,7 +21,15 @@ This is still a valid standalone distribution model, but it is important to desc
 - it is standalone for normal Windows users
 - it is not a pure native binary with zero runtime assumptions
 
-## 2. Build Characteristics
+## 2. Method Article Context
+
+The methods article should be described as a spatial-omics topology paper rather than a conventional clustering or visualization report. Its central claim is that tissue organization can be quantified by asking how annotated spatial entities find one another across the tissue field, transforming directed nearest-neighbor relationships into a cophenetic topology space. In this framework, a StructureMap summarizes relationships among populations, while SSS profiles quantify how close one entity is to biologically meaningful reference groups.
+
+Cell-GPS provides the software route from input coordinates to these outputs. It can operate on simple coordinate tables, `AnnData` objects and Xenium-style spatial transcriptomics outputs. The same conceptual workflow also supports transcript-by-cell and entity-to-cell analyses, allowing the method to move beyond cell-type neighborhood summaries toward segment-free or molecule-aware spatial evidence.
+
+The current executable is therefore best presented as a companion tool for applying COSTE workflows on Windows, especially for researchers who want to inspect coordinate-table or Xenium-derived StructureMap results without installing a Python environment.
+
+## 3. Build Characteristics
 
 The current official release has the following characteristics:
 
@@ -31,7 +43,7 @@ The current official release has the following characteristics:
 
 This release prioritizes stability and compatibility for the CSV and Xenium workflows over aggressive size reduction.
 
-## 3. Release Status
+## 4. Release Status
 
 The distributed executable should be treated as the official release build:
 
@@ -39,7 +51,7 @@ The distributed executable should be treated as the official release build:
 - older experimental or intermediate packaging variants should not be distributed
 - the current release was finalized after compatibility-focused packaging adjustments for the Xenium workflow
 
-## 4. Standalone Verdict
+## 5. Standalone Verdict
 
 The executable can be distributed as a standalone Windows application, provided that the target machine meets these conditions:
 
@@ -50,7 +62,7 @@ The executable can be distributed as a standalone Windows application, provided 
 
 In practical terms, most researchers should be able to download the file, copy it to a local folder, and run it without installing extra software.
 
-## 5. Known Limitations
+## 6. Known Limitations
 
 Please keep the following limitations in mind when distributing the application:
 
@@ -65,7 +77,7 @@ Please keep the following limitations in mind when distributing the application:
 4. In Xenium mode, if only `analysis.tar.gz` is available, the software may extract analysis files into the selected Xenium folder.
    That folder therefore needs write permission.
 
-## 6. Recommended Distribution Practice
+## 7. Recommended Distribution Practice
 
 For external release, distribute the software with:
 
@@ -76,16 +88,16 @@ When sharing the executable with researchers, use wording like this:
 
 > Cell-GPS is a Windows 64-bit single-file desktop build that already contains the required Python runtime and major dependencies. In most cases, no additional software installation is needed. The first launch may take longer because the application unpacks its runtime files into the user's temporary directory.
 
-## 7. System Requirements
+## 8. System Requirements
 
 - Windows 10 or Windows 11
 - 64-bit system
 - recommended memory: at least `8 GB RAM`
 - permission to read input datasets and write to the local temporary directory
 
-## 8. Before Launching the Program
+## 9. Before Launching the Program
 
-### 8.1 Copy the executable to a local disk
+### 9.1 Copy the executable to a local disk
 
 Do not run the program directly from:
 
@@ -98,7 +110,7 @@ Recommended locations:
 - `C:\Users\<username>\Desktop\Cell-GPS\cellgps.exe`
 - `C:\Users\<username>\Downloads\Cell-GPS\cellgps.exe`
 
-### 8.2 Unblock the file if Windows marked it as downloaded
+### 9.2 Unblock the file if Windows marked it as downloaded
 
 If the file was downloaded from a browser, cloud drive, or email:
 
@@ -107,7 +119,7 @@ If the file was downloaded from a browser, cloud drive, or email:
 3. If an `Unblock` option is visible, enable it
 4. Click `Apply` and `OK`
 
-### 8.3 Security software may intervene
+### 9.3 Security software may intervene
 
 On managed institutional machines, Windows SmartScreen or endpoint security software may delay or block the first launch.
 
@@ -116,7 +128,7 @@ If this happens, the user may need to:
 - allow the application to run
 - or ask their IT/security team to whitelist it
 
-## 9. Launch Instructions
+## 10. Launch Instructions
 
 To start the application:
 
@@ -129,16 +141,16 @@ Notes:
 - startup may be slower than ordinary desktop software because of temporary extraction
 - if no window appears immediately, wait before assuming the launch failed
 
-## 10. GUI Overview
+## 11. GUI Overview
 
 The application currently contains two workflows:
 
 - `CSV Heatmap`
 - `Xenium Heatmap`
 
-## 11. CSV Heatmap Workflow
+## 12. CSV Heatmap Workflow
 
-### 11.1 Required input
+### 12.1 Required input
 
 This mode expects a CSV file with at least these columns:
 
@@ -148,7 +160,7 @@ This mode expects a CSV file with at least these columns:
 
 If the file uses different column names, the current GUI does not provide a column-mapping dialog, and the workflow will fail.
 
-### 11.2 Steps
+### 12.2 Steps
 
 1. Open the program
 2. Go to the `CSV Heatmap` tab
@@ -159,15 +171,15 @@ If the file uses different column names, the current GUI does not provide a colu
 7. View the result in the display panel
 8. Adjust `Zoom` if needed
 
-### 11.3 Output behavior
+### 12.3 Output behavior
 
 The current GUI displays the result inside the application window.
 
 At the moment, there is no dedicated export button in the GUI, so users should treat the current build primarily as an analysis-and-preview interface.
 
-## 12. Xenium Heatmap Workflow
+## 13. Xenium Heatmap Workflow
 
-### 12.1 Expected Xenium folder structure
+### 13.1 Expected Xenium folder structure
 
 The selected Xenium folder should contain enough information for the loader to recover clustering and UMAP data through one of these paths:
 
@@ -175,7 +187,7 @@ The selected Xenium folder should contain enough information for the loader to r
 - `analysis.tar.gz`
 - `analysis.h5`
 
-### 12.2 Required selection CSV
+### 13.2 Required selection CSV
 
 The second CSV file must contain a column named exactly:
 
@@ -183,7 +195,7 @@ The second CSV file must contain a column named exactly:
 
 The program uses this column to select cells from the loaded Xenium dataset.
 
-### 12.3 Steps
+### 13.3 Steps
 
 1. Open the program
 2. Go to the `Xenium Heatmap` tab
@@ -196,7 +208,7 @@ The program uses this column to select cells from the loaded Xenium dataset.
 9. Click `Plot Xenium Heatmap`
 10. Wait for the result to appear in the display panel
 
-### 12.4 Important note about write access
+### 13.4 Important note about write access
 
 If only `analysis.tar.gz` is present and the extracted analysis folder is missing, the program may unpack analysis files into the selected Xenium directory.
 
@@ -207,9 +219,9 @@ That means:
 
 If users want to avoid changing the original dataset folder, they should work on a local copy.
 
-## 13. Troubleshooting
+## 14. Troubleshooting
 
-### 13.1 Nothing appears when double-clicking
+### 14.1 Nothing appears when double-clicking
 
 Check these first:
 
@@ -218,13 +230,13 @@ Check these first:
 - security software did not quarantine or suspend the process
 - the program has been given enough time to finish first-time extraction
 
-### 13.2 The program opens and then fails
+### 14.2 The program opens and then fails
 
 Check whether an `error.log` file was created next to the executable.
 
 This is the main runtime error log for the packaged build.
 
-### 13.3 Can researchers on other computers run it?
+### 14.3 Can researchers on other computers run it?
 
 In most cases, yes, if they are using:
 
@@ -232,13 +244,13 @@ In most cases, yes, if they are using:
 - a machine where `%TEMP%` is writable
 - valid input data in the expected format
 
-### 13.4 Why is the file still large?
+### 14.4 Why is the file still large?
 
 Because it still bundles a substantial scientific Python runtime and data processing stack required for heatmap generation and Xenium loading.
 
 The official release is a compatibility-focused scientific desktop executable rather than a minimal native utility.
 
-## 14. Recommended Final Validation Before Public Release
+## 15. Recommended Final Validation Before Public Release
 
 Before publishing globally, run one final smoke test on a clean Windows x64 machine that does not have your local Python or Conda development setup.
 
@@ -251,7 +263,7 @@ Recommended checklist:
 5. Confirm that no unexpected `error.log` is created
 6. Confirm that startup time is acceptable
 
-## 15. Final Assessment
+## 16. Final Assessment
 
 The official `cellgps.exe` is suitable for distribution to external researchers as a standalone Windows GUI application.
 
