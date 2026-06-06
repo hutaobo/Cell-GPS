@@ -685,13 +685,13 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
     df = summary.copy()
     marker_summary = marker_group_summary(summary).set_index("paper_marker_group")
 
-    fig = plt.figure(figsize=(7.15, 7.12), dpi=600)
+    fig = plt.figure(figsize=(7.15, 7.18), dpi=600)
     gs = GridSpec(
         4,
         6,
         figure=fig,
         height_ratios=[1.0, 1.08, 0.94, 0.86],
-        hspace=0.36,
+        hspace=0.50,
         wspace=0.72,
     )
 
@@ -784,15 +784,6 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
                 xytext=(0.50, y0 - 0.012),
                 arrowprops=dict(arrowstyle="-|>", lw=0.8, color=PALETTE["teal"]),
             )
-    ax.text(
-        0.5,
-        0.015,
-        "Only these 530 genes enter COSTE/concordance.",
-        ha="center",
-        va="bottom",
-        fontsize=5.2,
-        color=PALETTE["ink"],
-    )
     ax.set_title("Analysis universe", fontsize=7.6, pad=4)
     panel_label(ax, "b", x=-0.14, y=1.12)
 
@@ -868,16 +859,6 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
         ax.add_patch(plt.Rectangle((0.36, y0 + 0.018), 0.50, 0.052, facecolor="#edf1f5", edgecolor="none"))
         ax.add_patch(plt.Rectangle((0.36, y0 + 0.018), 0.50 * value, 0.052, facecolor=color, edgecolor="none"))
         ax.text(0.89, y0 + 0.045, f"{value:.3f}", ha="left", va="center", fontsize=5.8, color=PALETTE["ink"])
-    ax.text(
-        0.02,
-        0.035,
-        "Middle-ground agreement: uRNAs recover many compartments\nwithout copying the cell-assigned signal.",
-        ha="left",
-        va="bottom",
-        fontsize=5.25,
-        color=PALETTE["muted"],
-        linespacing=1.1,
-    )
     ax.set_title("Global concordance, summarized", fontsize=7.6, pad=4)
     panel_label(ax, "e", x=-0.10, y=1.10)
 
@@ -948,15 +929,6 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
             color=GENE_COLORS.get(exemplar, PALETTE["ink"]),
             fontweight="bold" if exemplar in GENE_COLORS else "normal",
         )
-    ax.text(
-        0.015,
-        0.93,
-        "Curated markers define interpretable positive controls before local spatial inspection",
-        ha="left",
-        va="center",
-        fontsize=6.0,
-        color=PALETTE["ink"],
-    )
     ax.set_title("Marker-control logic", fontsize=7.6, pad=4)
     panel_label(ax, "f", x=-0.02, y=1.08)
 
@@ -989,16 +961,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
                 arrowprops=dict(arrowstyle="-|>", lw=0.65, color="#9eb3c7"),
             )
         x0 += width + 0.026
-    ax.text(
-        0.5,
-        0.08,
-        "These five choices are visualized with true uRNA and cell coordinates in Figure 2.",
-        ha="center",
-        va="center",
-        fontsize=5.8,
-        color=PALETTE["ink"],
-    )
-    ax.set_title("Bridge to the spatial evidence figure", fontsize=7.6, pad=4)
+    ax.set_title("Bridge to spatial evidence", fontsize=7.6, pad=4)
     panel_label(ax, "g", x=-0.02, y=1.08)
 
     fig.subplots_adjust(left=0.073, right=0.986, top=0.963, bottom=0.052)
