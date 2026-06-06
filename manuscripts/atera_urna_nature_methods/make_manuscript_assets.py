@@ -312,33 +312,47 @@ def median_marker_heat(summary, urna_sss, groups, clusters):
 
 
 def figure_graphical_abstract(metadata, overall):
-    fig, ax = plt.subplots(figsize=(12, 4), dpi=220)
+    mm = 1 / 25.4
+    fig, ax = plt.subplots(figsize=(183 * mm, 61 * mm), dpi=600)
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
 
     boxes = [
-        (0.04, 0.22, 0.20, 0.56, "Atera WTA breast section", "18,028 genes\n624.1M high-quality gene transcripts"),
-        (0.30, 0.22, 0.20, 0.56, "uRNA extraction", "122.7M high-quality unassigned RNAs\n99.97% genes represented"),
-        (0.56, 0.22, 0.20, 0.56, "uRNA-only COSTE", "single transcripts treated as nodes\nSpatial Separation Score profiles"),
-        (0.82, 0.22, 0.14, 0.56, "Orthogonal check", f"median rho={overall['median_spearman_vs_full']:.3f}\nmatch rate={overall['best_cluster_exact_match_rate']:.3f}"),
+        (0.03, 0.15, 0.215, 0.61, "Atera WTA breast section", "18,028 genes\n624.1M high-quality\ngene transcripts"),
+        (0.285, 0.15, 0.215, 0.61, "uRNA extraction", "122.7M high-quality\nunassigned RNAs\n99.97% genes represented"),
+        (0.55, 0.15, 0.215, 0.61, "uRNA-only COSTE", "single transcripts\ntreated as nodes\nSpatial Separation\nScore profiles"),
+        (0.815, 0.15, 0.165, 0.61, "Orthogonal check", f"median rho={overall['median_spearman_vs_full']:.3f}\nmatch rate={overall['best_cluster_exact_match_rate']:.3f}"),
     ]
     for x, y, w, h, title, text in boxes:
         rect = plt.Rectangle((x, y), w, h, facecolor="#ffffff", edgecolor="#8aa0b8", linewidth=1.4)
         ax.add_patch(rect)
-        ax.text(x + w / 2, y + h - 0.12, title, ha="center", va="center", fontsize=10, fontweight="bold", color=PALETTE["ink"])
-        ax.text(x + w / 2, y + 0.22, text, ha="center", va="center", fontsize=8.3, color=PALETTE["muted"], linespacing=1.4)
-    for x in [0.255, 0.515, 0.775]:
-        ax.annotate("", xy=(x + 0.035, 0.5), xytext=(x, 0.5), arrowprops=dict(arrowstyle="-|>", lw=1.6, color=PALETTE["teal"]))
+        ax.text(x + w / 2, y + h - 0.13, title, ha="center", va="center", fontsize=7.5, fontweight="bold", color=PALETTE["ink"])
+        body_y = y + 0.18 if title == "Atera WTA breast section" else y + 0.25
+        ax.text(x + w / 2, body_y, text, ha="center", va="center", fontsize=6.3, color=PALETTE["muted"], linespacing=1.18)
+    for left_box, right_box in zip(boxes, boxes[1:]):
+        x = left_box[0] + left_box[2]
+        x_next = right_box[0]
+        ax.annotate("", xy=(x_next - 0.012, 0.49), xytext=(x + 0.012, 0.49), arrowprops=dict(arrowstyle="-|>", lw=1.6, color=PALETTE["teal"]))
 
     rng = np.random.default_rng(7)
     for _ in range(85):
         px = rng.uniform(0.065, 0.215)
-        py = rng.uniform(0.30, 0.60)
+        py = rng.uniform(0.47, 0.60)
         color = PALETTE["red"] if rng.random() < 0.20 else PALETTE["blue"]
         ax.scatter(px, py, s=rng.uniform(3, 10), color=color, alpha=0.65)
-    ax.text(0.04, 0.08, "Concept: unassigned RNAs are retained as spatial evidence instead of discarded as segmentation waste.", fontsize=9, color=PALETTE["ink"])
-    fig.tight_layout()
+    ax.text(
+        0.5,
+        0.93,
+        "Concept: unassigned RNAs are retained as spatial evidence\ninstead of discarded as segmentation waste.",
+        ha="center",
+        va="center",
+        fontsize=11.5,
+        fontweight="bold",
+        color=PALETTE["ink"],
+        linespacing=1.08,
+    )
     fig.savefig(FIGURES / "graphical_abstract.png", bbox_inches="tight")
     fig.savefig(FIGURES / "graphical_abstract.pdf", bbox_inches="tight")
     plt.close(fig)
