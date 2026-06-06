@@ -933,7 +933,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
             fontweight="bold" if exemplar in GENE_COLORS else "normal",
         )
     ax.set_title("Marker-control logic", fontsize=7.6, pad=4)
-    panel_label(ax, "f", x=-0.02, y=1.08)
+    panel_label(ax, "f", x=-0.070, y=1.08)
 
     ax = fig.add_subplot(gs[3, :])
     pos = ax.get_position()
@@ -967,7 +967,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
             )
         x0 += width + 0.018
     ax.set_title("Bridge to spatial evidence", fontsize=7.6, pad=4)
-    panel_label(ax, "g", x=-0.02, y=1.08)
+    panel_label(ax, "g", x=-0.070, y=1.08)
 
     fig.subplots_adjust(left=0.073, right=0.986, top=0.963, bottom=0.052)
     fig.savefig(FIGURES / "figure_1_integrated_urna_evidence_chain.png", bbox_inches="tight")
