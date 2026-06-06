@@ -342,8 +342,8 @@ def make_figure():
     plot_example_table(ax_table, metadata)
     panel_label(ax_table, "j", x=-0.05, y=1.12)
 
-    fig.savefig(FIGURES / "figure_5_spatial_evidence_multipanel.pdf", bbox_inches="tight")
-    fig.savefig(FIGURES / "figure_5_spatial_evidence_multipanel.png", bbox_inches="tight", dpi=600)
+    fig.savefig(FIGURES / "figure_2_spatial_evidence_multipanel.pdf", bbox_inches="tight")
+    fig.savefig(FIGURES / "figure_2_spatial_evidence_multipanel.png", bbox_inches="tight", dpi=600)
     plt.close(fig)
 
 

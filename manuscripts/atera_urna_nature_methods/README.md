@@ -9,10 +9,10 @@ This folder contains a Nature Methods style draft package for the Atera WTA brea
 - `cover_letter_draft.md`: short cover letter draft for Nature Methods.
 - `nature_methods_compliance_checklist.md`: checked format requirements and current evidence gaps.
 - `make_manuscript_assets.py`: script that regenerates all manuscript tables and figures from the committed benchmark output.
-- `extract_spatial_example_data.py`: A100-side extractor for real uRNA/cell-coordinate windows used in Figure 5.
+- `extract_spatial_example_data.py`: A100-side extractor for real uRNA/cell-coordinate windows used in Figure 2.
 - `make_spatial_evidence_figure.py`: builds the Nature-style multi-panel spatial evidence figure.
 - `paper_level_summary.md`: machine-generated numerical summary.
-- `spatial_examples/`: real extracted uRNA/cell-centroid points and sampled whole-section cell background for Figure 5.
+- `spatial_examples/`: real extracted uRNA/cell-centroid points and sampled whole-section cell background for Figure 2.
 - `figures/`: graphical abstract and draft main/extended figures.
 - `tables/`: derived tables used by the draft.
 

@@ -409,8 +409,8 @@ def figure_overview(metadata, counts, summary, cluster_counts):
     panel_label(ax, "d", x=-0.16)
 
     fig.tight_layout()
-    fig.savefig(FIGURES / "figure_1_dataset_and_attribution.png", bbox_inches="tight")
-    fig.savefig(FIGURES / "figure_1_dataset_and_attribution.pdf", bbox_inches="tight")
+    fig.savefig(FIGURES / "legacy_dataset_and_attribution.png", bbox_inches="tight")
+    fig.savefig(FIGURES / "legacy_dataset_and_attribution.pdf", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -479,8 +479,8 @@ def figure_concordance(summary, overall):
     panel_label(ax, "d", x=-0.16)
 
     fig.tight_layout()
-    fig.savefig(FIGURES / "figure_2_concordance.png", bbox_inches="tight")
-    fig.savefig(FIGURES / "figure_2_concordance.pdf", bbox_inches="tight")
+    fig.savefig(FIGURES / "legacy_concordance.png", bbox_inches="tight")
+    fig.savefig(FIGURES / "legacy_concordance.pdf", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -557,15 +557,15 @@ def figure_marker_validation(summary, urna_sss):
     panel_label(ax, "c", x=-0.10, y=1.30)
 
     fig.tight_layout()
-    fig.savefig(FIGURES / "figure_3_marker_validation.png", bbox_inches="tight")
-    fig.savefig(FIGURES / "figure_3_marker_validation.pdf", bbox_inches="tight")
+    fig.savefig(FIGURES / "legacy_marker_validation.png", bbox_inches="tight")
+    fig.savefig(FIGURES / "legacy_marker_validation.pdf", bbox_inches="tight")
     plt.close(fig)
 
     marker_gene_order = [gene for genes in MARKER_GENES.values() for gene in genes if gene in urna_sss.index]
     marker_summary = summary[summary["gene"].isin(marker_gene_order)][
         ["gene", "paper_marker_group", "urna_best_cluster", "full_best_cluster", "best_cluster_match", "sss_spearman_vs_full"]
     ].copy()
-    marker_summary.to_csv(TABLES / "figure_3_marker_callouts.csv", index=False)
+    marker_summary.to_csv(TABLES / "legacy_marker_callouts.csv", index=False)
 
 
 def figure_gene_selection_rationale(metadata, counts, summary, urna_sss, overall):
@@ -676,8 +676,8 @@ def figure_gene_selection_rationale(metadata, counts, summary, urna_sss, overall
     panel_label(ax, "d", x=-0.05, y=1.08)
 
     fig.tight_layout()
-    fig.savefig(FIGURES / "figure_4_gene_selection_rationale.png", bbox_inches="tight")
-    fig.savefig(FIGURES / "figure_4_gene_selection_rationale.pdf", bbox_inches="tight")
+    fig.savefig(FIGURES / "legacy_gene_selection_rationale.png", bbox_inches="tight")
+    fig.savefig(FIGURES / "legacy_gene_selection_rationale.pdf", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -992,7 +992,7 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
     ax.text(
         0.5,
         0.08,
-        "These five choices are visualized with true uRNA and cell coordinates in Figure 5.",
+        "These five choices are visualized with true uRNA and cell coordinates in Figure 2.",
         ha="center",
         va="center",
         fontsize=5.8,
@@ -1002,8 +1002,8 @@ def figure_combined_lead_in(metadata, counts, summary, overall, cluster_counts):
     panel_label(ax, "g", x=-0.02, y=1.08)
 
     fig.subplots_adjust(left=0.073, right=0.986, top=0.963, bottom=0.052)
-    fig.savefig(FIGURES / "figure_4_combined_lead_in.png", bbox_inches="tight")
-    fig.savefig(FIGURES / "figure_4_combined_lead_in.pdf", bbox_inches="tight")
+    fig.savefig(FIGURES / "figure_1_integrated_urna_evidence_chain.png", bbox_inches="tight")
+    fig.savefig(FIGURES / "figure_1_integrated_urna_evidence_chain.pdf", bbox_inches="tight")
     plt.close(fig)
 
 
