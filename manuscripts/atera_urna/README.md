@@ -19,7 +19,7 @@ The scripts are written to run from the repository root with this folder located
 
 The large benchmark output folder is expected at:
 
-`benchmarking/atera_wta_breast_urna_segmentation_bias_results/`
+`manuscripts/atera_urna/results/`
 
 The raw Atera transcript parquet file is not redistributed in this repository.
 

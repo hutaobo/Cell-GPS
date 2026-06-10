@@ -9,7 +9,7 @@ from matplotlib.gridspec import GridSpec
 
 
 HERE = Path(__file__).resolve().parents[1]
-RESULTS = Path(__file__).resolve().parents[3] / "benchmarking" / "atera_wta_breast_urna_segmentation_bias_results"
+RESULTS = HERE / "results"
 SPATIAL = HERE / "spatial_examples"
 FIGURES = HERE / "figures"
 TABLES = HERE / "tables"

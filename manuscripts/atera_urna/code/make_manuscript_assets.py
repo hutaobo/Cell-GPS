@@ -7,9 +7,8 @@ import pandas as pd
 from matplotlib.gridspec import GridSpec
 
 
-ROOT = Path(__file__).resolve().parents[3]
-SOURCE = ROOT / "benchmarking" / "atera_wta_breast_urna_segmentation_bias_results"
 OUT = Path(__file__).resolve().parents[1]
+SOURCE = OUT / "results"
 FIGURES = OUT / "figures"
 TABLES = OUT / "tables"
 

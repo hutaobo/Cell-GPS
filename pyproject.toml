@@ -48,6 +48,8 @@ xenium = [
 visium = [
     "spatialdata_io>=0.3",
 ]
+cli = ["rich"]
+plot = ["pycirclize"]
 
 [project.scripts]
 cellgps-gui = "cellgps.gui.gui_app:main"
@@ -136,3 +138,23 @@ ignore = [
 "*/__init__.py" = [
     "F401",
 ]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py39, py310, py311, ruff
+
+[testenv:ruff]
+basepython = python
+deps = ruff
+commands = ruff check src/sfplot tests
+
+[testenv]
+setenv =
+    PYTHONPATH = {toxinidir}/src
+
+deps =
+    pytest
+
+commands = pytest tests
+"""

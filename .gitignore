@@ -113,6 +113,8 @@ nc_revision_work/
 manuscripts/atera_urna/*
 !manuscripts/atera_urna/code/
 !manuscripts/atera_urna/code/**
+!manuscripts/atera_urna/results/
+!manuscripts/atera_urna/results/**
 manuscripts/atera_urna/code/__pycache__/
 manuscripts/atera_urna/code/**/*.pyc
 .codex_tmp/
