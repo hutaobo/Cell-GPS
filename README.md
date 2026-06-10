@@ -153,11 +153,32 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 )
 ```
 
+## GPU acceleration
+
+The searcher-findee nearest-neighbor step that underpins the cophenetic /
+StructureMap pipeline can run on a GPU. Pass `backend="gpu"` (or `backend="auto"`,
+which uses the GPU when a CUDA device is available) to the main entry points
+(`compute_cophenetic_distances_from_df`, `compute_cophenetic_distances_from_adata`,
+`compute_searcher_findee_distance_matrix_from_df`):
+
+```python
+row_coph, col_coph = compute_cophenetic_distances_from_df(df, backend="gpu")
+```
+
+`backend="cpu"` (scikit-learn) remains the default, so existing behaviour is
+unchanged. The GPU path is numerically equivalent to the CPU path: the default
+`gpu_dtype="float64"` reproduces the scikit-learn result exactly, while
+`gpu_dtype="float32"` is faster at a ~1e-5 relative deviation. The GPU backend
+requires `torch` (install via `pip install Cell-GPS[gpu]`); see
+`examples/gpu_searcher_findee_benchmark.py` to verify equivalence and benchmark
+the speedup on your own hardware.
+
 ## Useful public entry points
 
 - `load_xenium_data`: load and preprocess Xenium data.
 - `load_xenium_table_bundle`: load Xenium data from `cells.parquet` + `*_cell_groups.csv` + `cell_feature_matrix.h5` through `pyXenium.io`.
 - `compute_cophenetic_distances_from_df`: compute structure matrices from a coordinate table.
+- `compute_searcher_findee_distance_matrix_from_df_gpu`: GPU (PyTorch) searcher-findee kernel, numerically equivalent to the CPU path.
 - `compute_weighted_searcher_findee_distance_matrix_from_df`: weighted searcher-findee kernel for entity, pathway, or LR analysis.
 - `compute_weighted_cophenetic_distances_from_df`: weighted StructureMap wrapper over the weighted kernel.
 - `compute_cophenetic_distances_from_adata`: compute structure matrices from `AnnData`.
