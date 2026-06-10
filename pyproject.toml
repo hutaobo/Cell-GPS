@@ -58,7 +58,7 @@ Repository = "https://github.com/hutaobo/Cell-GPS"
 Source = "https://github.com/hutaobo/Cell-GPS"
 Documentation = "https://cell-gps.readthedocs.io/en/latest/"
 Preprint = "https://www.biorxiv.org/content/10.64898/2026.05.26.727847v1"
-"Manuscript code" = "https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code"
+"Manuscript code" = "https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript"
 "Conda forge" = "https://anaconda.org/conda-forge/cell-gps"
 
 [dependency-groups]

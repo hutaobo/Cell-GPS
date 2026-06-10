@@ -1,4 +1,4 @@
-# Cell-GPS manuscript code
+# Cell-GPS manuscript
 
 This folder reorganizes the located Cell-GPS Science manuscript analysis code by manuscript result.
 

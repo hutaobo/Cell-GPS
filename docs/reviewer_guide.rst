@@ -28,7 +28,7 @@ Repository map
 * ``src/cellgps/``: recommended Python import namespace
 * ``src/sfplot/``: legacy compatibility namespace and current implementation modules
 * ``docs/``: package documentation
-* ``Cell-GPS manuscript code/``: curated manuscript figure and table notebooks
+* ``Cell-GPS manuscript/``: curated manuscript figure and table notebooks
 * ``examples/``: compact package usage examples and small example data files
 * ``packaging/``: historical packaging recipes and Windows executable build assets
 
@@ -45,7 +45,7 @@ Manuscript validation scope
 ---------------------------
 
 The manuscript-validated scope is the COSTE/SSS workflow and the figure/table
-analyses mapped in ``Cell-GPS manuscript code/`` and
+analyses mapped in ``Cell-GPS manuscript/`` and
 ``docs/cellgps_science_manuscript_code_inventory.md``. Ligand-receptor
 topology, pathway topology, Visium helpers, GUI entry points and other
 convenience APIs are included for reuse and development, but should be treated

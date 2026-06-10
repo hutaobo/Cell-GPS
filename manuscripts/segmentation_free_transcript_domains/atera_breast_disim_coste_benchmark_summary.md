@@ -199,7 +199,7 @@ Output:
 `/data/taobo.hu/atera_breast_transcript_point_histoseg/coste1024_point_knn_train750k_assign_all`
 
 Script:
-`benchmarking/atera_breast_transcript_point_histoseg.py`
+`code/atera_breast_transcript_point_histoseg.py`
 
 This corrected run does not build a spatial grid. It takes the 1024 genes selected by full di-sim and organized by COSTE modules, then works directly on the transcript points from those selected genes. The HistoSeg-style feature for a point is the local composition of COSTE modules in its transcript-point neighborhood, plus a weak spatial coordinate term. The model trains on a 750000-point reservoir sample and then streams through the transcript table again to assign every selected-gene transcript point.
 
@@ -249,7 +249,7 @@ Output:
 `/data/taobo.hu/atera_breast_histoseg_comparison/point_vs_cell_coste1024`
 
 Script:
-`benchmarking/atera_breast_point_vs_cell_histoseg_comparison.py`
+`code/atera_breast_point_vs_cell_histoseg_comparison.py`
 
 Comparison unit: each selected-gene transcript point from the no-grid point-level HistoSeg run was matched to the nearest cell-based COSTE-HistoSeg cell centroid. The overlap is transcript-weighted and uses no spatial grid.
 
@@ -300,7 +300,7 @@ Output:
 `/data/taobo.hu/atera_breast_histoseg_nature_figures/pathology_explanations_aligned`
 
 Script:
-`benchmarking/atera_breast_nature_pathology_figures.py`
+`code/atera_breast_nature_pathology_figures.py`
 
 The H&E overlays now use the official 10x Xenium Explorer alignment file:
 `WTA_Preview_FFPE_Breast_Cancer_he_alignment.csv`. The remote copy used by the script is

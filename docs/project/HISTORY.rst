@@ -5,6 +5,9 @@ History
 Unreleased
 ----------
 
+* Renamed the ``Cell-GPS manuscript code/`` folder to ``Cell-GPS manuscript/`` and updated all README, documentation, and project-URL references.
+* Documented the COSTE extension manuscripts under ``manuscripts/`` in the README and repository layout.
+* Removed superseded duplicate scripts from ``benchmarking/``, moved the cell-based COSTE-HistoSeg script and benchmark log into the segmentation-free transcript-domain manuscript folder, and removed a duplicate Windows build-guide ``.docx``.
 * Organized root-level project notes and Windows packaging assets into dedicated folders.
 * Moved legacy conda recipe and small example data files out of the repository root.
 * Updated README and documentation installation instructions to use the official conda-forge package.
@@ -20,7 +23,7 @@ Unreleased
 ------------------
 
 * Updated the README to connect Cell-GPS with the bioRxiv preprint.
-* Documented the curated figure and table notebooks under ``Cell-GPS manuscript code/``.
+* Documented the curated figure and table notebooks under ``Cell-GPS manuscript/``.
 * Added PyPI project links for the preprint and manuscript code.
 
 0.0.2 (2026-04-02)

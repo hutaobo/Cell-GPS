@@ -20,8 +20,12 @@ Analysis pipeline:
 - `atera_breast_disim_coste_benchmark.py` — full-gene di-sim screen + COSTE module selection
 - `atera_breast_cellfree_transcript_pipeline.py` — cell-free transcript-grid prototype
 - `atera_breast_transcript_point_histoseg.py` — point-level HistoSeg domain assignment
+- `atera_breast_coste_histoseg.py` — cell-based COSTE-HistoSeg reference domains (Supplementary Figure 1)
 - `atera_breast_point_vs_cell_histoseg_comparison.py` — point-vs-cell domain comparison
 - `atera_breast_nature_pathology_figures.py` — H&E-aligned pathology figures
+
+The primary manuscript claim relies on `atera_breast_transcript_point_histoseg.py`, not the
+earlier cell-free grid prototype.
 
 Figure / table generation:
 - `_svg_relayout.py`, `_panel_d_evidence.py`, `relayout_supplementary_figures.py`,
@@ -29,6 +33,12 @@ Figure / table generation:
 - `make_supp_fig6_sensitivity.py` — domain-number sensitivity figure
 - `make_supp_table_s5.py` — sensitivity summary table
 - `regen_overlap_heatmap.py` — point-vs-cell overlap heatmap
+
+## Benchmark log
+
+`atera_breast_disim_coste_benchmark_summary.md` records the consolidated run log
+for this study: dataset facts, per-run timing and peak-memory tables, di-sim vs
+COSTE metrics, and domain example tables from the benchmark runs.
 
 ## Dependencies
 

@@ -54,7 +54,7 @@ Repository Companion Code
 
 The curated manuscript notebooks are stored in:
 
-   https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript%20code
+   https://github.com/hutaobo/cellgps/tree/main/Cell-GPS%20manuscript
 
 The folder is organized by manuscript result:
 

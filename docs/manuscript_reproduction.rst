@@ -28,7 +28,7 @@ The manuscript notebooks are under:
 
 .. code-block:: text
 
-   Cell-GPS manuscript code/
+   Cell-GPS manuscript/
      main_figures/
      supplementary_figures/
      supplementary_tables/

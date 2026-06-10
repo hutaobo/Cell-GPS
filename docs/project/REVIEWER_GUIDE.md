@@ -29,7 +29,7 @@ If you only have a few minutes, read the files in this order:
   Legacy compatibility namespace that currently hosts implementation modules; new code should import through `cellgps`.
 - `docs/`
   Lightweight package documentation.
-- `Cell-GPS manuscript code/`
+- `Cell-GPS manuscript/`
   Curated manuscript figure and supplementary table notebooks.
 - `examples/`
   Compact package usage examples and small example data files.
@@ -47,7 +47,7 @@ pip install -e .
 ## Manuscript validation scope
 
 The manuscript-validated scope is the COSTE/SSS workflow and the figure/table
-analyses mapped in `Cell-GPS manuscript code/` and
+analyses mapped in `Cell-GPS manuscript/` and
 `docs/cellgps_science_manuscript_code_inventory.md`. Ligand-receptor topology,
 pathway topology, Visium helpers, GUI entry points and other convenience APIs
 are included for reuse and development, but should be treated as optional or

@@ -21,13 +21,22 @@ Versioned bioRxiv page: <https://www.biorxiv.org/content/10.64898/2026.05.26.727
 
 If you use the Python package, the Windows executable, the R companion package, or the manuscript figure/table code, please cite this preprint.
 
-The code used to generate the preprint figures and supplementary tables is organized in [`Cell-GPS manuscript code/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code):
+The code used to generate the preprint figures and supplementary tables is organized in [`Cell-GPS manuscript/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript):
 
-- [`main_figures/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/main_figures): notebooks for main figure analyses.
-- [`supplementary_figures/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/supplementary_figures): notebooks for supplementary figure analyses.
-- [`supplementary_tables/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript%20code/supplementary_tables): notebooks for supplementary table analyses.
+- [`main_figures/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript/main_figures): notebooks for main figure analyses.
+- [`supplementary_figures/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript/supplementary_figures): notebooks for supplementary figure analyses.
+- [`supplementary_tables/`](https://github.com/hutaobo/Cell-GPS/tree/main/Cell-GPS%20manuscript/supplementary_tables): notebooks for supplementary table analyses.
 
 The notebooks are intentionally output-free and preserve the original manuscript data paths where those paths were required for reproduction. A detailed mapping from manuscript results to source code is available in [`docs/cellgps_science_manuscript_code_inventory.md`](https://github.com/hutaobo/Cell-GPS/blob/main/docs/cellgps_science_manuscript_code_inventory.md).
+
+## COSTE extension manuscripts
+
+Beyond the main Cell-GPS/COSTE preprint above, the [`manuscripts/`](https://github.com/hutaobo/Cell-GPS/tree/main/manuscripts) directory collects the analysis and figure-generation code for follow-up manuscripts that build on the COSTE method. Each subfolder is a self-contained study with its own README describing the dataset, scripts, and reproduction steps:
+
+- [`manuscripts/atera_urna/`](https://github.com/hutaobo/Cell-GPS/tree/main/manuscripts/atera_urna): Atera uRNA-COSTE study — segmentation-bias check using unassigned RNA (uRNA, transcripts not assigned to a segmented cell) and uRNA-COSTE concordance analysis.
+- [`manuscripts/segmentation_free_transcript_domains/`](https://github.com/hutaobo/Cell-GPS/tree/main/manuscripts/segmentation_free_transcript_domains): segmentation-free spatial domain discovery from transcript points alone.
+
+For details on any extension manuscript, read the README inside its subfolder.
 
 ## Package Names
 
@@ -58,7 +67,8 @@ The Python package is hosted at `https://github.com/hutaobo/Cell-GPS`. The R pac
 - `tests/`: package tests and smoke checks.
 - `docs/`: Sphinx documentation.
 - `docs/project/`: project notes, changelog, authors, and reviewer guide.
-- `Cell-GPS manuscript code/`: curated preprint figure and table notebooks.
+- `Cell-GPS manuscript/`: curated preprint figure and table notebooks for the main Cell-GPS/COSTE bioRxiv preprint.
+- `manuscripts/`: analysis code for follow-up COSTE extension manuscripts, one self-contained study per subfolder (see each subfolder's README).
 - `examples/`: compact usage examples and small example data files.
 - `packaging/conda-recipe/`: legacy local conda recipe retained for reference.
 - `packaging/pyinstaller/`: Windows executable build scripts and PyInstaller assets.
@@ -164,11 +174,11 @@ row_coph, col_coph = compute_cophenetic_distances_from_adata(
 
 ## Validation scope
 
-The manuscript-validated scope is the COSTE/SSS workflow and the figure/table analyses mapped in `Cell-GPS manuscript code/` and `docs/cellgps_science_manuscript_code_inventory.md`. Ligand-receptor topology, pathway topology, Visium helpers, GUI entry points and other convenience APIs are included for reuse and development, but should be treated as optional or exploratory unless a manuscript notebook or documentation page explicitly maps them to a reported analysis.
+The manuscript-validated scope is the COSTE/SSS workflow and the figure/table analyses mapped in `Cell-GPS manuscript/` and `docs/cellgps_science_manuscript_code_inventory.md`. Ligand-receptor topology, pathway topology, Visium helpers, GUI entry points and other convenience APIs are included for reuse and development, but should be treated as optional or exploratory unless a manuscript notebook or documentation page explicitly maps them to a reported analysis.
 
 ## Notes for reviewers
 
-- The curated figure and table notebooks for the bioRxiv preprint are kept in `Cell-GPS manuscript code/`.
+- The curated figure and table notebooks for the bioRxiv preprint are kept in `Cell-GPS manuscript/`.
 - Raw experimental datasets are not bundled in this repository because of size and distribution constraints. The code expects standard spatial omics outputs such as Xenium folders or tabular coordinate inputs.
 - Conda-forge packages the upstream Python distribution as `cell-gps`. The `sfplot` top-level namespace is bundled only as legacy compatibility inside the same distribution, not as a separate conda or PyPI package.
 - When a `cellgps_tbc_formal_wta/results`-style directory is already available, the LR and pathway topology extensions are designed to reuse its `t_and_c_result_*.csv` and `StructureMap_table_*.csv` outputs as the preferred gene-level topology anchors before falling back to recomputation.
