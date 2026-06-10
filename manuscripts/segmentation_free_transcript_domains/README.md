@@ -1,7 +1,7 @@
 # Segmentation-Free Spatial Domain Discovery from Transcript Points Alone
 
 Analysis and figure-generation code for the study *"Segmentation-Free Spatial
-Domain Discovery from Transcript Points Alone"* (manuscript under review).
+Domain Discovery from Transcript Points Alone"* (manuscript under preparation).
 
 The workflow discovers molecular tissue domains directly from transcript
 coordinates, without cell segmentation: a full-gene di-sim screen ranks
