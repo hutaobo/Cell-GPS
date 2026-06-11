@@ -43,7 +43,6 @@ For details on any extension manuscript, read the README inside its subfolder.
 - Python distribution: `Cell-GPS`
 - Conda-forge distribution: `cell-gps`
 - Python import package: `cellgps`
-- Legacy Python compatibility namespace: `sfplot` (not a separate distribution; retained for existing scripts)
 - R package/repository: `cellgpsr`
 - Windows executable: `cellgps.exe`
 
@@ -63,14 +62,13 @@ The Python package is hosted at `https://github.com/hutaobo/Cell-GPS`. The R pac
 
 - `src/cellgps/`: recommended Python import namespace.
 - `src/cellgps/pp`, `src/cellgps/tl`, `src/cellgps/pl`: scverse-style aliases for preprocessing, analysis, and plotting APIs.
-- `src/sfplot/`: legacy compatibility namespace that currently hosts implementation modules; new code should import through `cellgps`.
 - `tests/`: package tests and smoke checks.
 - `docs/`: Sphinx documentation.
 - `docs/project/`: project notes, changelog, authors, and reviewer guide.
 - `Cell-GPS manuscript/`: curated preprint figure and table notebooks for the main Cell-GPS/COSTE bioRxiv preprint.
 - `manuscripts/`: analysis code for follow-up COSTE extension manuscripts, one self-contained study per subfolder (see each subfolder's README).
 - `examples/`: compact usage examples and small example data files.
-- `packaging/conda-recipe/`: legacy local conda recipe retained for reference.
+- `packaging/conda-recipe/`: archived local conda recipe retained for reference.
 - `packaging/pyinstaller/`: Windows executable build scripts and PyInstaller assets.
 
 ## Installation
@@ -180,7 +178,7 @@ The manuscript-validated scope is the COSTE/SSS workflow and the figure/table an
 
 - The curated figure and table notebooks for the bioRxiv preprint are kept in `Cell-GPS manuscript/`.
 - Raw experimental datasets are not bundled in this repository because of size and distribution constraints. The code expects standard spatial omics outputs such as Xenium folders or tabular coordinate inputs.
-- Conda-forge packages the upstream Python distribution as `cell-gps`. The `sfplot` top-level namespace is bundled only as legacy compatibility inside the same distribution, not as a separate conda or PyPI package.
+- Conda-forge packages the upstream Python distribution as `cell-gps`.
 - When a `cellgps_tbc_formal_wta/results`-style directory is already available, the LR and pathway topology extensions are designed to reuse its `t_and_c_result_*.csv` and `StructureMap_table_*.csv` outputs as the preferred gene-level topology anchors before falling back to recomputation.
 - Xenium loading depends on `pyXenium>=0.4.3`. Visium helpers remain optional through the separate `Cell-GPS[visium]` extra.
 - A short repository walkthrough is available in [docs/project/REVIEWER_GUIDE.md](docs/project/REVIEWER_GUIDE.md).

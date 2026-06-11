@@ -6,7 +6,7 @@ existing package with published users.
 
 ## Adopted
 
-- `src/` package layout with the recommended `cellgps` import namespace.
+- `src/` package layout with the `cellgps` import namespace.
 - Sphinx documentation under `docs/` and ReadTheDocs configuration.
 - GitHub Actions for tests, release publishing, and package build checks.
 - Structured issue templates for bug reports and feature requests.
@@ -22,14 +22,13 @@ existing package with published users.
   the package already advertises Python 3.9 compatibility.
 - The PyPI publishing workflow remains `.github/workflows/python-publish.yml`,
   matching the configured trusted publisher.
-- The legacy `sfplot` namespace remains available for existing scripts.
 - Existing `.rst` documentation pages are preserved instead of converting the
   documentation tree to MyST Markdown.
 
 ## Future optional work
 
 - Add Codecov as a GitHub App if coverage comments should appear on pull requests.
-- Enable pre-commit.ci after the legacy codebase has been formatted and linted in
+- Enable pre-commit.ci after the codebase has been formatted and linted in
   a separate maintenance change.
 - Consider a future hatch/uv migration only if it is worth changing the local
   developer workflow and release tooling.

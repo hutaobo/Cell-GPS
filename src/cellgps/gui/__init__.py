@@ -1,8 +1,5 @@
-"""Cell-GPS GUI namespace."""
+"""Cell-GPS graphical user interface entry point."""
 
-from __future__ import annotations
+from .gui_app import main
 
-import sfplot.gui as _legacy
-
-__path__ = list(_legacy.__path__)
-__all__: list[str] = []
+__all__ = ["main"]

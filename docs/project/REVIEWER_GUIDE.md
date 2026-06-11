@@ -7,8 +7,7 @@ This repository contains the code used to develop the Cell-GPS workflow describe
 - Python distribution: `Cell-GPS`
 - Conda-forge distribution: `cell-gps`
 - Python import package: `cellgps`
-- Legacy Python compatibility namespace: `sfplot` (not a separate distribution; retained for existing scripts)
-- Python GitHub repository: `https://github.com/hutaobo/cellgps`
+- Python GitHub repository: `https://github.com/hutaobo/Cell-GPS`
 - R package/repository: `cellgpsr`, hosted at `https://github.com/hutaobo/cellgpsr`
 - Windows executable: `cellgps.exe`, latest open v2 DOI `https://doi.org/10.5281/zenodo.19482685`; version-series route `https://zenodo.org/records/17859173`
 
@@ -17,16 +16,14 @@ This repository contains the code used to develop the Cell-GPS workflow describe
 If you only have a few minutes, read the files in this order:
 
 1. `README.md`
-2. `src/sfplot/analysis/searcher_findee_score.py`
-3. `src/sfplot/preprocessing/data_processing.py`
-4. `src/sfplot/analysis/tbc_analysis.py`
+2. `src/cellgps/analysis/searcher_findee_score.py`
+3. `src/cellgps/preprocessing/data_processing.py`
+4. `src/cellgps/analysis/tbc_analysis.py`
 
 ## What each area contains
 
 - `src/cellgps/`
-  Recommended Python import namespace.
-- `src/sfplot/`
-  Legacy compatibility namespace that currently hosts implementation modules; new code should import through `cellgps`.
+  Python package and implementation modules.
 - `docs/`
   Lightweight package documentation.
 - `Cell-GPS manuscript/`
@@ -39,7 +36,7 @@ If you only have a few minutes, read the files in this order:
 ## Minimal install
 
 ```bash
-git clone https://github.com/hutaobo/cellgps.git
+git clone https://github.com/hutaobo/Cell-GPS.git
 cd cellgps
 pip install -e .
 ```

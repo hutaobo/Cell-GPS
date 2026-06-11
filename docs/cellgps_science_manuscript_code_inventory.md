@@ -45,17 +45,17 @@ The code used for the manuscript is distributed across:
 
 Direct/supporting code used across figures:
 
-- `D:\GitHub\sfplot\src\sfplot\analysis\searcher_findee_score.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\analysis\searcher_findee_score.py`
   - Contains `compute_cophenetic_distances_from_adata`, `compute_searcher_findee_distance_matrix_from_df`, `compute_cophenetic_from_distance_matrix`, `compute_cophenetic_distances_from_df`, and `plot_cophenetic_heatmap`.
-- `D:\GitHub\sfplot\src\sfplot\analysis\compute_cophenetic_distances_from_df_memory_opt.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\analysis\compute_cophenetic_distances_from_df_memory_opt.py`
   - Memory-aware implementation used for large transcript/cell merged point clouds.
-- `D:\GitHub\sfplot\src\sfplot\analysis\tbc_analysis.py`
-- `D:\GitHub\sfplot\src\sfplot\analysis\tbc_analysis_serial.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\analysis\tbc_analysis.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\analysis\tbc_analysis_serial.py`
   - Transcript-by-cell analysis: loads Xenium data/transcripts, computes cell-type StructureMap, then recomputes gene/transcript rows.
-- `D:\GitHub\sfplot\src\sfplot\analysis\compute_col_dendrogram_scores.py`
-- `D:\GitHub\sfplot\src\sfplot\plotting\circle_heatmap.py`
-- `D:\GitHub\sfplot\src\sfplot\plotting\circular_dendrogram.py`
-- Original package copy: `Y:\long\projects\Packagedevelopment\CellGPS\sfplot\src\sfplot`
+- `D:\GitHub\Cell-GPS\src\cellgps\analysis\compute_col_dendrogram_scores.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\plotting\circle_heatmap.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\plotting\circular_dendrogram.py`
+- Original package copy: `Y:\long\projects\Packagedevelopment\CellGPS\Cell-GPS\src\cellgps`
 - R implementation/helper copy:
   - `Y:\long\projects\Packagedevelopment\CellGPS\sfplotR_manuscript\R`
   - `Y:\long\publication_datasets\Vannan_2023_Lung_Fibrosis\Rcode\sfplotR\R`
@@ -245,11 +245,11 @@ Direct/supporting A100 locations:
 
 Supporting package code:
 
-- `D:\GitHub\sfplot\src\sfplot\analysis\tbc_analysis.py`
-- `D:\GitHub\sfplot\src\sfplot\analysis\tbc_analysis_serial.py`
-- `D:\GitHub\sfplot\src\sfplot\analysis\compute_cophenetic_distances_from_df_memory_opt.py`
-- `D:\GitHub\sfplot\src\sfplot\plotting\circular_dendrogram.py`
-- `D:\GitHub\sfplot\src\sfplot\plotting\circle_heatmap.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\analysis\tbc_analysis.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\analysis\tbc_analysis_serial.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\analysis\compute_cophenetic_distances_from_df_memory_opt.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\plotting\circular_dendrogram.py`
+- `D:\GitHub\Cell-GPS\src\cellgps\plotting\circle_heatmap.py`
 
 Confidence: Direct for transcript/cell StructureMap, circular hierarchy, and gene spatial panels. Strong inference that final Figure 5 was assembled from these outputs.
 
@@ -382,7 +382,7 @@ These paths contain output copies or partial notebooks that are relevant but sho
 
 For future reproduction, treat these as the canonical code set:
 
-- Core method: `D:\GitHub\sfplot\src\sfplot`
+- Core method: `D:\GitHub\Cell-GPS\src\cellgps`
 - Synthetic benchmark: A100 `/data/taobo.hu/projects/mouse_pup/benchmarking_complete_english.ipynb`, `benchmarking_complete_modular.ipynb`, `benchmarking_complete_nested.ipynb`
 - Mouse pup and 5K Xenium panels: `D:\GitHub\sfplot\sfplot-manuscript\figures`, `D:\GitHub\sfplot\sfplot-manuscript\t_and_c`, and `Y:\long\10X_datasets\Xenium\Xenium_5K\t_by_c_result`
 - Lung fibrosis COSTE: `Y:\long\publication_datasets\Vannan_2023_Lung_Fibrosis\notebook` and `Y:\long\publication_datasets\Vannan_2023_Lung_Fibrosis\Rcode\sfplotR`

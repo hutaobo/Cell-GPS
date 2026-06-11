@@ -62,6 +62,3 @@ def iter_cellgps_gene_names(adata) -> list[str]:
     if "name" in adata.var.columns:
         return adata.var["name"].astype(str).tolist()
     return adata.var_names.astype(str).tolist()
-
-
-iter_sfplot_gene_names = iter_cellgps_gene_names

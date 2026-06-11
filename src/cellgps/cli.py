@@ -1,5 +1,18 @@
 """Console script placeholder for Cell-GPS."""
 
-from sfplot.cli import app, main
+import typer
+from rich.console import Console
 
-__all__ = ["app", "main"]
+app = typer.Typer()
+console = Console()
+
+
+@app.command()
+def main():
+    """Console script placeholder for Cell-GPS."""
+    console.print("Replace this message by putting your code into cellgps.cli.main")
+    console.print("See Typer documentation at https://typer.tiangolo.com/")
+
+
+if __name__ == "__main__":
+    app()

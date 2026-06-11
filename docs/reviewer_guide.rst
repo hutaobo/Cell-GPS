@@ -10,7 +10,7 @@ Package naming
 
 * Python distribution: ``Cell-GPS``
 * Python import package: ``cellgps``
-* Python GitHub repository: https://github.com/hutaobo/cellgps
+* Python GitHub repository: https://github.com/hutaobo/Cell-GPS
 * R package/repository: ``cellgpsr`` at https://github.com/hutaobo/cellgpsr
 * Windows executable: ``cellgps.exe`` at latest open v2 DOI https://doi.org/10.5281/zenodo.19482685; version-series route https://zenodo.org/records/17859173
 
@@ -18,15 +18,14 @@ Suggested reading order
 -----------------------
 
 * ``README.md``
-* ``src/sfplot/analysis/searcher_findee_score.py``
-* ``src/sfplot/preprocessing/data_processing.py``
-* ``src/sfplot/tbc_analysis.py``
+* ``src/cellgps/analysis/searcher_findee_score.py``
+* ``src/cellgps/preprocessing/data_processing.py``
+* ``src/cellgps/analysis/tbc_analysis.py``
 
 Repository map
 --------------
 
-* ``src/cellgps/``: recommended Python import namespace
-* ``src/sfplot/``: legacy compatibility namespace and current implementation modules
+* ``src/cellgps/``: Python package and implementation modules
 * ``docs/``: package documentation
 * ``Cell-GPS manuscript/``: curated manuscript figure and table notebooks
 * ``examples/``: compact package usage examples and small example data files
@@ -37,7 +36,7 @@ Minimal install
 
 .. code-block:: console
 
-   $ git clone https://github.com/hutaobo/cellgps.git
+   $ git clone https://github.com/hutaobo/Cell-GPS.git
    $ cd cellgps
    $ pip install -e .
 

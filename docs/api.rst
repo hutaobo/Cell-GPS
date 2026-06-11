@@ -3,8 +3,7 @@ API reference
 =============
 
 This page documents the public Cell-GPS functions intended for direct use in
-analysis scripts. The preferred import path is ``cellgps``; the legacy
-``sfplot`` namespace remains available for backward compatibility.
+analysis scripts. The import path is ``cellgps``.
 
 Core COSTE and StructureMap functions
 -------------------------------------

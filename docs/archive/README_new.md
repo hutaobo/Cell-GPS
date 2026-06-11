@@ -33,7 +33,7 @@ Recommended public names:
 ### `topology_extensions.py`
 
 - `compute_weighted_searcher_findee_distance_matrix_from_df(...)`
-  Weighted version of the searcher-findee kernel that preserves backward compatibility when all weights equal one.
+  Weighted version of the searcher-findee kernel that matches the unweighted result when all weights equal one.
 - `compute_weighted_cophenetic_distances_from_df(...)`
   Weighted StructureMap wrapper over the weighted kernel.
 - `compute_entity_to_cell_topology(...)`
@@ -76,7 +76,7 @@ These are convenience wrappers for quick heatmap generation from common input ty
 
 ## Manuscript-related material
 
-- `sfplot-manuscript/` contains notebooks, generated figures, and intermediate outputs used during manuscript preparation.
+- `Cell-GPS manuscript/` contains notebooks, generated figures, and intermediate outputs used during manuscript preparation.
 - `benchmarking/` contains benchmarking-related artifacts.
 - `segmentation_methods/` contains supporting segmentation workflows.
 
@@ -84,9 +84,9 @@ These are convenience wrappers for quick heatmap generation from common input ty
 
 1. `README.md`
 2. `../project/REVIEWER_GUIDE.md`
-3. `src/sfplot/analysis/searcher_findee_score.py`
-4. `src/sfplot/preprocessing/data_processing.py`
-5. `src/sfplot/analysis/tbc_analysis.py`
+3. `src/cellgps/analysis/searcher_findee_score.py`
+4. `src/cellgps/preprocessing/data_processing.py`
+5. `src/cellgps/analysis/tbc_analysis.py`
 
 ## Practical notes
 

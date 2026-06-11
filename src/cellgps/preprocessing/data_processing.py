@@ -131,7 +131,7 @@ def load_xenium_table_bundle(
 
     The returned object keeps the requested cluster labels in
     ``adata.obs[cluster_col]`` and mirrors them into ``adata.obs["Cluster"]`` for
-    backward compatibility with the existing Cell-GPS API.
+    the Cell-GPS analysis API.
     """
     folder_path = Path(folder)
     px_io = _load_pyxenium_io_module()
@@ -176,6 +176,3 @@ def load_xenium_data(folder: str, normalize: bool = True):
         cluster_column_name="cluster",
     )
     return _coerce_cellgps_xenium_adata(adata, normalize=normalize, cluster_col="cluster")
-
-
-_coerce_sfplot_xenium_adata = _coerce_cellgps_xenium_adata

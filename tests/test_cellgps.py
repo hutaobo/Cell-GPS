@@ -12,10 +12,6 @@ import cellgps
 import cellgps.analysis
 import cellgps.plotting
 import cellgps.preprocessing
-import sfplot
-import sfplot.analysis
-import sfplot.plotting
-import sfplot.preprocessing
 
 
 class TestCellGps(unittest.TestCase):
@@ -26,12 +22,11 @@ class TestCellGps(unittest.TestCase):
         self.assertTrue(hasattr(cellgps, "__all__"))
         self.assertGreater(len(cellgps.__all__), 0)
 
-    def test_legacy_import_still_works(self):
-        """The historical sfplot namespace should remain compatible."""
-        self.assertEqual(
-            set(cellgps.__all__),
-            set(sfplot.__all__) | {"analysis", "preprocessing", "plotting", "gui", "pp", "tl", "pl"},
-        )
+    def test_removed_source_namespace_is_absent(self):
+        """The source tree should expose Cell-GPS through cellgps only."""
+        package_root = pathlib.Path(__file__).resolve().parents[1] / "src"
+        old_namespace = "sf" + "plot"
+        self.assertFalse((package_root / old_namespace).exists())
 
     def test_expected_public_exports_exist(self):
         """Key reviewer-facing APIs should remain exposed at the top level."""
@@ -82,14 +77,14 @@ class TestCellGps(unittest.TestCase):
         }
         self.assertTrue(expected.issubset(set(cellgps.plotting.__all__)))
 
-    def test_backwards_compat_circular_dendrogram(self):
-        """sfplot.circular_dendrogram backwards-compat alias should still work when pycirclize is installed."""
+    def test_circular_dendrogram_export(self):
+        """The circular dendrogram module should be available from cellgps."""
         try:
             import pycirclize  # noqa: F401
         except ImportError:
             self.skipTest("pycirclize not installed")
-        self.assertTrue(hasattr(sfplot, "circular_dendrogram"))
-        self.assertTrue(hasattr(sfplot.circular_dendrogram, "plot_circular_dendrogram_pycirclize"))
+        self.assertTrue(hasattr(cellgps, "circular_dendrogram"))
+        self.assertTrue(hasattr(cellgps.circular_dendrogram, "plot_circular_dendrogram_pycirclize"))
 
 
 if __name__ == "__main__":

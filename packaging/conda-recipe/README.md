@@ -1,4 +1,4 @@
-# Legacy local conda recipe
+# Archived local conda recipe
 
 Cell-GPS is now distributed through the official conda-forge package:
 

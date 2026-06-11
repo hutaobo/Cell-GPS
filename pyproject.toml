@@ -96,7 +96,6 @@ testpaths = [
 [tool.coverage.run]
 source = [
     "cellgps",
-    "sfplot",
 ]
 omit = [
     "**/test_*.py",
@@ -147,7 +146,7 @@ envlist = py39, py310, py311, ruff
 [testenv:ruff]
 basepython = python
 deps = ruff
-commands = ruff check src/sfplot tests
+commands = ruff check src/cellgps tests
 
 [testenv]
 setenv =
